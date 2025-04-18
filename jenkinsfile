@@ -3,9 +3,10 @@ pipeline {
 
     environment {
         NODE_VERSION = 'Node20'
-        SERVER_IP = '3.145.180.148'
+        SERVER_IP = '18.224.106.120'
         DEPLOY_USER = 'deployer'
-        APP_DIR = '/home/deployer/my-portfolio'
+        APP_NAME = 'my-portfolio'
+        APP_DIR = "/home/deployer/applications/${APP_NAME}"
     }
 
     stages {
@@ -33,30 +34,47 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage('Prepare Server') {
             steps {
                 script {
-                    // Make sure the deployment directory exists
+                    // Ensure the deployment directory exists
                     sh """
                         ssh -o StrictHostKeyChecking=no ${DEPLOY_USER}@${SERVER_IP} '
                             mkdir -p ${APP_DIR}
                         '
                     """
+                }
+            }
+        }
 
-                    // Transfer the files using tar for better performance
+        stage('Deploy') {
+            steps {
+                script {
+                    // Create deployment archive
+                    sh "tar -czf /tmp/${APP_NAME}.tar.gz --exclude=node_modules --exclude=.git ."
+                    
+                    // Transfer and deploy
                     sh """
-                        tar -czf /tmp/portfolio-deploy.tar.gz --exclude=node_modules .
-                        scp -o StrictHostKeyChecking=no /tmp/portfolio-deploy.tar.gz ${DEPLOY_USER}@${SERVER_IP}:/tmp/
+                        scp -o StrictHostKeyChecking=no /tmp/${APP_NAME}.tar.gz ${DEPLOY_USER}@${SERVER_IP}:/tmp/
                         ssh -o StrictHostKeyChecking=no ${DEPLOY_USER}@${SERVER_IP} '
-                            rm -rf ${APP_DIR}/*
                             mkdir -p ${APP_DIR}
-                            tar -xzf /tmp/portfolio-deploy.tar.gz -C ${APP_DIR}
+                            tar -xzf /tmp/${APP_NAME}.tar.gz -C ${APP_DIR}
                             cd ${APP_DIR}
                             npm install --production
-                            pm2 stop portfolio || true
-                            pm2 delete portfolio || true
-                            pm2 start npm --name "portfolio" -- start
+                            
+                            # Setup PM2 if not already installed
+                            if ! command -v pm2 &> /dev/null; then
+                                sudo npm install -g pm2
+                            fi
+                            
+                            # Stop and restart application
+                            pm2 stop ${APP_NAME} || true
+                            pm2 delete ${APP_NAME} || true
+                            pm2 start npm --name "${APP_NAME}" -- start
                             pm2 save
+                            
+                            # Clean up
+                            rm -f /tmp/${APP_NAME}.tar.gz
                         '
                     """
                 }
@@ -79,7 +97,8 @@ pipeline {
             emailext (
                 subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                 body: """<p>FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
-                <p>Check console output at <a href='${env.BUILD_URL}'>${env.BUILD_URL}</a></p>""",
+                <p>Check console output at <a href='${env.BUILD_URL}'>${env.BUILD_URL}</a></p>
+                <p><b>Error:</b> ${currentBuild.description ?: 'See log for details'}</p>""",
                 recipientProviders: [[$class: 'DevelopersRecipientProvider']]
             )
         }
