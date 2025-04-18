@@ -1,7 +1,9 @@
 'use client';
 
 import ExperienceSection from '@/components/ExperienceSection';
+import ServicesSection from '@/components/ServicesSection';
 import { motion } from 'framer-motion';
+import Button from '@/components/Button';
 
 export default function About() {
   return (
@@ -49,6 +51,31 @@ export default function About() {
             </motion.div>
           </div>
           <ExperienceSection />
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="mt-12 flex justify-center"
+          >
+            <motion.div
+              animate={{ boxShadow: '0 0 10px rgba(25, 118, 255, 0.3), 0 0 20px rgba(0, 212, 255, 0.3)' }}
+              transition={{ duration: 2, repeat: Infinity, repeatType: 'reverse' }}
+            >
+              <Button
+                variant="secondary"
+                whileHover={{
+                  scale: 1.05,
+                  boxShadow: '0 0 12px rgba(25, 118, 255, 0.5), 0 0 24px rgba(0, 212, 255, 0.3)',
+                  backgroundColor: '#00b7eb',
+                }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => window.location.href = '/contact'}
+              >
+                Hire Me
+              </Button>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
     </motion.main>

@@ -25,23 +25,19 @@ const buttonVariants = cva(
   }
 );
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
+interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
   isHireMe?: boolean;
 }
 
-// Create a motion-enabled Button using motion.create() with correct button type
-const MotionButton = motion.create<ButtonProps & HTMLMotionProps<'button'>>((props) => {
-  const { className, variant, size, isHireMe, ...rest } = props;
-  const baseClassName = buttonVariants({ variant, size, className }) || '';
+// Create a motion-enabled Button with correct button typing
+const MotionButton = motion.button;
+
+export default function Button({ className, variant, size, isHireMe, ...rest }: ButtonProps & HTMLMotionProps<'button'>) {
+  const baseClassName = buttonVariants({ variant, size }) || '';
   const hireMeClass = isHireMe ? ' animate-pulse-glow' : '';
-  const finalClassName = `${baseClassName}${hireMeClass}`.trim();
+  const finalClassName = `${baseClassName}${hireMeClass} ${className || ''}`.trim();
 
-  return (
-    <button
-      className={finalClassName}
-      {...rest}
-    />
-  );
-});
-
-export default MotionButton;
+  return <MotionButton className={finalClassName} {...rest} />;
+}
