@@ -1,0 +1,87 @@
+pipeline {
+    agent any
+
+    environment {
+        NODE_VERSION = 'Node20'
+        SERVER_IP = '3.145.180.148'
+        DEPLOY_USER = 'deployer'
+        APP_DIR = '/home/deployer/my-portfolio'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Setup') {
+            steps {
+                nodejs(nodeJSInstallationName: "${NODE_VERSION}") {
+                    sh 'npm --version'
+                    sh 'node --version'
+                    sh 'npm install'
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                nodejs(nodeJSInstallationName: "${NODE_VERSION}") {
+                    sh 'npm run build'
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                script {
+                    // Make sure the deployment directory exists
+                    sh """
+                        ssh -o StrictHostKeyChecking=no ${DEPLOY_USER}@${SERVER_IP} '
+                            mkdir -p ${APP_DIR}
+                        '
+                    """
+
+                    // Transfer the files using tar for better performance
+                    sh """
+                        tar -czf /tmp/portfolio-deploy.tar.gz --exclude=node_modules .
+                        scp -o StrictHostKeyChecking=no /tmp/portfolio-deploy.tar.gz ${DEPLOY_USER}@${SERVER_IP}:/tmp/
+                        ssh -o StrictHostKeyChecking=no ${DEPLOY_USER}@${SERVER_IP} '
+                            rm -rf ${APP_DIR}/*
+                            mkdir -p ${APP_DIR}
+                            tar -xzf /tmp/portfolio-deploy.tar.gz -C ${APP_DIR}
+                            cd ${APP_DIR}
+                            npm install --production
+                            pm2 stop portfolio || true
+                            pm2 delete portfolio || true
+                            pm2 start npm --name "portfolio" -- start
+                            pm2 save
+                        '
+                    """
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Deployment completed successfully!'
+            emailext (
+                subject: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+                body: """<p>SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
+                <p>Check console output at <a href='${env.BUILD_URL}'>${env.BUILD_URL}</a></p>""",
+                recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+            )
+        }
+        failure {
+            echo 'Deployment failed!'
+            emailext (
+                subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+                body: """<p>FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
+                <p>Check console output at <a href='${env.BUILD_URL}'>${env.BUILD_URL}</a></p>""",
+                recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+            )
+        }
+    }
+}
