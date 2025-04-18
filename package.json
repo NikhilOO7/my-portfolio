@@ -6,12 +6,26 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "backend": "tsx src/backend/server.ts"
   },
   "dependencies": {
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "next": "15.3.0"
+    "next": "15.3.0",
+    "parallax-js": "^3.1.0",
+    "react-icons": "^5.5.0",
+    "three": "^0.175.0",
+    "three-stdlib": "^2.18.0",
+    "@react-three/drei": "^10.0.6",
+    "@react-three/fiber": "^9.1.2",
+    "@react-three/postprocessing": "^3.0.4",
+    "axios": "^1.7.7",
+    "class-variance-authority": "^0.7.1",
+    "express": "^4.21.0",
+    "framer-motion": "^12.7.3",
+    "howler": "^2.2.4",
+    "lucide-react": "^0.488.0"
   },
   "devDependencies": {
     "typescript": "^5",
@@ -22,6 +36,12 @@
     "tailwindcss": "^4",
     "eslint": "^9",
     "eslint-config-next": "15.3.0",
-    "@eslint/eslintrc": "^3"
+    "@eslint/eslintrc": "^3",
+    "tsx": "^4.19.3",
+    "@types/three": "^0.175.0",
+    "autoprefixer": "^10.4.21",
+    "prettier": "^3.5.3",
+    "@types/express": "^4.17.21",
+    "@types/parallax-js": "^3.1.3"
   }
 }
