@@ -53,12 +53,19 @@ pipeline {
                     // Create deployment archive
                     sh "tar -czf /tmp/${APP_NAME}.tar.gz --exclude=node_modules --exclude=.git ."
                     
+                    // Create temp directory for deployer user
+                    sh """
+                        ssh -o StrictHostKeyChecking=no ${DEPLOY_USER}@${SERVER_IP} '
+                            mkdir -p /home/deployer/temp
+                        '
+                    """
+                    
                     // Transfer and deploy
                     sh """
-                        scp -o StrictHostKeyChecking=no /tmp/${APP_NAME}.tar.gz ${DEPLOY_USER}@${SERVER_IP}:/tmp/
+                        scp -o StrictHostKeyChecking=no /tmp/${APP_NAME}.tar.gz ${DEPLOY_USER}@${SERVER_IP}:/home/deployer/temp/
                         ssh -o StrictHostKeyChecking=no ${DEPLOY_USER}@${SERVER_IP} '
                             mkdir -p ${APP_DIR}
-                            tar -xzf /tmp/${APP_NAME}.tar.gz -C ${APP_DIR}
+                            tar -xzf /home/deployer/temp/${APP_NAME}.tar.gz -C ${APP_DIR}
                             cd ${APP_DIR}
                             npm install --production
                             
@@ -74,7 +81,7 @@ pipeline {
                             pm2 save
                             
                             # Clean up
-                            rm -f /tmp/${APP_NAME}.tar.gz
+                            rm -f /home/deployer/temp/${APP_NAME}.tar.gz
                         '
                     """
                 }
