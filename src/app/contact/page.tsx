@@ -1,45 +1,9 @@
 'use client';
 
-import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { FaLinkedin, FaGithub, FaTwitter, FaEnvelope } from 'react-icons/fa';
-import Link from 'next/link';
+import EnhancedContactForm from '@/components/EnhancedContactForm';
 
 export default function Contact() {
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState('');
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setSubmitStatus('');
-
-    try {
-      // Placeholder API call (replace with your backend endpoint)
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        setSubmitStatus('Message sent successfully!');
-        setFormData({ name: '', email: '', message: '' });
-      } else {
-        setSubmitStatus('Failed to send message. Please try again.');
-      }
-    } catch (error) {
-      setSubmitStatus('An error occurred. Please try again later.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
   return (
     <motion.main
       initial={{ opacity: 0 }}
@@ -57,89 +21,57 @@ export default function Contact() {
           >
             Contact Me
           </motion.h1>
+          
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            className="mt-4 text-center text-gray-300 max-w-2xl mx-auto"
+          >
+            Interested in working together? Have a project in mind or just want to connect?
+            Drop me a message and I'll get back to you as soon as possible.
+          </motion.p>
+          
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="mt-12 max-w-lg mx-auto bg-jarvis-dark-600 p-6 rounded-lg shadow-jarvis-glow"
+            className="mt-12"
           >
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label htmlFor="name" className="block text-sm font-display text-gray-300">
-                  Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  className="w-full mt-1 p-2 bg-jarvis-dark-500 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-jarvis-blue-500"
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="email" className="block text-sm font-display text-gray-300">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="w-full mt-1 p-2 bg-jarvis-dark-500 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-jarvis-blue-500"
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="message" className="block text-sm font-display text-gray-300">
-                  Message
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  rows={4}
-                  value={formData.message}
-                  onChange={handleChange}
-                  className="w-full mt-1 p-2 bg-jarvis-dark-500 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-jarvis-blue-500"
-                  required
-                />
-              </div>
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full bg-jarvis-blue-500 text-white py-2 rounded-md hover:bg-jarvis-blue-600 transition-colors animate-pulse-glow disabled:opacity-50"
-              >
-                {isSubmitting ? 'Sending...' : 'Send Message'}
-              </button>
-            </form>
-            {submitStatus && (
-              <p className={`mt-4 text-sm text-center ${submitStatus.includes('success') ? 'text-green-500' : 'text-red-500'}`}>
-                {submitStatus}
-              </p>
-            )}
+            <EnhancedContactForm />
           </motion.div>
+          
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="mt-12 flex justify-center space-x-6"
+            className="mt-20 bg-jarvis-dark-600 p-6 rounded-lg shadow-jarvis-glow max-w-3xl mx-auto"
           >
-            <Link href="https://linkedin.com/in/nikhilbindal" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-jarvis-blue-500">
-              <FaLinkedin size={24} />
-            </Link>
-            <Link href="https://github.com/nikhilbindal" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-jarvis-blue-500">
-              <FaGithub size={24} />
-            </Link>
-            <Link href="https://twitter.com/nikhilbindal" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-jarvis-blue-500">
-              <FaTwitter size={24} />
-            </Link>
-            <Link href="mailto:nikhilbindal@example.com" className="text-gray-300 hover:text-jarvis-blue-500">
-              <FaEnvelope size={24} />
-            </Link>
+            <h2 className="text-2xl font-display text-jarvis-blue-500 mb-4 text-center">Frequently Asked Questions</h2>
+            
+            <div className="space-y-4 mt-6">
+              <div>
+                <h3 className="text-xl font-display text-white mb-2">What are your rates?</h3>
+                <p className="text-gray-300">My rates vary depending on the project scope, timeline, and complexity. I'm happy to discuss your specific needs and provide a custom quote.</p>
+              </div>
+              
+              <div>
+                <h3 className="text-xl font-display text-white mb-2">What is your availability?</h3>
+                <p className="text-gray-300">I'm currently available for new projects and opportunities. My typical response time is within 24-48 hours, and I can usually start new projects within 1-2 weeks.</p>
+              </div>
+              
+              <div>
+                <h3 className="text-xl font-display text-white mb-2">Do you work remotely?</h3>
+                <p className="text-gray-300">Yes, I work remotely with clients globally. I'm based in Boston, MA (EST timezone) but can accommodate different time zones for meetings and collaboration.</p>
+              </div>
+              
+              <div>
+                <h3 className="text-xl font-display text-white mb-2">What technologies do you specialize in?</h3>
+                <p className="text-gray-300">I specialize in React, Next.js, Node.js, Python, and AI technologies like LLMs and RAG. I'm comfortable with a range of cloud platforms including AWS and GCP.</p>
+              </div>
+            </div>
           </motion.div>
         </div>
       </section>

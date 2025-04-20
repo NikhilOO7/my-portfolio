@@ -1,37 +1,29 @@
 'use client';
 
-import Button from '@/components/Button';
-import Card from '@/components/Card';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import Image from 'next/image';
+import EnhancedProjectCard from '@/components/EnhancedProjectCard';
+import Button from '@/components/Button';
+import { projects } from '@/data/projects';
 
 export default function Projects() {
-  const projects = [
-    {
-      title: 'CollabHub',
-      description: 'Real-time team collaboration platform integrating chat, task management, and video conferencing.',
-      tags: ['React', 'Node.js', 'WebSockets'],
-      thumbnail: '/images/collabhub-thumb.jpg',
-      github: 'https://github.com/nikhilbindal/collabhub',
-      demo: 'https://collabhub-demo.com',
-    },
-    {
-      title: 'Nexus AI Chatbot',
-      description: 'Scalable enterprise chatbot leveraging GPT-4o for customer support automation.',
-      tags: ['Python', 'FastAPI', 'LLM', 'VectorDB'],
-      thumbnail: '/images/nexus-thumb.jpg',
-      github: 'https://github.com/nikhilbindal/nexus-chatbot',
-      demo: 'https://nexus-demo.com',
-    },
-    {
-      title: 'Quantum Content Generator',
-      description: 'AI-driven blog post and marketing copy generator using Llama 3.1 fine-tuning.',
-      tags: ['Next.js', 'Python', 'Llama 3.1', 'Fine-tuning'],
-      thumbnail: '/images/quantum-thumb.jpg',
-      github: 'https://github.com/nikhilbindal/quantum-content',
-      demo: 'https://quantum-demo.com',
-    },
+  const [filter, setFilter] = useState<string>('all');
+  
+  const categories = [
+    { id: 'all', label: 'All Projects' },
+    { id: 'ai', label: 'AI & ML' },
+    { id: 'fullstack', label: 'Full Stack' },
+    { id: 'backend', label: 'Backend' },
   ];
+  
+  const filteredProjects = filter === 'all' 
+    ? projects 
+    : projects.filter(project => {
+        if (filter === 'ai') return project.tags.some(tag => ['AI', 'LLM', 'NLP', 'RAG'].includes(tag));
+        if (filter === 'fullstack') return project.techStack.includes('React') && (project.techStack.includes('Node.js') || project.techStack.includes('FastAPI'));
+        if (filter === 'backend') return project.techStack.includes('FastAPI') || project.techStack.includes('Node.js') || project.techStack.includes('Java');
+        return true;
+      });
 
   return (
     <motion.main
@@ -50,40 +42,54 @@ export default function Projects() {
           >
             Projects
           </motion.h1>
+          
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="flex justify-center mt-8 mb-12 space-x-4 overflow-x-auto py-2"
+          >
+            {categories.map((category) => (
+              <Button
+                key={category.id}
+                variant={filter === category.id ? "primary" : "outline"}
+                size="sm"
+                onClick={() => setFilter(category.id)}
+              >
+                {category.label}
+              </Button>
+            ))}
+          </motion.div>
+          
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            viewport={{ once: true, amount: 0.3 }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
             className="grid gap-8 md:gap-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-12"
           >
-            {projects.map((project, index) => (
-              <Card
-                key={index}
+            {filteredProjects.map((project) => (
+              <EnhancedProjectCard
+                key={project.id}
                 title={project.title}
                 description={project.description}
+                longDescription={project.longDescription}
                 tags={project.tags}
-              >
-                <div className="relative w-full h-48 mb-4">
-                  <Image
-                    src={project.thumbnail}
-                    alt={`${project.title} thumbnail`}
-                    fill
-                    style={{ objectFit: 'cover' }}
-                    className="rounded-lg"
-                  />
-                </div>
-                <div className="flex space-x-2">
-                  <Button variant="outline" size="sm" onClick={() => window.open(project.github, '_blank')}>
-                    GitHub
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={() => window.open(project.demo, '_blank')}>
-                    Demo
-                  </Button>
-                </div>
-              </Card>
+                techStack={project.techStack}
+                imageUrl={project.imageUrl}
+                github={project.github}
+                demo={project.demo}
+                achievements={project.achievements}
+              />
             ))}
           </motion.div>
+          
+          {filteredProjects.length === 0 && (
+            <div className="text-center text-gray-400 mt-12">
+              No projects found in this category.
+            </div>
+          )}
+          
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
