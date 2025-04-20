@@ -6,7 +6,7 @@ import ControlPanel from '@/components/ControlPanel';
 import ThreeCanvasWrapper from '@/components/ThreeCanvasWrapper';
 
 export const metadata: Metadata = {
-  title: 'Nikhil Bindal | JARVIS Portfolio',
+  title: 'Nikhil Bindal | Portfolio',
   description: 'A futuristic portfolio showcasing software engineering and AI skills.',
 };
 

@@ -58,12 +58,16 @@ export default function Header() {
       className="fixed top-0 left-0 right-0 bg-jarvis-dark-600 bg-opacity-80 backdrop-blur-md z-50 shadow-lg"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
-        <div className="flex items-center space-x-2 sm:space-x-4">
-          <span className="text-xs sm:text-sm text-gray-300 flex items-center w-[160px]" title="Current Time in Boston, MA">
+        <div className="flex items-center gap-4">
+          <span
+            className="text-xs sm:text-sm text-gray-300 flex items-center flex-shrink-0"
+            style={{ whiteSpace: 'nowrap', minWidth: '160px' }}
+            title="Current Time in Boston, MA"
+          >
             <Clock className="w-3 h-3 sm:w-4 sm:h-4 mr-1 text-jarvis-blue-500" />
             Boston, MA | {time}
           </span>
-          <span className="hidden sm:inline-flex text-xs sm:text-sm text-gray-300 items-center">
+          <span className="hidden md:inline-flex text-xs sm:text-sm text-gray-300 items-center flex-shrink-0">
             <span className="w-2 h-2 bg-green-500 rounded-full mr-1 animate-pulse"></span>
             System Status: Optimal
           </span>
