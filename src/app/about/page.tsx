@@ -5,6 +5,7 @@ import InteractiveResume from '@/components/InteractiveResume';
 import { FaLinkedin, FaGithub, FaTwitter } from 'react-icons/fa';
 import Link from 'next/link';
 import Image from 'next/image';
+import profileImage from '@/assets/images/nikhil.png';
 
 export default function About() {
   return (
@@ -34,7 +35,7 @@ export default function About() {
               className="relative w-48 h-48 lg:w-64 lg:h-64 shadow-jarvis-glow rounded-full overflow-hidden border-2 border-jarvis-blue-500"
             >
               <Image
-                src="/images/profile.jpg"
+                src={profileImage}
                 alt="Nikhil Bindal"
                 fill
                 priority
@@ -136,24 +137,25 @@ export default function About() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="mt-12 flex justify-center"
+            className="mt-16 flex justify-center"
           >
             <motion.div
               animate={{ boxShadow: '0 0 10px rgba(25, 118, 255, 0.3), 0 0 20px rgba(0, 212, 255, 0.3)' }}
               transition={{ duration: 2, repeat: Infinity, repeatType: 'reverse' }}
             >
-              <Button
-                variant="secondary"
-                whileHover={{
-                  scale: 1.05,
-                  boxShadow: '0 0 12px rgba(25, 118, 255, 0.5), 0 0 24px rgba(0, 212, 255, 0.3)',
-                  backgroundColor: '#00b7eb',
-                }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => window.location.href = '/contact'}
-              >
-                Hire Me
-              </Button>
+              <Link href="/contact">
+                <Button
+                  variant="secondary"
+                  whileHover={{
+                    scale: 1.05,
+                    boxShadow: '0 0 12px rgba(25, 118, 255, 0.5), 0 0 24px rgba(0, 212, 255, 0.3)',
+                    backgroundColor: '#00b7eb',
+                  }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Hire Me
+                </Button>
+              </Link>
             </motion.div>
           </motion.div>
         </div>

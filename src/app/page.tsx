@@ -1,8 +1,9 @@
+// src/app/page.tsx
 'use client';
 
 import Button from '@/components/Button';
-import FeaturedProjectCard from '@/components/FeaturedProjectCard';
-import ServicesSection from '@/components/ServicesSection';
+import EnhancedServicesSection from '@/components/ServicesSection';
+import EnhancedFeaturedProjectsSection from '@/components/FeaturedProjectSection';
 import { motion } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
@@ -29,11 +30,11 @@ export default function Home() {
 
   useEffect(() => {
     const quotes = [
-      "Code is like humor: when you have to explain it, it’s bad. – Cory House",
+      "Code is like humor: when you have to explain it, it's bad. – Cory House",
       "Programming isn't about what you know; it's about what you can figure out. – Chris Pine",
       "The only way to learn a new programming language is by writing programs in it. – Dennis Ritchie",
       "Any fool can write code that a computer can understand. Good programmers write code that humans can understand. – Martin Fowler",
-      "I’m not a great programmer; I’m just a good programmer with great habits. – Kent Beck",
+      "I'm not a great programmer; I'm just a good programmer with great habits. – Kent Beck",
       "First, solve the problem. Then, write the code. – John Johnson",
       "Debugging is twice as hard as writing the code in the first place. – Brian Kernighan",
       "Talk is cheap. Show me the code. – Linus Torvalds",
@@ -53,30 +54,6 @@ export default function Home() {
 
     return () => clearInterval(interval);
   }, []);
-
-  const featuredProjects = [
-    {
-      title: 'CollabHub',
-      description: 'Real-time team collaboration platform integrating chat, task management, and video conferencing.',
-      tags: ['React', 'Node.js', 'WebSockets'],
-      github: 'https://github.com/nikhilbindal/collabhub',
-      demo: 'https://collabhub-demo.com',
-    },
-    {
-      title: 'Nexus AI Chatbot',
-      description: 'Scalable enterprise chatbot leveraging GPT-4o for customer support automation.',
-      tags: ['Python', 'FastAPI', 'LLM'],
-      github: 'https://github.com/nikhilbindal/nexus-chatbot',
-      demo: 'https://nexus-demo.com',
-    },
-    {
-      title: 'Quantum Content Generator',
-      description: 'AI-driven blog post and marketing copy generator using Llama 3.1.',
-      tags: ['Next.js', 'Python', 'Fine-tuning'],
-      github: 'https://github.com/nikhilbindal/quantum-content',
-      demo: 'https://quantum-demo.com',
-    },
-  ];
 
   const scrollToServices = () => {
     servicesRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -135,18 +112,11 @@ export default function Home() {
               animate={{ boxShadow: '0 0 10px rgba(25, 118, 255, 0.3), 0 0 20px rgba(0, 212, 255, 0.3)' }}
               transition={{ duration: 2, repeat: Infinity, repeatType: 'reverse' }}
             >
-              <Button
-                variant="secondary"
-                whileHover={{
-                  scale: 1.05,
-                  boxShadow: '0 0 12px rgba(25, 118, 255, 0.5), 0 0 24px rgba(0, 212, 255, 0.3)',
-                  backgroundColor: '#00b7eb',
-                }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => window.location.href = '/contact'}
-              >
-                Hire Me
-              </Button>
+              <Link href="/contact">
+                <Button variant="secondary">
+                  Hire Me
+                </Button>
+              </Link>
             </motion.div>
           </motion.div>
           <motion.p
@@ -183,34 +153,12 @@ export default function Home() {
           ▼
         </motion.div>
       </div>
+      
       <div ref={servicesRef}>
-        <ServicesSection />
+        <EnhancedServicesSection />
       </div>
-      <motion.div
-        className="w-full mt-16 mb-16"
-      >
-        <motion.h2
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.8, delay: 0.4, ease: 'easeOut' }}
-          className="text-3xl sm:text-4xl font-bold text-jarvis-blue-500 animate-pulse-glow leading-tight text-center mb-12"
-        >
-          Featured Projects
-        </motion.h2>
-        <div className="max-w-7xl mx-auto px-4 grid gap-8 md:gap-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-          {featuredProjects.map((project, index) => (
-            <FeaturedProjectCard
-              key={index}
-              title={project.title}
-              description={project.description}
-              tags={project.tags}
-              github={project.github}
-              demo={project.demo}
-            />
-          ))}
-        </div>
-      </motion.div>
+      
+      <EnhancedFeaturedProjectsSection />
     </motion.main>
   );
 }
