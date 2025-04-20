@@ -4,6 +4,7 @@ import ParallaxLayer from '@/components/ParallaxLayer';
 import Header from '@/components/Header';
 import ControlPanel from '@/components/ControlPanel';
 import ThreeCanvasWrapper from '@/components/ThreeCanvasWrapper';
+import { ChatbotProvider } from '@/components/ChatbotContext';
 
 export const metadata: Metadata = {
   title: 'Nikhil Bindal | Portfolio',
@@ -18,15 +19,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ThreeCanvasWrapper />
-        <ParallaxLayer depth={0.1}>
-          <div className="absolute inset-0 bg-jarvis-grid opacity-10" />
-        </ParallaxLayer>
-        <Header />
-        <main className="bg-jarvis-dark-500 text-white relative font-display overflow-x-hidden z-10 pt-16">
-          {children}
-        </main>
-        <ControlPanel />
+        <ChatbotProvider>
+          <ThreeCanvasWrapper />
+          <ParallaxLayer depth={0.1}>
+            <div className="absolute inset-0 bg-jarvis-grid opacity-10" />
+          </ParallaxLayer>
+          <Header />
+          <main className="bg-jarvis-dark-500 text-white relative font-display overflow-x-hidden z-10 pt-16">
+            {children}
+          </main>
+          <ControlPanel />
+        </ChatbotProvider>
       </body>
     </html>
   );

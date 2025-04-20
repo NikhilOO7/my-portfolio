@@ -1,10 +1,45 @@
 'use client';
 
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaLinkedin, FaGithub, FaTwitter, FaEnvelope } from 'react-icons/fa';
 import Link from 'next/link';
 
 export default function Contact() {
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus('');
+
+    try {
+      // Placeholder API call (replace with your backend endpoint)
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setSubmitStatus('Message sent successfully!');
+        setFormData({ name: '', email: '', message: '' });
+      } else {
+        setSubmitStatus('Failed to send message. Please try again.');
+      }
+    } catch (error) {
+      setSubmitStatus('An error occurred. Please try again later.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
   return (
     <motion.main
       initial={{ opacity: 0 }}
@@ -29,7 +64,7 @@ export default function Contact() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="mt-12 max-w-lg mx-auto bg-jarvis-dark-600 p-6 rounded-lg shadow-jarvis-glow"
           >
-            <form className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label htmlFor="name" className="block text-sm font-display text-gray-300">
                   Name
@@ -38,6 +73,8 @@ export default function Contact() {
                   type="text"
                   id="name"
                   name="name"
+                  value={formData.name}
+                  onChange={handleChange}
                   className="w-full mt-1 p-2 bg-jarvis-dark-500 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-jarvis-blue-500"
                   required
                 />
@@ -50,6 +87,8 @@ export default function Contact() {
                   type="email"
                   id="email"
                   name="email"
+                  value={formData.email}
+                  onChange={handleChange}
                   className="w-full mt-1 p-2 bg-jarvis-dark-500 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-jarvis-blue-500"
                   required
                 />
@@ -62,17 +101,25 @@ export default function Contact() {
                   id="message"
                   name="message"
                   rows={4}
+                  value={formData.message}
+                  onChange={handleChange}
                   className="w-full mt-1 p-2 bg-jarvis-dark-500 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-jarvis-blue-500"
                   required
                 />
               </div>
               <button
                 type="submit"
-                className="w-full bg-jarvis-blue-500 text-white py-2 rounded-md hover:bg-jarvis-blue-600 transition-colors animate-pulse-glow"
+                disabled={isSubmitting}
+                className="w-full bg-jarvis-blue-500 text-white py-2 rounded-md hover:bg-jarvis-blue-600 transition-colors animate-pulse-glow disabled:opacity-50"
               >
-                Send Message
+                {isSubmitting ? 'Sending...' : 'Send Message'}
               </button>
             </form>
+            {submitStatus && (
+              <p className={`mt-4 text-sm text-center ${submitStatus.includes('success') ? 'text-green-500' : 'text-red-500'}`}>
+                {submitStatus}
+              </p>
+            )}
           </motion.div>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
