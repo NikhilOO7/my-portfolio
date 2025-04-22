@@ -5,13 +5,14 @@ import { motion } from 'framer-motion';
 import { BsArrowRight } from 'react-icons/bs';
 import Link from 'next/link';
 import Image from 'next/image';
+import CollabHubImage from './../assets/images/collabhub.png';
 
 const featuredProjects = [
   {
     id: 'collabhub',
     title: 'CollabHub',
     description: 'Real-time team collaboration platform integrating chat, task management, and video conferencing.',
-    image: '/images/collabhub-thumb.jpg',
+    image: CollabHubImage,
     tags: ['React', 'Node.js', 'WebSockets'],
     link: '/projects#collabhub'
   },

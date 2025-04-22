@@ -1,3 +1,5 @@
+import CollabHubImage from './../assets/images/collabhub.png';
+
 export interface Project {
     id: string;
     title: string;
@@ -5,7 +7,7 @@ export interface Project {
     longDescription: string;
     tags: string[];
     techStack: string[];
-    imageUrl: string;
+    imageUrl: any;
     github?: string;
     demo?: string;
     achievements: string[];
@@ -71,8 +73,8 @@ export interface Project {
       longDescription: "Developed a team collaboration platform with real-time chat, task management, and video conferencing features. Built with a microservices architecture to ensure scalability and reliability, the platform offers seamless integration between different collaboration tools in one unified interface.",
       tags: ["Collaboration", "Real-time", "WebRTC", "SaaS"],
       techStack: ["React", "Node.js", "MongoDB", "AWS"],
-      imageUrl: "/images/collabhub-thumb.jpg",
-      github: "https://github.com/nikhilbindal/collabhub",
+      imageUrl: CollabHubImage,
+      github: "https://github.com/NikhilOO7/collabhub",
       demo: "https://collabhub-demo.com",
       achievements: [
         "Implemented WebRTC and Socket.IO for real-time communication and data synchronization",
