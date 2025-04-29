@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { FaLinkedin, FaGithub, FaTwitter, FaFacebook, FaInstagram, FaMedium, FaEnvelope, FaPhone, FaMapMarkerAlt } from 'react-icons/fa';
+import { FaLinkedin, FaGithub, FaFacebook, FaInstagram, FaMedium, FaEnvelope, FaPhone, FaMapMarkerAlt } from 'react-icons/fa';
+import { FaXTwitter } from 'react-icons/fa6';
 import { Loader2, Send, CheckCircle, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import axios from 'axios';
@@ -320,17 +321,17 @@ export default function Contact() {
                   </a>
                   
                   <a 
-                    href="https://twitter.com/nikhilbindal" 
+                    href="https://x.com/NikhilBindal2" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="flex items-center p-3 bg-jarvis-dark-500 rounded-md hover:bg-jarvis-dark-400 transition-colors"
                   >
-                    <FaTwitter className="w-5 h-5 text-[#1DA1F2] mr-3" />
-                    <span className="text-gray-300">Twitter</span>
+                    <FaXTwitter className="w-5 h-5 text-[#1DA1F2] mr-3" />
+                    <span className="text-gray-300">X</span>
                   </a>
                   
                   <a 
-                    href="https://facebook.com/nikhilbindal" 
+                    href="https://www.facebook.com/nikhil.bindal2" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="flex items-center p-3 bg-jarvis-dark-500 rounded-md hover:bg-jarvis-dark-400 transition-colors"
@@ -340,7 +341,7 @@ export default function Contact() {
                   </a>
                   
                   <a 
-                    href="https://instagram.com/nikhilbindal" 
+                    href="https://www.instagram.com/nikhil.bindal2/" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="flex items-center p-3 bg-jarvis-dark-500 rounded-md hover:bg-jarvis-dark-400 transition-colors"
@@ -350,7 +351,7 @@ export default function Contact() {
                   </a>
                   
                   <a 
-                    href="https://medium.com/@nikhilbindal" 
+                    href="https://medium.com/@nikhilbindal2" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="flex items-center p-3 bg-jarvis-dark-500 rounded-md hover:bg-jarvis-dark-400 transition-colors"
