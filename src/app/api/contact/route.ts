@@ -1,5 +1,6 @@
+// src/app/api/contact/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import axios from 'axios';
+import nodemailer from 'nodemailer';
 
 export async function POST(request: NextRequest) {
   try {
@@ -24,37 +25,64 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // For development, we'll log the message to console
-    // In production, you would send this via email or to a database
-    console.log('Contact form submission:', {
-      name,
-      email,
-      subject: subject || 'No Subject',
-      message,
-      timestamp: new Date().toISOString(),
+    // Create transport with Gmail and App Password
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER || 'bindalnikhil09@gmail.com',
+        pass: process.env.EMAIL_APP_PASSWORD, // Use environment variable
+      },
     });
-    
-    // Try to send to the backend server if in production
-    if (process.env.NODE_ENV === 'production' && process.env.BACKEND_URL) {
-      try {
-        await axios.post(`${process.env.BACKEND_URL}/api/contact`, {
+
+    // Configure email
+    const mailOptions = {
+      from: `"Portfolio Contact" <${process.env.EMAIL_USER || 'bindalnikhil09@gmail.com'}>`,
+      to: process.env.EMAIL_TO || 'nikhil.bindal@outlook.com',
+      replyTo: email,
+      subject: `Portfolio Contact: ${subject || 'New message'}`,
+      text: `Name: ${name}\nEmail: ${email}\n\nMessage: ${message}`,
+      html: `
+        <h2>New Contact Message</h2>
+        <p><strong>From:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Subject:</strong> ${subject || 'No Subject'}</p>
+        <hr />
+        <div>
+          <p>${message.replace(/\n/g, '<br/>')}</p>
+        </div>
+      `
+    };
+
+    try {
+      // Send email
+      const info = await transporter.sendMail(mailOptions);
+      console.log('Message sent:', info.messageId);
+      
+      // Return success response
+      return NextResponse.json(
+        { success: true, message: 'Message received' },
+        { status: 200 }
+      );
+    } catch (emailError) {
+      console.error('Email sending error:', emailError);
+      
+      // Log attempt in development
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('Contact form submission (email failed):', {
           name,
           email,
-          subject: subject || 'Contact Form Submission',
+          subject: subject || 'No Subject',
           message,
+          timestamp: new Date().toISOString(),
         });
-      } catch (error) {
-        console.error('Error forwarding to backend:', error);
-        // We'll still return success to the client
-        // But in a real app, you might want to handle this differently
       }
+      
+      // Return failure response
+      return NextResponse.json(
+        { error: 'Failed to send email. Please try again later.' },
+        { status: 500 }
+      );
     }
-
-    // Return success response
-    return NextResponse.json(
-      { success: true, message: 'Message received' },
-      { status: 200 }
-    );
   } catch (error) {
     console.error('Contact form error:', error);
     

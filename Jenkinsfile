@@ -7,6 +7,7 @@ pipeline {
         DEPLOY_USER = 'deployer'
         APP_NAME = 'my-portfolio'
         APP_DIR = "/home/deployer/applications/${APP_NAME}"
+        BACKEND_APP_NAME = 'my-portfolio-backend'
     }
 
     stages {
@@ -74,10 +75,17 @@ pipeline {
                                 sudo npm install -g pm2
                             fi
                             
-                            # Stop and restart application
+                            # Stop and restart frontend application
                             pm2 stop ${APP_NAME} || true
                             pm2 delete ${APP_NAME} || true
                             pm2 start npm --name "${APP_NAME}" -- start
+                            
+                            # Stop and restart backend application
+                            pm2 stop ${BACKEND_APP_NAME} || true
+                            pm2 delete ${BACKEND_APP_NAME} || true
+                            pm2 start npm --name "${BACKEND_APP_NAME}" -- run backend
+                            
+                            # Save PM2 configuration
                             pm2 save
                             
                             # Clean up

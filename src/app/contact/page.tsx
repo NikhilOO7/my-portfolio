@@ -1,5 +1,3 @@
-// src/app/contact/page.tsx
-
 'use client';
 
 import { useState } from 'react';
@@ -10,6 +8,7 @@ import Link from 'next/link';
 import axios from 'axios';
 import Button from '@/components/Button';
 import MapComponent from '@/components/MapComponent';
+import BuyMeCoffeeButton from '@/components/BuyMeCoffeeButton';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -360,6 +359,17 @@ export default function Contact() {
                     <span className="text-gray-300">Medium</span>
                   </a>
                 </div>
+                
+                {/* Buy Me a Coffee section integrated into Connect With Me panel */}
+                <div className="mt-6 pt-4 border-t border-jarvis-blue-500/20">
+                  <h3 className="text-lg font-display text-white mb-2 text-center">Support My Work</h3>
+                  <p className="text-sm text-gray-300 mb-4 text-center">
+                    If you find my projects helpful or interesting, consider buying me a coffee!
+                  </p>
+                  <div className="flex justify-center">
+                    <BuyMeCoffeeButton variant="small" />
+                  </div>
+                </div>
               </motion.div>
             </div>
           </div>
@@ -393,6 +403,12 @@ export default function Contact() {
               <div>
                 <h3 className="text-xl font-display text-white mb-2">What technologies do you specialize in?</h3>
                 <p className="text-gray-300">I specialize in React, Next.js, Node.js, Python, and AI technologies like LLMs and RAG. I'm comfortable with a range of cloud platforms including AWS and GCP.</p>
+              </div>
+              <div>
+                <h3 className="text-xl font-display text-white mb-2">How can I support your work?</h3>
+                <p className="text-gray-300">
+                  If you'd like to support my work, you can <a href="https://www.buymeacoffee.com/nikhil007" target="_blank" rel="noopener noreferrer" className="text-jarvis-blue-500 hover:underline">buy me a coffee</a>. Your support helps me create more projects and content to share with the community.
+                </p>
               </div>
             </div>
           </motion.div>

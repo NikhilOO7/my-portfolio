@@ -4,6 +4,7 @@
 import Button from '@/components/Button';
 import EnhancedServicesSection from '@/components/ServicesSection';
 import EnhancedFeaturedProjectsSection from '@/components/FeaturedProjectSection';
+import BuyMeCoffeeButton from '@/components/BuyMeCoffeeButton';
 import { motion } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
@@ -98,7 +99,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.0 }}
-            className="mt-10 flex justify-center space-x-4"
+            className="mt-10 flex justify-center space-x-4 flex-wrap gap-y-4"
           >
             <motion.div
               animate={{ boxShadow: '0 0 10px rgba(25, 118, 255, 0.3), 0 0 20px rgba(0, 212, 255, 0.3)' }}
@@ -117,6 +118,12 @@ export default function Home() {
                   Hire Me
                 </Button>
               </Link>
+            </motion.div>
+            <motion.div
+              animate={{ boxShadow: '0 0 10px rgba(255, 221, 0, 0.3), 0 0 20px rgba(255, 221, 0, 0.3)' }}
+              transition={{ duration: 2, repeat: Infinity, repeatType: 'reverse' }}
+            >
+              <BuyMeCoffeeButton />
             </motion.div>
           </motion.div>
           <motion.p
