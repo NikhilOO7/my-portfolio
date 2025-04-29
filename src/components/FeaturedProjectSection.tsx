@@ -6,6 +6,8 @@ import { BsArrowRight } from 'react-icons/bs';
 import Link from 'next/link';
 import Image from 'next/image';
 import CollabHubImage from './../assets/images/collabhub.png';
+import ChatbotImage from './../assets/images/chatbot.png';
+import BlogGenImage from './../assets/images/blogGen.png';
 
 const featuredProjects = [
   {
@@ -20,7 +22,7 @@ const featuredProjects = [
     id: 'nexus-chatbot',
     title: 'Nexus AI Chatbot',
     description: 'Scalable enterprise chatbot leveraging GPT-4o for customer support automation.',
-    image: '/images/nexus-chatbot-thumb.jpg',
+    image: ChatbotImage,
     tags: ['Python', 'FastAPI', 'LLM'],
     link: '/projects#nexus-chatbot'
   },
@@ -28,7 +30,7 @@ const featuredProjects = [
     id: 'quantum-content',
     title: 'Quantum Content Generator',
     description: 'AI-driven blog post and marketing copy generator using Llama 3.1.',
-    image: '/images/quantum-content-thumb.jpg',
+    image: BlogGenImage,
     tags: ['Next.js', 'Python', 'Fine-tuning'],
     link: '/projects#quantum-content'
   },

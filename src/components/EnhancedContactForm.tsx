@@ -247,7 +247,7 @@ export default function EnhancedContactForm() {
               </a>
               
               <a 
-                href="https://github.com/nikhilbindal" 
+                href="https://github.com/NikhilOO7" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="flex items-center p-3 bg-jarvis-dark-500 rounded-md hover:bg-jarvis-dark-400 transition-colors"

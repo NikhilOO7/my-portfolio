@@ -1,4 +1,6 @@
 import CollabHubImage from './../assets/images/collabhub.png';
+import ChatbotImage from './../assets/images/chatbot.png';
+import BlogGenImage from './../assets/images/blogGen.png';
 
 export interface Project {
     id: string;
@@ -22,8 +24,8 @@ export interface Project {
       longDescription: "Designed and developed a full-stack web application that automatically generates, edits, and publishes SEO-optimized blogs using LLMs (Llama 3.1 via Hugging Face). The system uses Retrieval-Augmented Generation (RAG) with FAISS vector database to produce contextually relevant content based on user-provided topics and outlines.",
       tags: ["AI", "Content Generation", "LLM", "RAG"],
       techStack: ["React", "FastAPI", "Python", "AWS"],
-      imageUrl: "/images/blog-generator-thumb.jpg",
-      github: "https://github.com/nikhilbindal/ai-blog-generator",
+      imageUrl: BlogGenImage,
+      github: "https://github.com/NikhilOO7/ai-blog-generator",
       demo: "https://blog-generator-demo.com",
       achievements: [
         "Implemented real-time fine-tuning with RAG on dynamic datasets, enhancing content relevance and personalization",
@@ -39,8 +41,8 @@ export interface Project {
       longDescription: "Built a production-grade AI chatbot using GPT-4o (OpenAI API) and LangChain to automate responses for tier-1 customer support queries. Implemented semantic retrieval using FAISS to fetch contextually relevant answers from internal FAQs and documentation, enhancing response accuracy.",
       tags: ["LLM", "Chatbot", "Customer Support", "NLP"],
       techStack: ["React", "Node.js", "Python", "AWS"],
-      imageUrl: "/images/nexus-chatbot-thumb.jpg",
-      github: "https://github.com/nikhilbindal/nexus-chatbot",
+      imageUrl: ChatbotImage,
+      github: "https://github.com/NikhilOO7/nexusChatbot",
       demo: "https://nexus-demo.com",
       achievements: [
         "Reduced average query handling time by 45% through advanced NLP techniques for intent recognition",

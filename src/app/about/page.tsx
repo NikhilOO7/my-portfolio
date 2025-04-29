@@ -70,7 +70,7 @@ export default function About() {
                     <FaLinkedin className="mr-2" /> LinkedIn
                   </Button>
                 </Link>
-                <Link href="https://github.com/nikhilbindal" target="_blank" rel="noopener noreferrer">
+                <Link href="https://github.com/NikhilOO7" target="_blank" rel="noopener noreferrer">
                   <Button variant="outline" size="sm" className="flex items-center">
                     <FaGithub className="mr-2" /> GitHub
                   </Button>
