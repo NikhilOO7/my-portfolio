@@ -2,6 +2,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Music, Play, Pause, SkipForward, SkipBack, Volume2, VolumeX, X, Plus, Trash2, ExternalLink } from 'lucide-react';
+import IronMan3 from '@/assets/images/ironman3.jpg';
+import IronMan3Quote from '@/assets/images/ironman3-quote.jpg';
 
 interface MusicPlayerProps {
   onClose: () => void;
@@ -53,19 +55,26 @@ export default function EnhancedMusicPlayer({ onClose }: MusicPlayerProps) {
     // Default tracks
     return [
       { 
+        name: 'Iron Man 3 Theme', 
+        src: IronMan3,
+        artist: 'J.A.R.V.I.S. Audio',
+        type: 'local',
+        color: '#00d4ff'
+      },
+      { 
+        name: 'My qoute', 
+        src: IronMan3Quote,
+        artist: 'J.A.R.V.I.S. Audio',
+        type: 'local',
+        color: '#00d4ff'
+      },
+      { 
         name: 'Lofi Study', 
         artist: 'Lofi Girl',
         src: 'https://www.youtube.com/watch?v=jfKfPfyJRdk',
         youtubeId: 'jfKfPfyJRdk',
         type: 'youtube',
         color: '#7C3AED'
-      },
-      { 
-        name: 'Ambient Pulse', 
-        src: '/audio/ambient-pulse.mp3',
-        artist: 'J.A.R.V.I.S. Audio',
-        type: 'local',
-        color: '#00d4ff'
       },
       { 
         name: 'Chill Work Music', 
