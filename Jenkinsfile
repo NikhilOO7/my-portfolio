@@ -8,6 +8,9 @@ pipeline {
         APP_NAME = 'my-portfolio'
         APP_DIR = "/home/deployer/applications/${APP_NAME}"
         BACKEND_APP_NAME = 'my-portfolio-backend'
+        // Use Jenkins credentials for sensitive values
+        OPENAI_API_KEY = credentials('openai-api-key')
+        EMAIL_APP_PASSWORD = credentials('email-app-password')
     }
 
     stages {
@@ -29,6 +32,16 @@ pipeline {
 
         stage('Build') {
             steps {
+                script {
+                    // Create .env.local file for build
+                    sh """
+                    echo "OPENAI_API_KEY=dummy-value-for-build" > .env.local
+                    echo "EMAIL_APP_PASSWORD=dummy-value-for-build" >> .env.local
+                    echo "EMAIL_USER=bindalnikhil09@gmail.com" >> .env.local
+                    echo "EMAIL_TO=nikhil.bindal@outlook.com" >> .env.local
+                    """
+                }
+                
                 nodejs(nodeJSInstallationName: "${NODE_VERSION}") {
                     sh 'npm run build'
                 }
@@ -68,6 +81,13 @@ pipeline {
                             mkdir -p ${APP_DIR}
                             tar -xzf /home/deployer/temp/${APP_NAME}.tar.gz -C ${APP_DIR}
                             cd ${APP_DIR}
+                            
+                            # Create proper .env.local file on server
+                            echo "OPENAI_API_KEY=${OPENAI_API_KEY}" > .env.local
+                            echo "EMAIL_APP_PASSWORD=${EMAIL_APP_PASSWORD}" >> .env.local
+                            echo "EMAIL_USER=bindalnikhil09@gmail.com" >> .env.local
+                            echo "EMAIL_TO=nikhil.bindal@outlook.com" >> .env.local
+                            
                             npm install --production
                             
                             # Setup PM2 if not already installed

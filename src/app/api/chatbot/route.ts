@@ -4,7 +4,7 @@ import OpenAI from 'openai';
 
 // Initialize OpenAI client
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY, // Add this to your .env.local
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 // Portfolio information for context
@@ -48,13 +48,13 @@ Buy Me a Coffee: https://www.buymeacoffee.com/nikhil007
 // Function to generate AI response
 async function generateAIResponse(userMessage: string): Promise<string> {
   try {
-    if (!process.env.OPENAI_API_KEY) {
-      // Fallback if no API key is set
+    // Use fallback if no API key is set
+    if (!openai) {
       return fallbackResponse(userMessage);
     }
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo", // You can upgrade to gpt-4 for better results
+      model: "gpt-3.5-turbo",
       messages: [
         {
           role: "system",
