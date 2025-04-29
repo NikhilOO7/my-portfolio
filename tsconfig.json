@@ -25,14 +25,15 @@
     },
     "ts-node": {
         "esm": true,
-        "experimentalSpecifierResolution": "node" // Often needed with ESM
+        "experimentalSpecifierResolution": "node"
     },
     "include": [
         "next-env.d.ts",
         "**/*.ts",
         "**/*.tsx",
         ".next/types/**/*.ts",
-        "src/backend/**/*"
+        "src/backend/**/*",
+        "src/types/**/*.d.ts"  // Add this line to include custom type declarations
     ],
     "exclude": ["node_modules"]
 }

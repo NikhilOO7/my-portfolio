@@ -2,8 +2,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Music, Play, Pause, SkipForward, SkipBack, Volume2, VolumeX, X, Plus, Trash2, ExternalLink } from 'lucide-react';
-import IronMan3 from '@/assets/audio/IronMan3.mp3';
-import IronMan3Quote from '@/assets/audio/ironman3-quote.mp3';
 
 interface MusicPlayerProps {
   onClose: () => void;
@@ -17,6 +15,9 @@ interface Track {
   src: string;
   youtubeId?: string;
 }
+
+const IronMan3 ='/audio/ironman3.mp3';
+const IronMan3Quote = '/audio/ironman3-quote.mp3';
 
 // Utility function to extract YouTube ID from URL
 const getYoutubeId = (url: string): string | null => {
@@ -38,17 +39,58 @@ export default function EnhancedMusicPlayer({ onClose }: MusicPlayerProps) {
   
   const audioRef = useRef<HTMLAudioElement>(null);
   const progressIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    // Debug audio file existence
+    console.log("Checking audio files:");
+    
+    // Create a temporary audio element to test loading
+    const testAudio1 = new Audio('/audio/ironman3.mp3');
+    testAudio1.addEventListener('canplaythrough', () => {
+      console.log("✅ ironman3.mp3 loaded successfully");
+    });
+    testAudio1.addEventListener('error', (e) => {
+      if (e?.target instanceof HTMLAudioElement) {
+        console.error("❌ ironman3.mp3 error:", e.target.error);
+      }
+    });
+    
+    const testAudio2 = new Audio('/audio/ironman3-quote.mp3');
+    testAudio2.addEventListener('canplaythrough', () => {
+      console.log("✅ ironman3-quote.mp3 loaded successfully");
+    });
+    testAudio2.addEventListener('error', (e) => {
+      if (e?.target instanceof HTMLAudioElement) {
+        console.error("❌ ironman3-quote.mp3 error:", e.target.error);
+      }
+    });
+    
+    // Prevent actual playback
+    testAudio1.volume = 0;
+    testAudio2.volume = 0;
+    
+    // Attempt to load
+    testAudio1.load();
+    testAudio2.load();
+    
+    return () => {
+      testAudio1.removeEventListener('canplaythrough', () => {});
+      testAudio1.removeEventListener('error', () => {});
+      testAudio2.removeEventListener('canplaythrough', () => {});
+      testAudio2.removeEventListener('error', () => {});
+    };
+  }, []);
   
   // Load tracks from localStorage or use defaults
   const [tracks, setTracks] = useState<Track[]>(() => {
     if (typeof window !== 'undefined') {
-      const savedTracks = localStorage.getItem('musicPlayerTracks');
-      if (savedTracks) {
-        try {
+      try {
+        const savedTracks = localStorage.getItem('musicPlayerTracks');
+        if (savedTracks) {
           return JSON.parse(savedTracks);
-        } catch (e) {
-          console.error('Error parsing saved tracks', e);
         }
+      } catch (e) {
+        console.error('Error parsing saved tracks', e);
       }
     }
     
@@ -56,14 +98,16 @@ export default function EnhancedMusicPlayer({ onClose }: MusicPlayerProps) {
     return [
       { 
         name: 'Iron Man 3 Theme', 
-        src: IronMan3,
+        // src: IronMan3,
+        src: '/audio/ironman3.mp3',
         artist: 'J.A.R.V.I.S. Audio',
         type: 'local',
         color: '#00d4ff'
       },
       { 
-        name: 'My qoute', 
-        src: IronMan3Quote,
+        name: 'My Quote', 
+        // src: IronMan3Quote,
+        src: '/audio/ironman3-quote.mp3',
         artist: 'J.A.R.V.I.S. Audio',
         type: 'local',
         color: '#00d4ff'
@@ -90,32 +134,38 @@ export default function EnhancedMusicPlayer({ onClose }: MusicPlayerProps) {
   // Save tracks to localStorage when updated
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      localStorage.setItem('musicPlayerTracks', JSON.stringify(tracks));
+      try {
+        localStorage.setItem('musicPlayerTracks', JSON.stringify(tracks));
+      } catch (e) {
+        console.error('Error saving tracks to localStorage', e);
+      }
     }
   }, [tracks]);
 
   useEffect(() => {
-    if (audioRef.current) {
-      const audio = audioRef.current;
-      
-      // Set up event listeners
-      audio.addEventListener('loadedmetadata', () => {
-        setDuration(audio.duration);
-      });
-      
-      audio.addEventListener('ended', handleNext);
-      
-      // Set initial volume
-      audio.volume = volume;
-      
-      return () => {
-        audio.removeEventListener('loadedmetadata', () => {});
-        audio.removeEventListener('ended', handleNext);
-        if (progressIntervalRef.current) {
-          clearInterval(progressIntervalRef.current);
-        }
-      };
-    }
+    if (!audioRef.current) return;
+    
+    const audio = audioRef.current;
+    
+    // Set up event listeners
+    const handleMetadata = () => {
+      setDuration(audio.duration);
+    };
+    
+    audio.addEventListener('loadedmetadata', handleMetadata);
+    audio.addEventListener('ended', handleNext);
+    
+    // Set initial volume
+    audio.volume = volume;
+    
+    // Cleanup
+    return () => {
+      audio.removeEventListener('loadedmetadata', handleMetadata);
+      audio.removeEventListener('ended', handleNext);
+      if (progressIntervalRef.current) {
+        clearInterval(progressIntervalRef.current);
+      }
+    };
   }, [currentTrack]);
 
   useEffect(() => {
@@ -125,10 +175,8 @@ export default function EnhancedMusicPlayer({ onClose }: MusicPlayerProps) {
           setProgress(audioRef.current.currentTime);
         }
       }, 100);
-    } else {
-      if (progressIntervalRef.current) {
-        clearInterval(progressIntervalRef.current);
-      }
+    } else if (progressIntervalRef.current) {
+      clearInterval(progressIntervalRef.current);
     }
     
     return () => {
@@ -142,7 +190,7 @@ export default function EnhancedMusicPlayer({ onClose }: MusicPlayerProps) {
     const track = tracks[currentTrack];
     
     if (track.type === 'youtube') {
-      // For YouTube tracks, open in a new tab (audio-only not directly supported)
+      // For YouTube tracks, open in a new tab
       window.open(`https://www.youtube.com/watch?v=${track.youtubeId}`, '_blank');
       return;
     }
@@ -151,7 +199,20 @@ export default function EnhancedMusicPlayer({ onClose }: MusicPlayerProps) {
       if (isPlaying) {
         audioRef.current.pause();
       } else {
-        audioRef.current.play();
+        // Handle play promise to avoid uncaught promise rejection
+        const playPromise = audioRef.current.play();
+        
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              // Playback started successfully
+            })
+            .catch(error => {
+              console.error("Play failed:", error);
+              // Auto-play prevented by browser
+              setIsPlaying(false);
+            });
+        }
       }
       setIsPlaying(!isPlaying);
     }
@@ -179,10 +240,17 @@ export default function EnhancedMusicPlayer({ onClose }: MusicPlayerProps) {
         audioRef.current.load();
         
         if (isPlaying) {
-          audioRef.current.play();
+          const playPromise = audioRef.current.play();
+          
+          if (playPromise !== undefined) {
+            playPromise.catch(error => {
+              console.error("Play failed when changing track:", error);
+              setIsPlaying(false);
+            });
+          }
         }
       } else {
-        // For YouTube tracks, we don't auto-play since we'll open in a new tab
+        // For YouTube tracks, we don't auto-play
         setIsPlaying(false);
       }
     }
@@ -308,7 +376,12 @@ export default function EnhancedMusicPlayer({ onClose }: MusicPlayerProps) {
         </button>
       </div>
       
-      <audio ref={audioRef} src={tracks[currentTrack].type === 'local' ? tracks[currentTrack].src : ''} />
+      <audio 
+        ref={audioRef} 
+        src={tracks[currentTrack].type === 'local' ? tracks[currentTrack].src : ''} 
+        preload="auto"
+        onError={(e) => console.error("Audio element error:", e)}
+      />
       
       <div className="px-4 py-5">
         {/* Track Info and Album Art */}
