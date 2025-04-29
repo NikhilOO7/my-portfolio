@@ -2,8 +2,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Music, Play, Pause, SkipForward, SkipBack, Volume2, VolumeX, X, Plus, Trash2, ExternalLink } from 'lucide-react';
-import IronMan3 from '@/assets/images/ironman3.jpg';
-import IronMan3Quote from '@/assets/images/ironman3-quote.jpg';
+import IronMan3 from '@/assets/audio/IronMan3.mp3';
+import IronMan3Quote from '@/assets/audio/ironman3-quote.mp3';
 
 interface MusicPlayerProps {
   onClose: () => void;
