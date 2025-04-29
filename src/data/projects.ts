@@ -27,7 +27,7 @@ export interface Project {
       techStack: ["React", "FastAPI", "Python", "AWS"],
       imageUrl: BlogGenImage,
       github: "https://github.com/NikhilOO7/ai-blog-generator",
-      demo: "https://blog-generator-demo.com",
+      // demo: "https://blog-generator-demo.com",
       achievements: [
         "Implemented real-time fine-tuning with RAG on dynamic datasets, enhancing content relevance and personalization",
         "Built custom FastAPI microservices for prompt engineering and model inference, serving responses via RESTful APIs",
@@ -44,7 +44,7 @@ export interface Project {
       techStack: ["React", "Node.js", "Python", "AWS"],
       imageUrl: ChatbotImage,
       github: "https://github.com/NikhilOO7/nexusChatbot",
-      demo: "https://nexus-demo.com",
+      // demo: "https://nexus-demo.com",
       achievements: [
         "Reduced average query handling time by 45% through advanced NLP techniques for intent recognition",
         "Orchestrated prompt templates, system instructions, and fallback logic using LangChain agents",
@@ -61,7 +61,7 @@ export interface Project {
       techStack: ["Python", "FastAPI", "AWS", "React"],
       imageUrl: FianceAnalyse,
       github: "https://github.com/NikhilOO7/financial-risk-analyzer",
-      demo: "https://risk-analyzer-demo.com",
+      // demo: "https://risk-analyzer-demo.com",
       achievements: [
         "Improved risk factor identification by 35% using fine-tuned RAG models",
         "Reduced report processing time by 50% through efficient AWS Lambda deployment",
@@ -78,7 +78,7 @@ export interface Project {
       techStack: ["React", "Node.js", "MongoDB", "AWS"],
       imageUrl: CollabHubImage,
       github: "https://github.com/NikhilOO7/collabhub",
-      demo: "https://collabhub-demo.com",
+      // demo: "https://collabhub-demo.com",
       achievements: [
         "Implemented WebRTC and Socket.IO for real-time communication and data synchronization",
         "Designed a responsive UI with React.js, Material-UI, and Apollo Client",
