@@ -11,6 +11,8 @@ pipeline {
         // Use Jenkins credentials for sensitive values
         OPENAI_API_KEY = credentials('openai-api-key')
         EMAIL_APP_PASSWORD = credentials('email-app-password')
+        // Add NODE_OPTIONS to increase memory allocation
+        NODE_OPTIONS = '--max-old-space-size=4096'
     }
 
     stages {
@@ -43,7 +45,8 @@ pipeline {
                 }
                 
                 nodejs(nodeJSInstallationName: "${NODE_VERSION}") {
-                    sh 'npm run build'
+                    // Ensure NODE_OPTIONS is properly set for the build
+                    sh 'export NODE_OPTIONS="--max-old-space-size=4096" && npm run build'
                 }
             }
         }
@@ -88,6 +91,8 @@ pipeline {
                             echo "EMAIL_USER=bindalnikhil09@gmail.com" >> .env.local
                             echo "EMAIL_TO=nikhil.bindal@outlook.com" >> .env.local
                             
+                            # Use increased memory for npm install too
+                            export NODE_OPTIONS="--max-old-space-size=4096"
                             npm install --production
                             
                             # Setup PM2 if not already installed
