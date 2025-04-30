@@ -2,7 +2,8 @@
 import { motion } from 'framer-motion';
 import Button from '@/components/Button';
 import InteractiveResume from '@/components/InteractiveResume';
-import { FaLinkedin, FaGithub, FaTwitter } from 'react-icons/fa';
+import { FaLinkedin, FaGithub } from 'react-icons/fa';
+import { FaXTwitter } from 'react-icons/fa6';
 import Link from 'next/link';
 import Image from 'next/image';
 import profileImage from '@/assets/images/nikhil.png';
@@ -75,9 +76,9 @@ export default function About() {
                     <FaGithub className="mr-2" /> GitHub
                   </Button>
                 </Link>
-                <Link href="https://twitter.com/nikhilbindal" target="_blank" rel="noopener noreferrer">
+                <Link href="https://x.com/NikhilBindal2" target="_blank" rel="noopener noreferrer">
                   <Button variant="outline" size="sm" className="flex items-center">
-                    <FaTwitter className="mr-2" /> Twitter
+                    <FaXTwitter className="mr-2" /> X
                   </Button>
                 </Link>
               </div>

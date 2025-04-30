@@ -73,7 +73,8 @@ export default function InteractiveResume() {
       description: [
         'Developed and maintained scalable web applications using ReactJS and Next.js, enhancing user engagement by 25%.',
         'Built and integrated secure RESTful APIs with Node.js, enabling seamless data flow and communication.',
-        'Developed AI-powered personalization engine for content recommendations, boosting engagement by 30%.'
+        'Developed AI-powered personalization engine for content recommendations, boosting engagement by 30%.',
+        'Initiated Agile-based tech reviews with cross-functional teams using JIRA, leading to a 20% improvement in development velocity and reduced handoff times.'
       ],
       skills: ['React', 'Next.js', 'Node.js', 'RESTful APIs', 'Spring Boot'],
       category: 'fullstack'
@@ -86,9 +87,10 @@ export default function InteractiveResume() {
       startDate: 'Jan 2019',
       endDate: 'Mar 2021',
       description: [
-        'Developed ERP-integrated financial automation modules using ReactJS and FastAPI, enabling real-time loan disbursals with sub-100ms API latency.',
+        'Developed ERP-integrated financial automation modules using ReactJS and Java Spring Boot, enabling real-time loan disbursals with sub-100ms API latency.',
         'Engineered a data ingestion and transformation layer using Python (Pandas, SQLAlchemy) to normalize raw financial statements into structured records in PostgreSQL, reducing reconciliation time by 60%.',
-        'Built a credit risk scoring pipeline using Scikit-learn and deployed it into production to evaluate high-volume transactions, resulting in a 35% improvement in bad-loan prediction accuracy.'
+        'Built a credit risk scoring pipeline using Scikit-learn and deployed it into production to evaluate high-volume transactions, resulting in a 35% improvement in bad-loan prediction accuracy.',
+        'Conducted code reviews and mentored junior developers, fostering a collaborative environment.'
       ],
       skills: ['Java', 'Spring Boot', 'React', 'FastAPI', 'MongoDB', 'AWS', 'Scikit-learn'],
       category: 'backend'
@@ -111,16 +113,16 @@ export default function InteractiveResume() {
   ];
   
   const education: Education[] = [
-    {
-      id: 'cumberlands',
-      degree: 'Master of Science',
-      field: 'Artificial Intelligence',
-      school: 'University of the Cumberlands',
-      location: 'Williamsburg, KY',
-      startDate: 'Aug 2024',
-      endDate: 'Present',
-      description: 'Currently pursuing advanced studies in AI with focus on deep learning, NLP, and computer vision.'
-    },
+    // {
+    //   id: 'cumberlands',
+    //   degree: 'Master of Science',
+    //   field: 'Artificial Intelligence',
+    //   school: 'University of the Cumberlands',
+    //   location: 'Williamsburg, KY',
+    //   startDate: 'Aug 2024',
+    //   endDate: 'Present',
+    //   description: 'Currently pursuing advanced studies in AI with focus on deep learning, NLP, and computer vision.'
+    // },
     {
       id: 'northeastern-edu',
       degree: 'Master of Science',
@@ -176,7 +178,7 @@ export default function InteractiveResume() {
             </Button>
           </div>
           
-          <Link href="/Nikhil_Bindal_Resume.pdf" target="_blank" rel="noopener noreferrer">
+          <Link href="/resume/Nikhil_Bindal_Resume.pdf" target="_blank" rel="noopener noreferrer">
             <Button variant="outline" size="sm" className="flex items-center">
               <Download className="w-4 h-4 mr-2" />
               Download PDF
