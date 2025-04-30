@@ -31,8 +31,8 @@ export default function BuyMeCoffeeButton({
   return (
     <motion.button
       onClick={handleClick}
-      className={`bg-[#FFDD00] hover:bg-[#FFDD00]/90 text-black font-semibold rounded-md 
-                 flex items-center justify-center gap-2 transition-all duration-300 
+      className={`bg-[#FFDD00] hover:bg-[#FFDD00]/90 text-black font-semibold 
+                 flex items-center justify-center gap-2 h-full transition-all duration-300 
                  shadow-md hover:shadow-lg ${getVariantClasses()} ${className}`}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
