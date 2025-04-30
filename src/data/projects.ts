@@ -19,21 +19,21 @@ export interface Project {
   
   export const projects: Project[] = [
     {
-      id: "ai-blog-generator",
-      title: "AI-Powered Blog Generator",
-      description: "AI-driven blog post and content generator using Llama 3.1 and RAG.",
-      longDescription: "Designed and developed a full-stack web application that automatically generates, edits, and publishes SEO-optimized blogs using LLMs (Llama 3.1 via Hugging Face). The system uses Retrieval-Augmented Generation (RAG) with FAISS vector database to produce contextually relevant content based on user-provided topics and outlines.",
-      tags: ["AI", "Content Generation", "LLM", "RAG"],
-      techStack: ["React", "FastAPI", "Python", "AWS"],
-      imageUrl: BlogGenImage,
-      github: "https://github.com/NikhilOO7/ai-blog-generator",
-      // demo: "https://blog-generator-demo.com",
+      id: "collabhub",
+      title: "CollabHub",
+      description: "Real-time team collaboration platform integrating chat, task management, and video conferencing.",
+      longDescription: "Developed a team collaboration platform with real-time chat, task management, and video conferencing features. Built with a microservices architecture to ensure scalability and reliability, the platform offers seamless integration between different collaboration tools in one unified interface.",
+      tags: ["Collaboration", "Real-time", "WebRTC", "SaaS"],
+      techStack: ["React", "Node.js", "MongoDB", "AWS"],
+      imageUrl: CollabHubImage,
+      github: "https://github.com/NikhilOO7/collabhub",
+      // demo: "https://collabhub-demo.com",
       achievements: [
-        "Implemented real-time fine-tuning with RAG on dynamic datasets, enhancing content relevance and personalization",
-        "Built custom FastAPI microservices for prompt engineering and model inference, serving responses via RESTful APIs",
-        "Created a ReactJS-based markdown editor with live preview and version history, improving editor productivity by 40%"
+        "Implemented WebRTC and Socket.IO for real-time communication and data synchronization",
+        "Designed a responsive UI with React.js, Material-UI, and Apollo Client",
+        "Built a scalable backend with Node.js, MongoDB, and GraphQL"
       ],
-      featured: true
+      featured: false
     },
     {
       id: "conversational-ai-chatbot",
@@ -53,6 +53,23 @@ export interface Project {
       featured: true
     },
     {
+      id: "ai-blog-generator",
+      title: "AI-Powered Blog Generator",
+      description: "AI-driven blog post and content generator using Llama 3.1 and RAG.",
+      longDescription: "Designed and developed a full-stack web application that automatically generates, edits, and publishes SEO-optimized blogs using LLMs (Llama 3.1 via Hugging Face). The system uses Retrieval-Augmented Generation (RAG) with FAISS vector database to produce contextually relevant content based on user-provided topics and outlines.",
+      tags: ["AI", "Content Generation", "LLM", "RAG"],
+      techStack: ["React", "FastAPI", "Python", "AWS"],
+      imageUrl: BlogGenImage,
+      github: "https://github.com/NikhilOO7/ai-blog-generator",
+      // demo: "https://blog-generator-demo.com",
+      achievements: [
+        "Implemented real-time fine-tuning with RAG on dynamic datasets, enhancing content relevance and personalization",
+        "Built custom FastAPI microservices for prompt engineering and model inference, serving responses via RESTful APIs",
+        "Created a ReactJS-based markdown editor with live preview and version history, improving editor productivity by 40%"
+      ],
+      featured: true
+    },
+    {
       id: "financial-risk-analyzer",
       title: "AI Financial Risk Analyzer",
       description: "AI-driven financial risk assessment platform analyzing SEC filings and earnings reports.",
@@ -68,23 +85,6 @@ export interface Project {
         "Enhanced investment decision-making accuracy through AI-driven insights"
       ],
       featured: true
-    },
-    {
-      id: "collabhub",
-      title: "CollabHub",
-      description: "Real-time team collaboration platform integrating chat, task management, and video conferencing.",
-      longDescription: "Developed a team collaboration platform with real-time chat, task management, and video conferencing features. Built with a microservices architecture to ensure scalability and reliability, the platform offers seamless integration between different collaboration tools in one unified interface.",
-      tags: ["Collaboration", "Real-time", "WebRTC", "SaaS"],
-      techStack: ["React", "Node.js", "MongoDB", "AWS"],
-      imageUrl: CollabHubImage,
-      github: "https://github.com/NikhilOO7/collabhub",
-      // demo: "https://collabhub-demo.com",
-      achievements: [
-        "Implemented WebRTC and Socket.IO for real-time communication and data synchronization",
-        "Designed a responsive UI with React.js, Material-UI, and Apollo Client",
-        "Built a scalable backend with Node.js, MongoDB, and GraphQL"
-      ],
-      featured: false
     },
     // {
     //   id: "loan-originating-system",
