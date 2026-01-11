@@ -106,7 +106,7 @@ export default function Writings() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4, ease: 'easeOut' }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-jarvis-blue-500 animate-pulse-glow leading-tight text-center"
+            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-jarvis-blue-500 leading-tight text-center"
           >
             Writings
           </motion.h1>

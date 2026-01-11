@@ -38,6 +38,25 @@
 }
 
 /* ✅ 4. Custom utilities and overrides */
+
+/* Fix for default active button states */
+.shadow-jarvis-glow {
+  box-shadow: 0 0 12px rgba(25, 118, 255, 0.5), 0 0 24px rgba(25, 118, 255, 0.3);
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(25, 118, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(25, 118, 255, 0.7);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
 .reactor {
   position: relative;
   width: 200px;

@@ -27,19 +27,19 @@ export default function MapComponent({ className = '' }: { className?: string })
           document.head.appendChild(link);
         }
         
-        // Boston coordinates
-        const bostonCoords: [number, number] = [42.3601, -71.0589];
-        
+        // San Francisco coordinates
+        const sanFranciscoCoords: [number, number] = [37.7749, -122.4194];
+
         // Check if map is already initialized
         if (!mapRef.current.classList.contains('leaflet-container')) {
-          const map = L.map(mapRef.current).setView(bostonCoords, 13);
-          
+          const map = L.map(mapRef.current).setView(sanFranciscoCoords, 13);
+
           // Add dark theme tile layer
           L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
             maxZoom: 19,
           }).addTo(map);
-          
+
           // Add custom marker
           const markerIcon = L.divIcon({
             className: 'custom-pin',
@@ -47,9 +47,9 @@ export default function MapComponent({ className = '' }: { className?: string })
             iconSize: [30, 30],
             iconAnchor: [15, 15],
           });
-          
-          L.marker(bostonCoords, { icon: markerIcon }).addTo(map)
-            .bindPopup("Nikhil Bindal<br>Boston, MA")
+
+          L.marker(sanFranciscoCoords, { icon: markerIcon }).addTo(map)
+            .bindPopup("Nikhil Bindal<br>San Francisco, CA")
             .openPopup();
           
           // Custom styles

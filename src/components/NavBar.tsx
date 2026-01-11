@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 const navItems = [
   { name: 'Home', href: '/' },
@@ -21,6 +22,14 @@ interface NavBarProps {
 
 export default function NavBar({ className }: NavBarProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+
+  const isActive = (href: string) => {
+    if (href === '/') {
+      return pathname === '/';
+    }
+    return pathname.startsWith(href);
+  };
 
   return (
     <motion.nav
@@ -31,14 +40,27 @@ export default function NavBar({ className }: NavBarProps) {
     >
       <div className="hidden sm:flex sm:space-x-8">
         {navItems.map((item) => (
-          <Link
+          <motion.div
             key={item.name}
-            href={item.href}
-            prefetch={true}
-            className="inline-flex items-center px-1 pt-1 text-sm font-display text-white hover:text-jarvis-blue-500 hover:animate-pulse-glow"
+            animate={
+              isActive(item.href)
+                ? { boxShadow: '0 0 10px rgba(25, 118, 255, 0.3), 0 0 20px rgba(0, 212, 255, 0.3)' }
+                : {}
+            }
+            transition={{ duration: 2, repeat: Infinity, repeatType: 'reverse' }}
           >
-            {item.name}
-          </Link>
+            <Link
+              href={item.href}
+              prefetch={true}
+              className={`inline-flex items-center px-3 py-2 rounded text-sm font-display transition-colors ${
+                isActive(item.href)
+                  ? 'text-jarvis-blue-500 bg-jarvis-blue-500/10'
+                  : 'text-white hover:text-jarvis-blue-500 hover:animate-pulse-glow'
+              }`}
+            >
+              {item.name}
+            </Link>
+          </motion.div>
         ))}
       </div>
       <div className="sm:hidden">
@@ -66,7 +88,11 @@ export default function NavBar({ className }: NavBarProps) {
                 key={item.name}
                 href={item.href}
                 prefetch={true}
-                className="block pl-3 pr-4 py-2 text-base font-display text-white hover:text-jarvis-blue-500 hover:bg-jarvis-dark-400"
+                className={`block pl-3 pr-4 py-2 text-base font-display transition-colors ${
+                  isActive(item.href)
+                    ? 'text-jarvis-blue-500 bg-jarvis-blue-500/10 border-l-4 border-jarvis-blue-500'
+                    : 'text-white hover:text-jarvis-blue-500 hover:bg-jarvis-dark-400'
+                }`}
                 onClick={() => setIsOpen(false)}
               >
                 {item.name}

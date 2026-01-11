@@ -49,18 +49,35 @@ export default function InteractiveResume() {
   
   const experiences: Experience[] = [
     {
+      id: 'ai-consultant',
+      title: 'AI Solutions Consultant — Backend & AI Infrastructure',
+      company: 'Independent',
+      location: 'San Francisco, CA',
+      startDate: 'Sep 2024',
+      endDate: 'Present',
+      description: [
+        'Architected a voice-based document intelligence platform using WebRTC, LiveKit, FastAPI and PostgreSQL; implemented a multi-agent RAG pipeline with CrewAI and LlamaIndex that improved search relevance by 40%, supported 1,000+ concurrent sessions with sub-50 ms latency and 95%+ transcription accuracy.',
+        'Designed multi-agent LLM reasoning pipelines (CrewAI + LlamaIndex) with a three-tier RAG approach (local/document/global embeddings) powering semantic question generation and context-aware inference.',
+        'Built continuous streaming infrastructure for STT/TTS (Deepgram Nova-3, Cartesia Sonic) and model inference in production with real-time WebRTC voice UI.',
+        'Led end-to-end solution from prototyping to production on GCP, leveraging Docker, Kubernetes, Qdrant vector database, and introduced comprehensive monitoring (Prometheus/Grafana) and CI/CD pipelines; collaborated with clients to prioritize features and mentored junior engineers in both front- and back-end best practices.'
+      ],
+      skills: ['Python', 'FastAPI', 'Django', 'PostgreSQL', 'Redis', 'WebRTC', 'LiveKit', 'CrewAI', 'LlamaIndex', 'Qdrant', 'Kubernetes', 'GCP', 'Deepgram'],
+      category: 'ai'
+    },
+    {
       id: 'northeastern',
-      title: 'Full Stack Developer',
+      title: 'Full-Stack + AI Developer',
       company: 'Northeastern University',
       location: 'Boston, MA',
-      startDate: 'May 2023',
-      endDate: 'Sep 2023',
+      startDate: 'Feb 2023',
+      endDate: 'Dec 2023',
       description: [
-        'Built responsive web components using ReactJS for a bioengineering research portal, improving accessibility compliance.',
-        'Developed LLM-driven chatbot for Natural Language to SQL query generation, enabling researchers to interact with protein databases.',
-        'Built and deployed FastAPI-based microservices for serving AI models on GCP App Engine with auto-scaling.'
+        'Designed a FastAPI + PostgreSQL pipeline enabling semantic search across 10K+ biomedical articles; integrated vector embeddings and search scoring to surface relevant literature for biomedical research.',
+        'Built AWS Batch cloud pipeline to execute large-scale simulations; automated job orchestration and resource provisioning, reducing compute costs by 40%.',
+        'Created React + D3.js visualization tools and TensorFlow CNN classifiers for glycan research analysis.',
+        'Developed a tactile graphics generator and screen-reader plugins to improve STEM accessibility, leveraging React and OpenCV.'
       ],
-      skills: ['React', 'FastAPI', 'Python', 'LLMs', 'GCP', 'Docker'],
+      skills: ['React', 'FastAPI', 'Python', 'PostgreSQL', 'AWS Batch', 'D3.js', 'TensorFlow', 'OpenCV', 'TypeScript', 'Docker'],
       category: 'fullstack'
     },
     {
@@ -71,28 +88,28 @@ export default function InteractiveResume() {
       startDate: 'Apr 2021',
       endDate: 'Jul 2022',
       description: [
-        'Developed and maintained scalable web applications using ReactJS and Next.js, enhancing user engagement by 25%.',
-        'Built and integrated secure RESTful APIs with Node.js, enabling seamless data flow and communication.',
-        'Developed AI-powered personalization engine for content recommendations, boosting engagement by 30%.',
-        'Initiated Agile-based tech reviews with cross-functional teams using JIRA, leading to a 20% improvement in development velocity and reduced handoff times.'
+        'Scaled backend services (Spring Boot + Redis) to handle 8.4M daily requests and supported 120K+ subscribers, contributing to $150M+ annual revenue for the TOI+ subscription platform.',
+        'Designed a Kafka-based personalization and recommendations pipeline that delivered personalized news feeds; achieved 9.7% CTR increase for premium users.',
+        'Led migration of 70+ city sections into React micro-frontends, improving page load times and raising Lighthouse performance scores to 92/100.',
+        'Containerized services using Docker and deployed to AWS EKS, reducing infrastructure costs by 35% and simplifying deployments.'
       ],
-      skills: ['React', 'Next.js', 'Node.js', 'RESTful APIs', 'Spring Boot'],
-      category: 'fullstack'
+      skills: ['Spring Boot', 'Java', 'Node.js', 'Redis', 'Kafka', 'React', 'Docker', 'Kubernetes', 'AWS EKS', 'Jenkins'],
+      category: 'backend'
     },
     {
       id: 'progcap',
-      title: 'Software Engineer',
-      company: 'Progcap',
+      title: 'Founding Software Engineer',
+      company: 'Progcap (Fintech)',
       location: 'New Delhi, India',
       startDate: 'Jan 2019',
       endDate: 'Mar 2021',
       description: [
-        'Developed ERP-integrated financial automation modules using ReactJS and Java Spring Boot, enabling real-time loan disbursals with sub-100ms API latency.',
-        'Engineered a data ingestion and transformation layer using Python (Pandas, SQLAlchemy) to normalize raw financial statements into structured records in PostgreSQL, reducing reconciliation time by 60%.',
-        'Built a credit risk scoring pipeline using Scikit-learn and deployed it into production to evaluate high-volume transactions, resulting in a 35% improvement in bad-loan prediction accuracy.',
-        'Conducted code reviews and mentored junior developers, fostering a collaborative environment.'
+        'Designed and built Node.js/Express microservices for real-time loan underwriting; reduced latency from 8.7s to 890ms through caching and optimized database queries.',
+        'Implemented a Kafka event-driven architecture processing 22K transactions per second with exactly-once semantics to ensure financial integrity.',
+        'Developed credit scoring ML models (XGBoost) that decreased false negatives by 19%, enabling smarter lending decisions.',
+        'Supported product growth to ₹9,800 Cr+ lending volume, helping secure Series B funding (US$25M).'
       ],
-      skills: ['Java', 'Spring Boot', 'React', 'FastAPI', 'MongoDB', 'AWS', 'Scikit-learn'],
+      skills: ['Node.js', 'Express', 'Kafka', 'MongoDB', 'Redis', 'XGBoost', 'AWS ECS', 'Python'],
       category: 'backend'
     },
     {
@@ -103,45 +120,45 @@ export default function InteractiveResume() {
       startDate: 'Aug 2017',
       endDate: 'May 2018',
       description: [
-        'Developed two microservices-based full-stack applications using ReactJS and Node.js for streamlined motor insurance claims processing.',
-        'Built a rule-based vehicle inspection engine in Python for auto-validating image metadata and geotags, reducing manual claim verification efforts by 50%.',
-        'Orchestrated deployments using GitLab CI, Docker, and Terraform, enabling repeatable, scalable builds across development and staging environments.'
+        'Built an OCR-based document verification system using Tesseract.js and Python APIs, achieving 92%+ accuracy for identity verification.',
+        'Developed a React Native offline-first inspection app used for 50K+ monthly site inspections; reduced inspection time from 45 minutes to 22 minutes through local caching and sync logic.',
+        'Created a React.js + Django claims platform that cut insurance claims processing time by 60%.'
       ],
-      skills: ['React', 'Node.js', 'Python', 'Docker', 'GitLab CI', 'Terraform'],
+      skills: ['React Native', 'React', 'Django', 'Python', 'Tesseract.js', 'PostgreSQL', 'Redux', 'REST APIs'],
       category: 'fullstack'
     }
   ];
   
   const education: Education[] = [
-    // {
-    //   id: 'cumberlands',
-    //   degree: 'Master of Science',
-    //   field: 'Artificial Intelligence',
-    //   school: 'University of the Cumberlands',
-    //   location: 'Williamsburg, KY',
-    //   startDate: 'Aug 2024',
-    //   endDate: 'Present',
-    //   description: 'Currently pursuing advanced studies in AI with focus on deep learning, NLP, and computer vision.'
-    // },
+    {
+      id: 'cumberlands',
+      degree: 'Master of Science',
+      field: 'Artificial Intelligence',
+      school: 'University of the Cumberlands',
+      location: 'Williamsburg, KY',
+      startDate: '2024',
+      endDate: '2025',
+      description: 'Courses: Deep Learning, Natural Language Processing, Generative AI & LLMs, Ethics in AI, Data Visualization.'
+    },
     {
       id: 'northeastern-edu',
       degree: 'Master of Science',
       field: 'Information Systems',
       school: 'Northeastern University',
       location: 'Boston, MA',
-      startDate: 'Sep 2022',
-      endDate: 'Apr 2024',
-      description: 'Specialized in AI applications in information systems, data analytics, and cloud computing.'
+      startDate: '2022',
+      endDate: '2024',
+      description: 'Courses: Database Design, Algorithms, Cloud Computing, Web Design & Development, Data Science, Research Methods in AI.'
     },
     {
         id: 'kurukshetra',
         degree: 'Bachelor of Technology',
-        field: 'Computer Science',
+        field: 'Computer Science & Engineering',
         school: 'Kurukshetra University',
         location: 'Kurukshetra, India',
-        startDate: 'Aug 2012',
-        endDate: 'Jun 2016',
-        description: 'Completed undergraduate studies with focus on algorithms, data structures, and software engineering principles.'
+        startDate: '2012',
+        endDate: '2016',
+        description: 'Courses: Data Structures & Algorithms, Computer Networks, Discrete Mathematics, Object-Oriented Design.'
       }
     ];
     
@@ -162,7 +179,7 @@ export default function InteractiveResume() {
               variant={activeTab === 'experience' ? 'primary' : 'outline'}
               size="sm"
               onClick={() => setActiveTab('experience')}
-              className="flex items-center"
+              className={activeTab === 'experience' ? 'flex items-center shadow-jarvis-glow animate-pulse-glow' : 'flex items-center'}
             >
               <Briefcase className="w-4 h-4 mr-2" />
               Experience
@@ -171,14 +188,14 @@ export default function InteractiveResume() {
               variant={activeTab === 'education' ? 'primary' : 'outline'}
               size="sm"
               onClick={() => setActiveTab('education')}
-              className="flex items-center"
+              className={activeTab === 'education' ? 'flex items-center shadow-jarvis-glow animate-pulse-glow' : 'flex items-center'}
             >
               <GraduationCap className="w-4 h-4 mr-2" />
               Education
             </Button>
           </div>
           
-          <Link href="/resume/Nikhil_Bindal_Resume.pdf" target="_blank" rel="noopener noreferrer">
+          <Link href="/resume/Nikhil Bindal Resume.pdf" target="_blank" rel="noopener noreferrer">
             <Button variant="outline" size="sm" className="flex items-center">
               <Download className="w-4 h-4 mr-2" />
               Download PDF
@@ -199,6 +216,7 @@ export default function InteractiveResume() {
                   variant={activeFilter === option.id ? 'primary' : 'outline'}
                   size="sm"
                   onClick={() => setActiveFilter(option.id)}
+                  className={activeFilter === option.id ? 'shadow-jarvis-glow animate-pulse-glow' : ''}
                 >
                   {option.label}
                 </Button>
@@ -234,9 +252,12 @@ export default function InteractiveResume() {
                       </div>
                     </div>
                     
-                    <ul className="list-disc list-inside text-gray-300 space-y-2 mb-4">
+                    <ul className="text-gray-300 space-y-2 mb-4">
                       {exp.description.map((item, i) => (
-                        <li key={i} className="text-sm">{item}</li>
+                        <li key={i} className="text-sm flex">
+                          <span className="mr-2 text-jarvis-blue-400 flex-shrink-0">•</span>
+                          <span className="flex-1">{item}</span>
+                        </li>
                       ))}
                     </ul>
                     

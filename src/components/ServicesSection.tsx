@@ -50,7 +50,7 @@ export default function EnhancedServicesSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.8, delay: 0.4, ease: 'easeOut' }}
-          className="text-4xl sm:text-5xl font-bold text-jarvis-blue-500 animate-pulse-glow leading-tight text-center mb-16"
+          className="text-4xl sm:text-5xl font-bold text-jarvis-blue-500 leading-tight text-center mb-16"
         >
           Services I Offer
         </motion.h2>

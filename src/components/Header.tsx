@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Clock, Menu, X } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 const navItems = [
   { name: 'Home', href: '/' },
@@ -17,6 +18,14 @@ const navItems = [
 export default function Header() {
   const [time, setTime] = useState('');
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+
+  const isActive = (href: string) => {
+    if (href === '/') {
+      return pathname === '/';
+    }
+    return pathname.startsWith(href);
+  };
 
   useEffect(() => {
     const updateTime = () => {
@@ -24,7 +33,7 @@ export default function Header() {
       try {
         setTime(
           now.toLocaleTimeString('en-US', {
-            timeZone: 'America/New_York',
+            timeZone: 'America/Los_Angeles',
             hour12: false,
             hour: '2-digit',
             minute: '2-digit',
@@ -61,10 +70,10 @@ export default function Header() {
           <span
             className="text-xs sm:text-sm text-gray-300 flex items-center flex-shrink-0"
             style={{ whiteSpace: 'nowrap', minWidth: '160px' }}
-            title="Current Time in Boston, MA"
+            title="Current Time in San Francisco, CA"
           >
             <Clock className="w-3 h-3 sm:w-4 sm:h-4 mr-1 text-jarvis-blue-500" />
-            Boston, MA | {time}
+            San Francisco, CA | {time}
           </span>
           <span className="hidden md:inline-flex text-xs sm:text-sm text-gray-300 items-center flex-shrink-0">
             <span className="w-2 h-2 bg-green-500 rounded-full mr-1 animate-pulse"></span>
@@ -77,7 +86,11 @@ export default function Header() {
               key={item.name}
               href={item.href}
               prefetch={true}
-              className="inline-flex items-center px-1 pt-1 text-sm font-display text-white hover:text-jarvis-blue-500 hover:animate-pulse-glow"
+              className={`inline-flex items-center px-1 pt-1 text-sm font-display transition-colors ${
+                isActive(item.href)
+                  ? 'text-jarvis-blue-500 font-bold'
+                  : 'text-white hover:text-jarvis-blue-500 hover:animate-pulse-glow'
+              }`}
             >
               {item.name}
             </Link>
@@ -109,7 +122,11 @@ export default function Header() {
                 key={item.name}
                 href={item.href}
                 prefetch={true}
-                className="block pl-3 pr-4 py-2 text-base font-display text-white hover:text-jarvis-blue-500 hover:bg-jarvis-dark-400"
+                className={`block pl-3 pr-4 py-2 text-base font-display transition-colors ${
+                  isActive(item.href)
+                    ? 'text-jarvis-blue-500 font-bold bg-jarvis-blue-500/10 border-l-4 border-jarvis-blue-500'
+                    : 'text-white hover:text-jarvis-blue-500 hover:bg-jarvis-dark-400'
+                }`}
                 onClick={() => setIsOpen(false)}
               >
                 {item.name}

@@ -22,7 +22,7 @@ export default function About() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4, ease: 'easeOut' }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-jarvis-blue-500 animate-pulse-glow leading-tight text-center"
+            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-jarvis-blue-500 leading-tight text-center"
           >
             About Me
           </motion.h1>
@@ -53,16 +53,19 @@ export default function About() {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="flex-1"
             >
-              <h2 className="text-2xl font-display text-jarvis-blue-400 mb-4">Software Engineer & AI/ML Practitioner</h2>
+              <h2 className="text-2xl font-display text-jarvis-blue-400 mb-4">Backend Engineer & AI Infrastructure Specialist</h2>
               <p className="text-base sm:text-lg text-gray-300 mb-4">
-                Hi, I'm Nikhil – a passionate Software Engineer with a focus on building intelligent, high-performance applications. 
-                With over 5 years of experience across full-stack development and AI engineering, I specialize in creating solutions 
-                that blend cutting-edge technology with seamless user experiences.
+                Hi, I'm Nikhil – a Backend and AI engineer with 6+ years of experience building scalable, distributed
+                systems and AI-powered applications across fintech, media, research, and health tech.
+                I started in frontend/mobile development, later architected microservices and
+                event-driven systems, and now specialize in AI/ML integrations, RAG pipelines, and
+                cloud-native infrastructure.
               </p>
               <p className="text-base sm:text-lg text-gray-300 mb-6">
-                My expertise spans React, Next.js, Python, and AI technologies like LLMs and RAG. I'm deeply interested in 
-                leveraging artificial intelligence to solve real-world problems and create innovative applications that push 
-                the boundaries of what's possible.
+                Known for taking full ownership from concept to production,
+                delivering measurable outcomes, and collaborating with cross-functional teams. Strong expertise in
+                Python (FastAPI, Django), Node.js, distributed systems, PostgreSQL, AWS/GCP, WebRTC, and multi-agent AI architectures.
+                Passionate about solving complex, ambiguous technical problems with scalable systems and intelligent automation.
               </p>
               
               <div className="flex space-x-4">

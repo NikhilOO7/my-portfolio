@@ -75,7 +75,7 @@ export default function Home() {
           className="pt-24 pb-16"
         >
           <motion.h1
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-jarvis-blue-500 animate-pulse-glow leading-tight"
+            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-jarvis-blue-500 leading-tight"
           >
             Nikhil Bindal
           </motion.h1>
@@ -85,7 +85,7 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.6, ease: 'easeOut' }}
             className="text-xl sm:text-2xl lg:text-3xl font-light text-gray-200 mt-2"
           >
-            Software & AI Engineer
+            Backend Engineer
           </motion.h2>
           <motion.p
             initial={{ opacity: 0 }}

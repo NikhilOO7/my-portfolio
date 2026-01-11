@@ -8,9 +8,9 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        primary: 'bg-jarvis-blue-500 text-white hover:bg-jarvis-blue-600 animate-pulse-glow',
+        primary: 'bg-jarvis-blue-500 text-white hover:bg-jarvis-blue-600',
         secondary: 'bg-jarvis-accent-500 text-jarvis-dark-900 hover:bg-jarvis-accent-400',
-        outline: 'border border-jarvis-blue-500 text-jarvis-blue-500 hover:bg-jarvis-blue-500 hover:text-white hover:animate-pulse-glow',
+        outline: 'border border-jarvis-blue-500 text-jarvis-blue-500 hover:bg-jarvis-blue-500 hover:text-white',
       },
       size: {
         default: 'h-10 py-2 px-4',
