@@ -27,16 +27,17 @@ export async function POST(request: NextRequest) {
 
     // Create transport with Gmail and App Password
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      host: "smtp.office365.com",
+      service: "Outlook365",
       auth: {
-        user: process.env.EMAIL_USER || 'bindalnikhil09@gmail.com',
+        user: process.env.EMAIL_USER || 'nikhil.bindal@outlook.com',
         pass: process.env.EMAIL_APP_PASSWORD, // Use environment variable
       },
     });
 
     // Configure email
     const mailOptions = {
-      from: `"Portfolio Contact" <${process.env.EMAIL_USER || 'bindalnikhil09@gmail.com'}>`,
+      from: `"Portfolio Contact" <${process.env.EMAIL_USER || 'nikhil.bindal@outlook.com'}>`,
       to: process.env.EMAIL_TO || 'nikhil.bindal@outlook.com',
       replyTo: email,
       subject: `Portfolio Contact: ${subject || 'New message'}`,

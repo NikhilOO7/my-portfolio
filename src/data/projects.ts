@@ -65,7 +65,7 @@ export interface Project {
         "Implemented persistent memory and learning capabilities using vector databases",
         "Built tool integration framework for web search, code execution, and API interactions"
       ],
-      featured: true
+      featured: false
     },
     {
       id: "conversational-ai-chatbot",
@@ -81,7 +81,7 @@ export interface Project {
         "Integrated Google Gemini API for advanced conversational AI with context retention",
         "Implemented real-time sentiment detection and emotional intelligence in conversations"
       ],
-      featured: true
+      featured: false
     },
     {
       id: "trading-platform",
@@ -97,7 +97,7 @@ export interface Project {
         "Reduced API calls by 60% through intelligent caching and efficient data fetching",
         "Built responsive dashboards with live trading, portfolio management, and price alerts"
       ],
-      featured: true
+      featured: false
     },
     {
       id: "financial-data-anomaly-detection",

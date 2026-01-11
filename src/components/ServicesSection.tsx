@@ -1,6 +1,5 @@
 'use client';
 import { motion } from 'framer-motion';
-import { FaCode, FaRobot, FaLightbulb } from 'react-icons/fa';
 import { Code, BrainCircuit, Presentation } from 'lucide-react';
 import Link from 'next/link';
 import Button from './Button';
@@ -69,11 +68,9 @@ export default function EnhancedServicesSection() {
               }}
               className={`bg-gradient-to-b ${service.color} rounded-xl overflow-hidden shadow-jarvis-glow border ${service.highlight} p-8 flex flex-col`}
             >
-              <div className="flex justify-between items-start mb-6">
-                <div>
-                  <h3 className="text-2xl font-display text-white mb-1">{service.title}</h3>
-                </div>
-                <div className="rounded-full p-3 bg-jarvis-dark-600/50">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-2xl font-display text-white">{service.title}</h3>
+                <div className="rounded-full p-3 bg-jarvis-dark-600/50 flex-shrink-0">
                   {service.icon}
                 </div>
               </div>

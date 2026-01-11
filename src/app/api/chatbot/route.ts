@@ -1,49 +1,32 @@
 // src/app/api/chatbot/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
+import fs from 'fs';
+import path from 'path';
 
 // Initialize OpenAI client
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-// Portfolio information for context
-const portfolioInfo = `
+// Load portfolio information from knowledge base file
+let portfolioInfo = '';
+try {
+  const knowledgeBasePath = path.join(process.cwd(), 'chatbot-knowledge-base.md');
+  portfolioInfo = fs.readFileSync(knowledgeBasePath, 'utf-8');
+} catch (error) {
+  console.error('Error loading knowledge base:', error);
+  // Fallback to basic info if file can't be read
+  portfolioInfo = `
+PERSONAL INFORMATION:
 Name: Nikhil Bindal
-Role: Software Engineer & AI/ML Practitioner
-Location: Boston, Massachusetts
+Title: Backend Engineer & AI Infrastructure Specialist
+Location: San Francisco, CA
 
-EDUCATION:
-- Master of Science in Artificial Intelligence, University of the Cumberlands (2024-Present)
-- Master of Science in Information Systems, Northeastern University (2022-2024)
-- Bachelor of Technology in Computer Science, Kurukshetra University (2012-2016)
-
-SKILLS:
-Frontend: React, Next.js, JavaScript, TypeScript
-Backend: Node.js, FastAPI, Python, Java, Spring Boot, GraphQL
-Databases: MongoDB, PostgreSQL
-AI/ML: Machine Learning, TensorFlow, LLMs & RAG, NLP
-Cloud & DevOps: AWS, GCP, Docker, Kubernetes
-
-EXPERIENCE:
-- Full Stack Developer at Northeastern University (May 2023 - Sep 2023): Built ReactJS components for research portal, developed LLM-driven chatbot for Natural Language to SQL queries, built FastAPI microservices for AI models on GCP.
-- Software Engineer at Times Internet (Apr 2021 - Jul 2022): Developed scalable web applications, built RESTful APIs, developed AI-powered personalization engine.
-- Software Engineer at Progcap (Jan 2019 - Mar 2021): Developed financial automation modules, engineered data transformation layer, built credit risk scoring pipeline.
-- Software Engineer at Livemedia (Aug 2017 - May 2018): Developed microservices-based applications, built rule-based vehicle inspection engine, orchestrated deployments.
-
-PROJECTS:
-1. AI-Powered Blog Generator: Blog content generator using Llama 3.1 and RAG. Built with React, FastAPI, Python, AWS.
-2. Nexus AI Chatbot: Enterprise-grade chatbot using GPT-4o for customer support. Built with React, Node.js, Python, AWS.
-3. AI Financial Risk Analyzer: Platform analyzing SEC filings and earnings reports. Built with Python, FastAPI, AWS, React.
-4. CollabHub: Real-time team collaboration platform with chat, task management, and video conferencing. Built with React, Node.js, MongoDB, AWS.
-
-CONTACT:
-Email: nikhil.bindal@outlook.com
-Phone: (857) 313-5445
-GitHub: https://github.com/NikhilOO7
-LinkedIn: https://linkedin.com/in/nikhil-bindal
-Buy Me a Coffee: https://www.buymeacoffee.com/nikhil007
+PROFESSIONAL SUMMARY:
+Backend and AI engineer with 6+ years of experience building scalable, distributed systems and AI-powered applications.
 `;
+}
 
 // Function to generate AI response
 async function generateAIResponse(userMessage: string): Promise<string> {
@@ -78,26 +61,77 @@ async function generateAIResponse(userMessage: string): Promise<string> {
   }
 }
 
-// Fallback response function using predefined rules
+// Enhanced fallback response function with comprehensive information
 function fallbackResponse(input: string): string {
   const lowercaseInput = input.toLowerCase();
-  
-  if (lowercaseInput.includes('skill') || lowercaseInput.includes('what can you do')) {
-    return 'Nikhil is proficient in React, Next.js, Node.js, Python, and AI technologies like LLMs and NLP. He has experience with cloud platforms including AWS and GCP, and is skilled in both frontend and backend development.';
-  } else if (lowercaseInput.includes('project')) {
-    return 'Nikhil has built several impressive projects including AI-Powered Blog Generator, Nexus AI Chatbot, and Financial Risk Analyzer. You can check them out on the Projects page or ask me for specific details about any of them!';
-  } else if (lowercaseInput.includes('experience') || lowercaseInput.includes('work')) {
-    return 'Nikhil has worked as a Full Stack Developer at Northeastern University, Software Engineer at Times Internet and Progcap, and more. His experience spans full stack development, AI implementation, and backend architecture.';
-  } else if (lowercaseInput.includes('education') || lowercaseInput.includes('study')) {
-    return 'Nikhil has a Master of Science in Information Systems from Northeastern University and is currently pursuing another Master\'s in Artificial Intelligence from University of the Cumberlands. He also holds a Bachelor of Technology in Computer Science from Kurukshetra University.';
-  } else if (lowercaseInput.includes('contact') || lowercaseInput.includes('hire') || lowercaseInput.includes('email')) {
-    return 'You can contact Nikhil at nikhil.bindal@outlook.com, call at (857) 313-5445, or use the contact form on the Contact page. He\'s based in Boston, Massachusetts.';
-  } else if (lowercaseInput.includes('buy me a coffee') || lowercaseInput.includes('donation') || lowercaseInput.includes('support')) {
-    return 'You can support Nikhil\'s work by visiting his Buy Me a Coffee page at https://www.buymeacoffee.com/nikhil007. Your support helps him continue creating projects and content!';
-  } else if (lowercaseInput.includes('hi') || lowercaseInput.includes('hello')) {
-    return 'Hey there! How can I help you learn about Nikhil today?';
-  } else {
-    return 'I can tell you about Nikhil\'s skills, projects, work experience, education, or how to contact him. What would you like to know?';
+
+  // Skills queries
+  if (lowercaseInput.includes('skill') || lowercaseInput.includes('technologies') || lowercaseInput.includes('tech stack')) {
+    if (lowercaseInput.includes('ai') || lowercaseInput.includes('ml') || lowercaseInput.includes('machine learning')) {
+      return 'Nikhil has extensive AI/ML expertise including PyTorch, TensorFlow, Scikit-learn, XGBoost, LangChain, LlamaIndex, CrewAI, GPT-4o, Google Gemini, and RAG systems. He has built multi-agent AI systems and voice AI platforms.';
+    } else if (lowercaseInput.includes('backend') || lowercaseInput.includes('api')) {
+      return 'Nikhil is highly skilled in backend development with Python (FastAPI, Django), Node.js, Java (Spring Boot), and TypeScript. He works with PostgreSQL, MongoDB, Redis, and Qdrant, and has built systems handling 8.4M daily requests.';
+    } else if (lowercaseInput.includes('cloud') || lowercaseInput.includes('devops')) {
+      return 'Nikhil has strong cloud and DevOps skills including AWS (EKS, Batch, Lambda), GCP, Docker, Kubernetes, Jenkins, Prometheus, and Grafana. He has reduced infrastructure costs by 35% through optimization.';
+    } else {
+      return 'Nikhil has 6+ years of experience with Backend (Python, Node.js, Java), AI/ML (PyTorch, LangChain, RAG systems), Cloud (AWS, GCP, Kubernetes), and Frontend (React, Next.js). He specializes in distributed systems and AI infrastructure.';
+    }
+  }
+
+  // Project queries
+  else if (lowercaseInput.includes('project')) {
+    if (lowercaseInput.includes('voice') || lowercaseInput.includes('document intelligence')) {
+      return 'Voice Document Intelligence Platform is Nikhil\'s most advanced project - a real-time voice-based platform with multi-agent RAG pipeline supporting 1,000+ concurrent sessions with sub-50ms latency and 95%+ transcription accuracy. Built with Python, FastAPI, WebRTC, LiveKit, and CrewAI.';
+    } else if (lowercaseInput.includes('knowledge graph') || lowercaseInput.includes('gaussian')) {
+      return 'Gaussian Splatting Knowledge Graph uses a 3-agent pipeline (Extractor → Resolver → Validator) with GPT-4o to ingest academic papers and construct queryable knowledge graphs. Built with PostgreSQL, Hono, and React Flow.';
+    } else if (lowercaseInput.includes('fraud') || lowercaseInput.includes('anomaly') || lowercaseInput.includes('financial')) {
+      return 'Anomaly Detection in Financial Data achieves 95%+ accuracy in fraud detection using Isolation Forest and One-Class SVM, processing 10K+ transactions per minute with interactive Plotly dashboards.';
+    } else {
+      return 'Nikhil has built 11 impressive projects including Voice Document Intelligence (1,000+ concurrent sessions), Gaussian Splatting Knowledge Graph (multi-agent LLM), Anomaly Detection (95%+ accuracy), Trading Platform (MERN stack), CollabHub, and more. Check the Projects page for details!';
+    }
+  }
+
+  // Experience queries
+  else if (lowercaseInput.includes('experience') || lowercaseInput.includes('work') || lowercaseInput.includes('job')) {
+    if (lowercaseInput.includes('times') || lowercaseInput.includes('internet')) {
+      return 'At Times Internet, Nikhil scaled backend services to handle 8.4M daily requests supporting 120K+ subscribers ($150M+ revenue). He built a Kafka-based personalization pipeline achieving 9.7% CTR increase and reduced infrastructure costs by 35%.';
+    } else if (lowercaseInput.includes('northeastern') || lowercaseInput.includes('university')) {
+      return 'At Northeastern University, Nikhil designed a FastAPI + PostgreSQL pipeline for semantic search across 10K+ biomedical articles, built AWS Batch pipeline reducing compute costs by 40%, and created React + D3.js visualization tools.';
+    } else if (lowercaseInput.includes('progcap') || lowercaseInput.includes('loan')) {
+      return 'At ProgCap, Nikhil built a Loan Originating System from scratch, cutting operational errors by 90% and engineering APIs with sub-100ms latency using Java Spring Boot and React.';
+    } else {
+      return 'Nikhil has 6+ years of experience as AI Solutions Consultant (current), Full-Stack + AI Developer at Northeastern, Software Engineer at Times Internet (8.4M requests/day), and ProgCap (90% error reduction). He has expertise across fintech, media, research, and health tech.';
+    }
+  }
+
+  // Education queries
+  else if (lowercaseInput.includes('education') || lowercaseInput.includes('study') || lowercaseInput.includes('degree') || lowercaseInput.includes('university')) {
+    return 'Nikhil holds a Master of Science in Information Systems from Northeastern University (2022-2023, GPA: 3.9/4.0) and a Bachelor of Technology in Computer Science from SRM Institute (2015-2019, GPA: 9.0/10.0). He studied courses in AI, cloud computing, web design, and data science.';
+  }
+
+  // Contact queries
+  else if (lowercaseInput.includes('contact') || lowercaseInput.includes('hire') || lowercaseInput.includes('email') || lowercaseInput.includes('reach')) {
+    return 'Nikhil is based in San Francisco, CA. You can reach him through the Contact form on this website, connect on LinkedIn (linkedin.com/in/nikhil-bindal), GitHub (github.com/NikhilOO7), or X (@NikhilBindal2). He offers consulting services in Backend, AI Solutions, and Technical Strategy.';
+  }
+
+  // Services queries
+  else if (lowercaseInput.includes('service') || lowercaseInput.includes('consulting') || lowercaseInput.includes('offer')) {
+    return 'Nikhil offers 3 main services: 1) Full-Stack Development (React, Next.js, Node.js, APIs), 2) AI Solutions (RAG systems, Multi-agent AI, Chatbots, ML models), and 3) Consulting & Strategy (Architecture design, AI/ML integration, System scalability). Visit the Services section for more details!';
+  }
+
+  // Achievement queries
+  else if (lowercaseInput.includes('achievement') || lowercaseInput.includes('metric') || lowercaseInput.includes('result')) {
+    return 'Key achievements: 1,000+ concurrent sessions with sub-50ms latency, 95%+ accuracy in fraud detection, 8.4M daily requests handled, $150M+ revenue contribution, 40% search improvement, 90% error reduction, 60% API call reduction, and 35% infrastructure cost savings.';
+  }
+
+  // Greeting
+  else if (lowercaseInput.includes('hi') || lowercaseInput.includes('hello') || lowercaseInput.includes('hey')) {
+    return 'Hello! I\'m JARVIS, Nikhil\'s AI assistant. I can tell you about his 6+ years of experience in Backend & AI engineering, 11 impressive projects, technical skills, work history, or how to get in touch. What would you like to know?';
+  }
+
+  // Default
+  else {
+    return 'I\'m here to help you learn about Nikhil Bindal! I can share details about his skills (Backend, AI/ML, Cloud), projects (Voice AI, Knowledge Graphs, Trading Platform), 6+ years of work experience (Times Internet, Northeastern, ProgCap), education (MS from Northeastern), or how to contact him. What interests you?';
   }
 }
 

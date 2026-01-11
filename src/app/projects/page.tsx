@@ -55,6 +55,7 @@ export default function Projects() {
                 variant={filter === category.id ? "primary" : "outline"}
                 size="sm"
                 onClick={() => setFilter(category.id)}
+                className={filter === category.id ? 'shadow-jarvis-glow animate-pulse-glow' : ''}
               >
                 {category.label}
               </Button>

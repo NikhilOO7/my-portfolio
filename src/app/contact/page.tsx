@@ -265,7 +265,7 @@ export default function Contact() {
                     <FaMapMarkerAlt className="w-5 h-5 text-jarvis-blue-500 mt-1 mr-3" />
                     <div>
                       <h3 className="text-lg font-display text-white">Location</h3>
-                      <p className="text-gray-300">Boston, Massachusetts, USA</p>
+                      <p className="text-gray-300">San Francisco, California, USA</p>
                     </div>
                   </div>
                 </div>
