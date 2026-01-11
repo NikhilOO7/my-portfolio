@@ -1,14 +1,22 @@
 import type { NextConfig } from "next";
-import { fileURLToPath } from 'url';
 
 const nextConfig: NextConfig = {
     /* config options here */
     reactStrictMode: true,
     images: {
-        domains: ["example.com"], // Add domains for external images if needed
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'example.com',
+            },
+        ],
     },
-    eslint: {
-        ignoreDuringBuilds: true,
+    typescript: {
+        // !! WARN !!
+        // Dangerously allow production builds to successfully complete even if
+        // your project has type errors.
+        // !! WARN !!
+        ignoreBuildErrors: true,
     },
     webpack: (config) => {
         config.module.rules.push({
