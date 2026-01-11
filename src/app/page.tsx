@@ -85,7 +85,7 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.6, ease: 'easeOut' }}
             className="text-xl sm:text-2xl lg:text-3xl font-light text-gray-200 mt-2"
           >
-            Backend Engineer
+            Full-Stack & AI Engineer
           </motion.h2>
           <motion.p
             initial={{ opacity: 0 }}

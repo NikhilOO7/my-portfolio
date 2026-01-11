@@ -20,11 +20,11 @@ try {
   portfolioInfo = `
 PERSONAL INFORMATION:
 Name: Nikhil Bindal
-Title: Backend Engineer & AI Infrastructure Specialist
+Title: Full-Stack Engineer & AI Infrastructure Specialist
 Location: San Francisco, CA
 
 PROFESSIONAL SUMMARY:
-Backend and AI engineer with 6+ years of experience building scalable, distributed systems and AI-powered applications.
+Full-Stack and AI engineer with 6+ years of experience building scalable, distributed systems and AI-powered applications.
 `;
 }
 

@@ -55,7 +55,7 @@ export default function About() {
             >
               <h2 className="text-2xl font-display text-jarvis-blue-400 mb-4">Backend Engineer & AI Infrastructure Specialist</h2>
               <p className="text-base sm:text-lg text-gray-300 mb-4">
-                Hi, I'm Nikhil – a Backend and AI engineer with 6+ years of experience building scalable, distributed
+                Hi, I'm Nikhil – a Full-stack and AI engineer with 6+ years of experience building scalable, distributed
                 systems and AI-powered applications across fintech, media, research, and health tech.
                 I started in frontend/mobile development, later architected microservices and
                 event-driven systems, and now specialize in AI/ML integrations, RAG pipelines, and
