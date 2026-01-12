@@ -1,16 +1,16 @@
 npm run build
 
 scp -i "~/Documents/Project Docs/myServerKeyPair.pem" -r .next \
-ubuntu@ec2-18-224-103-112.us-east-2.compute.amazonaws.com:/home/ubuntu/.next-new
+ubuntu@ec2-18-224-106-120.us-east-2.compute.amazonaws.com:/home/ubuntu/.next-new
 
 
 ssh -i "~/Documents/Project Docs/myServerKeyPair.pem" \
-ubuntu@ec2-18-224-103-112.us-east-2.compute.amazonaws.com
+ubuntu@ec2-18-224-106-120.us-east-2.compute.amazonaws.com
 
 # on EC2:
 sudo su - deployer
-rm -rf /home/deployer/applications/my-portfolio/.next
-cp -r /home/ubuntu/.next-new /home/deployer/applications/my-portfolio/.next
+sudo rm -rf /home/deployer/applications/my-portfolio/.next
+sudo cp -r /home/ubuntu/.next-new /home/deployer/applications/my-portfolio/.next
 
 
 cd /home/deployer/applications/my-portfolio
