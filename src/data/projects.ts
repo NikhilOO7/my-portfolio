@@ -2,6 +2,14 @@ import CollabHubImage from './../assets/images/collabhub.png';
 import ChatbotImage from './../assets/images/chatbot.png';
 import BlogGenImage from './../assets/images/blogGen.png';
 import FianceAnalyse from './../assets/images/financial-analyser.png';
+import VoiceDocIntelligenceImage from './../assets/images/voice-doc-intelligence.png';
+import GaussianImage from './../assets/images/Gaussian-splatting.png';
+import GennieImage from './../assets/images/gennie.png';
+import TradingImage from './../assets/images/trading.png';
+import AnomalyImage from './../assets/images/anomaly.png';
+import LLMBiasImage from './../assets/images/bias-analyser.png';
+import MLFeatureImage from './../assets/images/ml-feature-selection.png';
+import WeatherImage from './../assets/images/weather.png';
 
 export interface Project {
     id: string;
@@ -25,8 +33,8 @@ export interface Project {
       longDescription: "Architected a voice-based document intelligence platform using WebRTC, LiveKit, FastAPI and PostgreSQL; implemented a multi-agent RAG pipeline with CrewAI and LlamaIndex that improved search relevance by 40%, supported 1,000+ concurrent sessions with sub-50 ms latency and 95%+ transcription accuracy. Built continuous streaming infrastructure for STT/TTS (Deepgram Nova-3, Cartesia Sonic) and model inference with real-time WebRTC voice UI.",
       tags: ["AI", "Voice AI", "RAG", "Multi-Agent", "Real-time"],
       techStack: ["Python", "FastAPI", "PostgreSQL", "WebRTC", "LiveKit", "CrewAI", "LlamaIndex", "Qdrant", "Deepgram", "Kubernetes", "GCP"],
-      imageUrl: ChatbotImage,
-      github: "https://github.com/NikhilOO7/voice-document-intelligence",
+      imageUrl: VoiceDocIntelligenceImage,
+      github: "https://github.com/NikhilOO7/voice-doc-intelligence",
       achievements: [
         "Implemented multi-agent RAG pipeline with 40% improvement in search relevance",
         "Supported 1,000+ concurrent sessions with sub-50ms latency and 95%+ transcription accuracy",
@@ -42,8 +50,8 @@ export interface Project {
       longDescription: "Designed a full-stack multi-agent LLM system that ingests academic papers, extracts structured entities/relationships, and constructs a queryable knowledge graph using PostgreSQL, Hono, Drizzle ORM, and React Flow. Implemented a 3-agent pipeline (Extractor → Resolver → Validator) using GPT-4o with strict JSON schema outputs and provenance tracking across 40+ document chunks.",
       tags: ["AI Research", "Knowledge Graph", "Multi-Agent", "LLM"],
       techStack: ["PostgreSQL", "Hono", "Drizzle ORM", "React", "GPT-4o", "TypeScript"],
-      imageUrl: ChatbotImage,
-      github: "https://github.com/NikhilOO7/gaussian-splatting-kg",
+      imageUrl: GaussianImage,
+      github: "https://github.com/NikhilOO7/gaussian-splatting",
       achievements: [
         "Implemented 3-agent pipeline (Extractor → Resolver → Validator) using GPT-4o",
         "Built queryable knowledge graph with provenance tracking across 40+ document chunks",
@@ -74,8 +82,8 @@ export interface Project {
       longDescription: "Integrated Google Gemini API and sentiment detection into a React/FastAPI app; supported 500+ concurrent users with 40% lower latency, demonstrating ability to blend full-stack engineering with AI. The platform features real-time sentiment analysis, context-aware responses, and personalized conversation flows with emotional intelligence.",
       tags: ["LLM", "AI", "Real-time", "Full-Stack", "Sentiment Analysis"],
       techStack: ["React", "FastAPI", "Python", "Google Gemini", "WebSocket", "Redis", "PostgreSQL"],
-      imageUrl: ChatbotImage,
-      github: "https://github.com/NikhilOO7/conversational-ai-platform",
+      imageUrl: GennieImage,
+      github: "https://github.com/NikhilOO7/next-door-chatbot",
       achievements: [
         "Supported 500+ concurrent users with 40% lower latency through optimized WebSocket connections",
         "Integrated Google Gemini API for advanced conversational AI with context retention",
@@ -90,8 +98,8 @@ export interface Project {
       longDescription: "Developed a comprehensive trading platform using MERN stack with TypeScript, implementing GraphQL and WebSocket feeds for real-time stock data. The platform features responsive dashboards, portfolio management, real-time price alerts, and reduced API calls by 60% through efficient data fetching strategies and intelligent caching.",
       tags: ["Fintech", "Real-time", "Trading", "Full-Stack"],
       techStack: ["MongoDB", "Express", "React", "Node.js", "TypeScript", "GraphQL", "WebSocket", "Redis"],
-      imageUrl: FianceAnalyse,
-      github: "https://github.com/NikhilOO7/trading-platform",
+      imageUrl: TradingImage,
+      github: "https://github.com/NikhilOO7/zerodha-ai-trading-platform",
       achievements: [
         "Implemented GraphQL and WebSocket feeds for real-time stock data with sub-100ms latency",
         "Reduced API calls by 60% through intelligent caching and efficient data fetching",
@@ -106,8 +114,8 @@ export interface Project {
       longDescription: "Built fraud-detection pipeline using Isolation Forest and One-Class SVM; achieved 95%+ accuracy and visualised insights via Plotly dashboards. The system processes large volumes of financial transactions in real-time to detect anomalies, potential fraud patterns, and suspicious activities with comprehensive alerting and reporting.",
       tags: ["Fintech", "Machine Learning", "Fraud Detection", "Data Science"],
       techStack: ["Python", "Scikit-learn", "Pandas", "NumPy", "Plotly", "FastAPI", "PostgreSQL"],
-      imageUrl: FianceAnalyse,
-      github: "https://github.com/NikhilOO7/financial-anomaly-detection",
+      imageUrl: AnomalyImage,
+      github: "https://github.com/NikhilOO7/Anomaly-Detection-in-Financial-Data",
       achievements: [
         "Achieved 95%+ accuracy in fraud detection using ensemble ML models",
         "Built real-time anomaly detection pipeline processing 10K+ transactions per minute",
@@ -138,7 +146,7 @@ export interface Project {
       longDescription: "Developed a comprehensive bias detection and analysis tool for Large Language Models that evaluates outputs across gender, race, age, and other demographic dimensions. Uses statistical analysis, sentiment comparison, and semantic similarity to identify potential biases in LLM responses with detailed reporting and visualization.",
       tags: ["AI", "Ethics", "LLM", "Research", "Data Science"],
       techStack: ["Python", "PyTorch", "Transformers", "FastAPI", "React", "Plotly", "Pandas"],
-      imageUrl: ChatbotImage,
+      imageUrl: LLMBiasImage,
       github: "https://github.com/NikhilOO7/llm-bias-analyzer",
       achievements: [
         "Built multi-dimensional bias detection framework analyzing gender, race, and age biases",
@@ -170,8 +178,8 @@ export interface Project {
       longDescription: "Developed an automated machine learning pipeline that handles data preprocessing, cleaning, missing value imputation, outlier detection, and intelligent feature selection using multiple algorithms. Supports various data types and provides recommendations for optimal feature sets to improve model performance and reduce training time.",
       tags: ["Machine Learning", "Data Science", "Automation", "MLOps"],
       techStack: ["Python", "Scikit-learn", "Pandas", "NumPy", "XGBoost", "FastAPI", "Docker"],
-      imageUrl: BlogGenImage,
-      github: "https://github.com/NikhilOO7/ml-data-cleaning-feature-selection",
+      imageUrl: MLFeatureImage,
+      github: "hhttps://github.com/NikhilOO7/ML-Data-Cleaning-and-Feature-Selection",
       achievements: [
         "Built automated data cleaning pipeline handling missing values, outliers, and duplicates",
         "Implemented multiple feature selection algorithms (RFE, LASSO, Tree-based importance)",
@@ -186,7 +194,7 @@ export interface Project {
       longDescription: "Built a comprehensive weather application featuring real-time weather data, 7-day forecasts, severe weather alerts, and interactive visualizations. Includes location-based services, favorite locations, historical weather data comparison, and beautiful UI with animated weather conditions and responsive design across all devices.",
       tags: ["Full-Stack", "API Integration", "Real-time", "Mobile-Friendly"],
       techStack: ["React", "TypeScript", "Node.js", "OpenWeather API", "Chart.js", "Tailwind CSS"],
-      imageUrl: BlogGenImage,
+      imageUrl: WeatherImage,
       github: "https://github.com/NikhilOO7/weather-app",
       achievements: [
         "Integrated multiple weather APIs with fallback mechanisms for 99.9% uptime",
