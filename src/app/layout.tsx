@@ -12,7 +12,6 @@ import JarvisQuickMic from '@/components/JarvisQuickMic';
 import JarvisCommandPalette from '@/components/JarvisCommandPalette';
 import JarvisSubsystems from '@/components/JarvisSubsystems';
 import IronManHologram from '@/components/IronManHologram';
-import { ChatbotProvider } from '@/components/ChatbotContext';
 import { JarvisVoiceProvider } from '@/components/JarvisVoiceContext';
 import { JarvisSystemProvider } from '@/components/JarvisSystemContext';
 
@@ -29,7 +28,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ChatbotProvider>
         <JarvisSystemProvider>
         <JarvisVoiceProvider>
           <HUDTopBar />
@@ -54,7 +52,6 @@ export default function RootLayout({
           <JarvisCommandPalette />
         </JarvisVoiceProvider>
         </JarvisSystemProvider>
-        </ChatbotProvider>
       </body>
     </html>
   );
