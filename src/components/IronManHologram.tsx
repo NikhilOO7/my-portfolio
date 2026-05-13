@@ -86,7 +86,9 @@ export default function IronManHologram({
 
   return (
     <div
-      className={`fixed inset-0 z-0 pointer-events-none flex items-center justify-center overflow-hidden ${className}`}
+      // Sit below the persistent HUD chrome (HUDTopBar 28px + Header 56px = 84px)
+      // so the hologram's head doesn't disappear behind the top bar.
+      className={`fixed inset-0 pt-[84px] z-0 pointer-events-none flex items-center justify-center overflow-hidden ${className}`}
       aria-hidden
     >
       {/* Vertical scan band sweeping the figure */}

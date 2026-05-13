@@ -1,12 +1,21 @@
 'use client';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import Button from '@/components/Button';
-import { 
-  Briefcase, GraduationCap, Award, Filter, 
-  Download, ExternalLink, Calendar, MapPin
+import HUDFrame from '@/components/ui/HUDFrame';
+import {
+  Briefcase, GraduationCap, Filter,
+  Download, Calendar, MapPin,
 } from 'lucide-react';
 import Link from 'next/link';
+
+const MONO = 'font-mono uppercase tracking-[0.25em]';
+
+const CATEGORY_META: Record<string, { tier: string; accent: string; classification: string }> = {
+  ai: { tier: 'ALPHA', accent: '#a855f7', classification: 'AI Infrastructure' },
+  fullstack: { tier: 'BETA', accent: '#06b6d4', classification: 'Full-Stack Engineering' },
+  backend: { tier: 'BETA', accent: '#22c55e', classification: 'Distributed Backend' },
+  frontend: { tier: 'OPS', accent: '#00d4ff', classification: 'Frontend Engineering' },
+};
 
 interface SubRole {
   company: string;
@@ -201,192 +210,331 @@ export default function InteractiveResume() {
         transition={{ duration: 0.5 }}
         className="w-full"
       >
-        <div className="flex justify-between items-center mb-8">
-          <div className="flex space-x-2">
-            <Button
-              variant={activeTab === 'experience' ? 'primary' : 'outline'}
-              size="sm"
+        {/* JARVIS mode selector — tabs + export action */}
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
+          <div className="flex items-center gap-2">
+            <span className={`${MONO} text-[10px] text-jarvis-blue-300/55 mr-1 hidden sm:inline`}>▸ Mode</span>
+            <button
               onClick={() => setActiveTab('experience')}
-              className={activeTab === 'experience' ? 'flex items-center shadow-jarvis-glow animate-pulse-glow' : 'flex items-center'}
+              className={`${MONO} text-[10px] px-3 py-1.5 rounded-sm border transition-all inline-flex items-center gap-2`}
+              style={
+                activeTab === 'experience'
+                  ? {
+                      borderColor: '#00d4ff',
+                      backgroundColor: 'rgba(0, 212, 255, 0.18)',
+                      color: '#00d4ff',
+                      boxShadow: '0 0 12px rgba(0, 212, 255, 0.45), inset 0 0 12px rgba(0, 212, 255, 0.15)',
+                    }
+                  : {
+                      borderColor: 'rgba(0, 212, 255, 0.22)',
+                      color: 'rgba(203, 213, 225, 0.85)',
+                      backgroundColor: 'rgba(0, 212, 255, 0.04)',
+                    }
+              }
+              aria-pressed={activeTab === 'experience'}
             >
-              <Briefcase className="w-4 h-4 mr-2" />
-              Experience
-            </Button>
-            <Button
-              variant={activeTab === 'education' ? 'primary' : 'outline'}
-              size="sm"
+              <Briefcase className="w-3 h-3" />
+              <span>Experience</span>
+              <span className="opacity-50 tabular-nums">[{experiences.length}]</span>
+            </button>
+            <button
               onClick={() => setActiveTab('education')}
-              className={activeTab === 'education' ? 'flex items-center shadow-jarvis-glow animate-pulse-glow' : 'flex items-center'}
+              className={`${MONO} text-[10px] px-3 py-1.5 rounded-sm border transition-all inline-flex items-center gap-2`}
+              style={
+                activeTab === 'education'
+                  ? {
+                      borderColor: '#fbbf24',
+                      backgroundColor: 'rgba(251, 191, 36, 0.18)',
+                      color: '#fbbf24',
+                      boxShadow: '0 0 12px rgba(251, 191, 36, 0.45), inset 0 0 12px rgba(251, 191, 36, 0.15)',
+                    }
+                  : {
+                      borderColor: 'rgba(251, 191, 36, 0.22)',
+                      color: 'rgba(203, 213, 225, 0.85)',
+                      backgroundColor: 'rgba(251, 191, 36, 0.04)',
+                    }
+              }
+              aria-pressed={activeTab === 'education'}
             >
-              <GraduationCap className="w-4 h-4 mr-2" />
-              Education
-            </Button>
+              <GraduationCap className="w-3 h-3" />
+              <span>Education</span>
+              <span className="opacity-50 tabular-nums">[{education.length}]</span>
+            </button>
           </div>
-          
-          <Link href="/resume/Nikhil Bindal Resume.pdf" target="_blank" rel="noopener noreferrer">
-            <Button variant="outline" size="sm" className="flex items-center">
-              <Download className="w-4 h-4 mr-2" />
-              Download PDF
-            </Button>
+
+          <Link
+            href="/resume/Nikhil Bindal Resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`${MONO} text-[10px] px-3 py-1.5 rounded-sm border transition-all inline-flex items-center gap-2 group/dl`}
+            style={{
+              borderColor: 'rgba(251, 191, 36, 0.45)',
+              color: '#fbbf24',
+              backgroundColor: 'rgba(251, 191, 36, 0.08)',
+              boxShadow: '0 0 0 1px rgba(251, 191, 36, 0.08)',
+            }}
+            title="Download full dossier (PDF)"
+          >
+            <Download className="w-3 h-3 transition-transform group-hover/dl:translate-y-0.5" />
+            <span>Export · Dossier.PDF</span>
           </Link>
         </div>
         
         {activeTab === 'experience' && (
           <>
-            <div className="mb-6 flex flex-wrap gap-2">
-              <span className="text-sm text-gray-400 flex items-center mr-2">
-                <Filter className="w-4 h-4 mr-1" /> Filter:
-              </span>
-              
-              {filterOptions.map(option => (
-                <Button
-                  key={option.id}
-                  variant={activeFilter === option.id ? 'primary' : 'outline'}
-                  size="sm"
-                  onClick={() => setActiveFilter(option.id)}
-                  className={activeFilter === option.id ? 'shadow-jarvis-glow animate-pulse-glow' : ''}
-                >
-                  {option.label}
-                </Button>
-              ))}
+            {/* JARVIS Scan filter chips */}
+            <div className="mb-6">
+              <div className={`${MONO} text-[10px] text-jarvis-blue-300/60 mb-2 inline-flex items-center gap-2`}>
+                <Filter className="w-3 h-3" /> ▸ Scan Parameters · {filteredExperiences.length} of {experiences.length} ops
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {filterOptions.map(option => {
+                  const active = activeFilter === option.id;
+                  return (
+                    <button
+                      key={option.id}
+                      onClick={() => setActiveFilter(option.id)}
+                      className={`${MONO} text-[10px] px-3 py-1.5 rounded-sm border transition-all`}
+                      style={
+                        active
+                          ? {
+                              borderColor: '#00d4ff',
+                              backgroundColor: 'rgba(0, 212, 255, 0.18)',
+                              color: '#00d4ff',
+                              boxShadow: '0 0 12px rgba(0, 212, 255, 0.4)',
+                            }
+                          : {
+                              borderColor: 'rgba(0, 212, 255, 0.22)',
+                              color: 'rgba(203, 213, 225, 0.85)',
+                              backgroundColor: 'rgba(0, 212, 255, 0.04)',
+                            }
+                      }
+                    >
+                      <span className="opacity-60 mr-1.5">▸</span>{option.label}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
-            
-            <div className="relative border-l-2 border-jarvis-blue-500 ml-4 sm:ml-6 space-y-12">
-              {filteredExperiences.map((exp, index) => (
-                <motion.div
-                  key={exp.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="relative pl-8"
-                >
-                  <span className="absolute -left-3 w-6 h-6 bg-jarvis-blue-500 rounded-full animate-pulse-glow" />
-                  
-                  <div className="bg-jarvis-dark-600 p-6 rounded-lg shadow-jarvis-glow border border-jarvis-blue-500/30">
-                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-4">
-                      <div>
-                        <h3 className="text-xl font-display text-jarvis-blue-500">{exp.title}</h3>
-                        <p className="text-gray-300 font-display text-lg">{exp.company}</p>
-                      </div>
-                      <div className="mt-2 sm:mt-0 text-sm text-gray-400">
-                        <div className="flex items-center">
-                          <Calendar className="w-4 h-4 mr-1" />
-                          {exp.startDate} - {exp.endDate}
+
+            {/* Operation files */}
+            <div className="space-y-5">
+              {filteredExperiences.map((exp, index) => {
+                const meta = CATEGORY_META[exp.category] ?? CATEGORY_META.ai;
+                const accent = meta.accent;
+                const opNum = `OP-${String(filteredExperiences.length - index).padStart(3, '0')}`;
+                const isActive = exp.endDate.toLowerCase().includes('present');
+                return (
+                  <motion.div
+                    key={exp.id}
+                    initial={{ opacity: 0, y: 16 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.15 }}
+                    transition={{ duration: 0.4, delay: Math.min(index * 0.05, 0.4) }}
+                  >
+                    <HUDFrame accent={accent} cornerSize={14} className="bg-jarvis-dark-700/65 backdrop-blur-md">
+                      <div
+                        className="absolute inset-0 pointer-events-none"
+                        style={{ background: `linear-gradient(135deg, ${accent}10 0%, rgba(0, 8, 20, 0.55) 100%)` }}
+                      />
+
+                      {/* TOP METADATA STRIP */}
+                      <div className={`relative px-4 py-2 border-b border-white/5 flex flex-wrap items-center justify-between gap-2 ${MONO} text-[10px]`}>
+                        <div className="flex items-center gap-3">
+                          <span style={{ color: accent, opacity: 0.9 }}>› {opNum}</span>
+                          <span className="text-jarvis-blue-300/40">·</span>
+                          <span style={{ color: isActive ? '#22c55e' : 'rgba(148, 163, 184, 0.7)' }} className="inline-flex items-center gap-1.5">
+                            <span className="relative flex h-1.5 w-1.5">
+                              {isActive && <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />}
+                              <span className="relative inline-flex rounded-full h-1.5 w-1.5" style={{ background: isActive ? '#22c55e' : '#94a3b8' }} />
+                            </span>
+                            {isActive ? 'Active' : 'Concluded'}
+                          </span>
+                          <span className="text-jarvis-blue-300/40">·</span>
+                          <span style={{ color: accent }}>class::{meta.tier}</span>
                         </div>
-                        <div className="flex items-center mt-1">
-                          <MapPin className="w-4 h-4 mr-1" />
-                          {exp.location}
-                        </div>
+                        <span className="text-jarvis-blue-300/55">{meta.classification}</span>
                       </div>
-                    </div>
-                    
-                    {exp.subRoles && exp.subRoles.length > 0 ? (
-                      <div className="space-y-5 mb-4">
-                        {exp.subRoles.map((sub, si) => (
-                          <div key={si}>
-                            <h4 className="text-base font-display text-jarvis-blue-400 mb-2">{sub.company}</h4>
-                            <ul className="text-gray-300 space-y-2">
-                              {sub.description.map((item, i) => (
-                                <li key={i} className="text-sm flex">
-                                  <span className="mr-2 text-jarvis-blue-400 flex-shrink-0">•</span>
-                                  <span className="flex-1">{item}</span>
+
+                      {/* CONTENT */}
+                      <div className="relative p-5 sm:p-6">
+                        {/* Header — title + dates/location */}
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-4">
+                          <div>
+                            <h3 className="text-lg sm:text-xl font-display text-white leading-tight">{exp.title}</h3>
+                            <p className={`${MONO} text-xs mt-1`} style={{ color: accent, opacity: 0.85 }}>
+                              {exp.company}
+                            </p>
+                          </div>
+                          <div className={`${MONO} text-[10px] text-jarvis-blue-300/70 sm:text-right space-y-1 flex-shrink-0`}>
+                            <div className="inline-flex items-center gap-1.5">
+                              <Calendar className="w-3 h-3" />
+                              {exp.startDate} → {exp.endDate}
+                            </div>
+                            <div className="inline-flex items-center gap-1.5">
+                              <MapPin className="w-3 h-3" />
+                              {exp.location}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Bullets — sub-roles or main */}
+                        {exp.subRoles && exp.subRoles.length > 0 ? (
+                          <div className="space-y-5 mb-5">
+                            {exp.subRoles.map((sub, si) => (
+                              <div key={si}>
+                                <div className={`${MONO} text-[10px] mb-2 flex items-center gap-2`} style={{ color: accent, opacity: 0.85 }}>
+                                  ▸ Theatre {String.fromCharCode(65 + si)} · {sub.company}
+                                </div>
+                                <ul className="space-y-2 pl-3 border-l" style={{ borderColor: `${accent}33` }}>
+                                  {sub.description.map((item, i) => (
+                                    <li key={i} className="flex items-start gap-2.5 text-sm text-gray-300">
+                                      <span
+                                        className="mt-2 w-1 h-1 rounded-full flex-shrink-0"
+                                        style={{ backgroundColor: accent, boxShadow: `0 0 4px ${accent}` }}
+                                      />
+                                      <span className="flex-1 leading-relaxed">{item}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="mb-5">
+                            <div className={`${MONO} text-[10px] mb-2`} style={{ color: accent, opacity: 0.85 }}>
+                              ▸ Mission Outcomes
+                            </div>
+                            <ul className="space-y-2">
+                              {exp.description.map((item, i) => (
+                                <li key={i} className="flex items-start gap-2.5 text-sm text-gray-300">
+                                  <span
+                                    className="mt-2 w-1 h-1 rounded-full flex-shrink-0"
+                                    style={{ backgroundColor: accent, boxShadow: `0 0 4px ${accent}` }}
+                                  />
+                                  <span className="flex-1 leading-relaxed">{item}</span>
                                 </li>
                               ))}
                             </ul>
                           </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <ul className="text-gray-300 space-y-2 mb-4">
-                        {exp.description.map((item, i) => (
-                          <li key={i} className="text-sm flex">
-                            <span className="mr-2 text-jarvis-blue-400 flex-shrink-0">•</span>
-                            <span className="flex-1">{item}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
+                        )}
 
-                    <div className="flex flex-wrap gap-2">
-                      {exp.skills.map((skill) => (
-                        <span
-                          key={skill}
-                          className="text-xs font-display text-gray-200 bg-jarvis-dark-700 px-2 py-1 rounded-full"
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
+                        {/* Deployed assets */}
+                        <div>
+                          <div className={`${MONO} text-[10px] mb-1.5`} style={{ color: accent, opacity: 0.75 }}>
+                            ▸ Deployed Assets
+                          </div>
+                          <div className="flex flex-wrap gap-1.5">
+                            {exp.skills.map(skill => (
+                              <span
+                                key={skill}
+                                className="font-mono text-[10px] tracking-wide px-2 py-0.5 rounded-sm border"
+                                style={{
+                                  borderColor: `${accent}33`,
+                                  backgroundColor: `${accent}0a`,
+                                  color: 'rgba(229, 231, 235, 0.85)',
+                                }}
+                              >
+                                {skill}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </HUDFrame>
+                  </motion.div>
+                );
+              })}
             </div>
           </>
         )}
         
         {activeTab === 'education' && (
-          <div className="relative border-l-2 border-jarvis-blue-500 ml-4 sm:ml-6 space-y-12">
-            {education.map((edu, index) => (
-              <motion.div
-                key={edu.id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="relative pl-8"
-              >
-                <span className="absolute -left-3 w-6 h-6 bg-jarvis-blue-500 rounded-full animate-pulse-glow" />
-                
-                <div className="bg-jarvis-dark-600 p-6 rounded-lg shadow-jarvis-glow border border-jarvis-blue-500/30">
-                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-4">
-                    <div>
-                      <h3 className="text-xl font-display text-jarvis-blue-500">{edu.degree} in {edu.field}</h3>
-                      <p className="text-gray-300 font-display text-lg">{edu.school}</p>
-                    </div>
-                    <div className="mt-2 sm:mt-0 text-sm text-gray-400">
-                      <div className="flex items-center">
-                        <Calendar className="w-4 h-4 mr-1" />
-                        {edu.startDate} - {edu.endDate}
+          <div className="space-y-4">
+            <div className={`${MONO} text-[10px] text-jarvis-blue-300/60 mb-3`}>
+              ▸ Credentials · {education.length} verified records
+            </div>
+            {education.map((edu, index) => {
+              const accent = ['#fbbf24', '#06b6d4', '#a855f7'][index % 3];
+              return (
+                <motion.div
+                  key={edu.id}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.15 }}
+                  transition={{ duration: 0.4, delay: index * 0.08 }}
+                >
+                  <HUDFrame accent={accent} cornerSize={12} className="bg-jarvis-dark-700/65 backdrop-blur-md">
+                    <div
+                      className="absolute inset-0 pointer-events-none"
+                      style={{ background: `linear-gradient(135deg, ${accent}10 0%, rgba(0, 8, 20, 0.55) 100%)` }}
+                    />
+                    <div className={`relative px-4 py-2 border-b border-white/5 flex flex-wrap items-center justify-between gap-2 ${MONO} text-[10px]`}>
+                      <div className="flex items-center gap-3">
+                        <span style={{ color: accent, opacity: 0.9 }}>› CRED-{String(index + 1).padStart(3, '0')}</span>
+                        <span className="text-jarvis-blue-300/40">·</span>
+                        <span style={{ color: accent }}>Verified</span>
                       </div>
-                      <div className="flex items-center mt-1">
-                        <MapPin className="w-4 h-4 mr-1" />
-                        {edu.location}
-                      </div>
+                      <span className="text-jarvis-blue-300/55">Academic Record</span>
                     </div>
-                  </div>
-                  
-                  {edu.description && (
-                    <p className="text-sm text-gray-300">{edu.description}</p>
-                  )}
-                </div>
-              </motion.div>
-            ))}
+                    <div className="relative p-5">
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-3">
+                        <div>
+                          <h3 className="text-lg font-display text-white leading-tight">
+                            {edu.degree} · {edu.field}
+                          </h3>
+                          <p className={`${MONO} text-xs mt-1`} style={{ color: accent, opacity: 0.85 }}>
+                            {edu.school}
+                          </p>
+                        </div>
+                        <div className={`${MONO} text-[10px] text-jarvis-blue-300/70 sm:text-right space-y-1 flex-shrink-0`}>
+                          <div className="inline-flex items-center gap-1.5">
+                            <Calendar className="w-3 h-3" />
+                            {edu.startDate} → {edu.endDate}
+                          </div>
+                          <div className="inline-flex items-center gap-1.5">
+                            <MapPin className="w-3 h-3" />
+                            {edu.location}
+                          </div>
+                        </div>
+                      </div>
+                      {edu.description && (
+                        <div>
+                          <div className={`${MONO} text-[10px] mb-1`} style={{ color: accent, opacity: 0.7 }}>
+                            ▸ Coursework
+                          </div>
+                          <p className="text-sm text-gray-300 leading-relaxed">{edu.description}</p>
+                        </div>
+                      )}
+                    </div>
+                  </HUDFrame>
+                </motion.div>
+              );
+            })}
           </div>
         )}
         
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
           className="mt-12 flex justify-center"
         >
-          <motion.div
-            animate={{ boxShadow: '0 0 10px rgba(25, 118, 255, 0.3), 0 0 20px rgba(0, 212, 255, 0.3)' }}
-            transition={{ duration: 2, repeat: Infinity, repeatType: 'reverse' }}
+          <Link
+            href="/contact"
+            className={`${MONO} text-[11px] px-5 py-2.5 rounded-sm border transition-all inline-flex items-center gap-2.5 group/cta`}
+            style={{
+              color: '#00d4ff',
+              borderColor: 'rgba(0, 212, 255, 0.5)',
+              backgroundColor: 'rgba(0, 212, 255, 0.1)',
+              boxShadow: '0 0 14px rgba(0, 212, 255, 0.35), inset 0 0 14px rgba(0, 212, 255, 0.1)',
+            }}
           >
-            <Button
-              variant="secondary"
-              whileHover={{
-                scale: 1.05,
-                boxShadow: '0 0 12px rgba(25, 118, 255, 0.5), 0 0 24px rgba(0, 212, 255, 0.3)',
-                backgroundColor: '#00b7eb',
-              }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => window.location.href = '/contact'}
-            >
-              Hire Me
-            </Button>
-          </motion.div>
+            <span className="opacity-60">›</span>
+            <span>Open a channel</span>
+            <span className="opacity-60 transition-transform group-hover/cta:translate-x-1">→</span>
+          </Link>
         </motion.div>
       </motion.div>
     );
