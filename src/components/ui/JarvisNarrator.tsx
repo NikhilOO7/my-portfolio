@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useJarvisVoice } from '@/components/JarvisVoiceContext';
 
 interface JarvisNarratorProps {
@@ -29,30 +29,44 @@ export default function JarvisNarrator({
   const [charIndex, setCharIndex] = useState(0);
   const [started, setStarted] = useState(false);
   const { speak } = useJarvisVoice();
+  // Track which line indices we've already spoken so re-renders (e.g. when
+  // the voice context updates) cannot re-trigger speech for the same line.
+  const spokenRef = useRef<Set<number>>(new Set());
+  // Keep the latest lines accessible without putting them in effect deps —
+  // parents often recreate the array on every render which would otherwise
+  // refire the speech effect.
+  const linesRef = useRef(lines);
+  linesRef.current = lines;
 
   useEffect(() => {
     const t = setTimeout(() => setStarted(true), startDelay);
     return () => clearTimeout(t);
   }, [startDelay]);
 
-  // Speak each line out loud (if voice is on) the moment it starts typing
+  // Speak each line out loud (if voice is on) the moment it starts typing.
+  // Dependencies are only `started` and `lineIndex` so a parent re-creating
+  // its `lines` array does not retrigger the same line's speech.
   useEffect(() => {
     if (!started) return;
-    if (lineIndex >= lines.length) return;
-    speak(lines[lineIndex], { interrupt: lineIndex === 0 });
-    // We deliberately exclude `speak` from deps — its identity is stable from context
+    const currentLines = linesRef.current;
+    if (lineIndex >= currentLines.length) return;
+    if (spokenRef.current.has(lineIndex)) return;
+    spokenRef.current.add(lineIndex);
+    speak(currentLines[lineIndex], { interrupt: lineIndex === 0 });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [started, lineIndex, lines]);
+  }, [started, lineIndex]);
 
   useEffect(() => {
-    if (!started || lineIndex >= lines.length) return;
-    const current = lines[lineIndex];
+    if (!started) return;
+    const currentLines = linesRef.current;
+    if (lineIndex >= currentLines.length) return;
+    const current = currentLines[lineIndex];
     if (charIndex < current.length) {
       const t = setTimeout(() => setCharIndex(charIndex + 1), speed);
       return () => clearTimeout(t);
     }
     // Line finished; if more lines, advance after pause
-    if (lineIndex < lines.length - 1) {
+    if (lineIndex < currentLines.length - 1) {
       const t = setTimeout(() => {
         setLineIndex(lineIndex + 1);
         setCharIndex(0);
@@ -60,7 +74,8 @@ export default function JarvisNarrator({
       return () => clearTimeout(t);
     }
     onDone?.();
-  }, [charIndex, lineIndex, started, lines, speed, onDone]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [charIndex, lineIndex, started, speed, onDone]);
 
   return (
     <div className={`font-mono text-xs sm:text-sm leading-relaxed ${className}`}>

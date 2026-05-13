@@ -16,6 +16,7 @@ export default function JarvisQuickMic() {
     speak,
     listening,
     recognitionAvailable,
+    enabled: voiceEnabled,
     startListening,
     stopListening,
   } = useJarvisVoice();
@@ -93,7 +94,9 @@ export default function JarvisQuickMic() {
     });
   };
 
-  if (!recognitionAvailable) return null;
+  // Voice is a single concept now — when the user turns voice OFF in the HUD
+  // top bar, both TTS and mic disappear. Recognition unsupported still hides.
+  if (!recognitionAvailable || !voiceEnabled) return null;
 
   const overlayVisible = listening || feedback.kind !== 'idle';
 

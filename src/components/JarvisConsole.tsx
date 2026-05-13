@@ -13,7 +13,8 @@ import { useJarvisDispatcher } from '@/lib/useJarvisDispatcher';
 const CONSOLE_COMMANDS = JARVIS_COMMANDS.filter(c => c.id !== 'console');
 
 export default function JarvisConsole() {
-  const { speak, listening, recognitionAvailable, startListening, stopListening } = useJarvisVoice();
+  const { speak, listening, recognitionAvailable, enabled: voiceEnabled, startListening, stopListening } = useJarvisVoice();
+  const voiceReady = recognitionAvailable && voiceEnabled;
   const executeCommand = useJarvisDispatcher();
   const [query, setQuery] = useState('');
   const [interim, setInterim] = useState('');
@@ -29,7 +30,7 @@ export default function JarvisConsole() {
   }, []);
 
   const handleMic = () => {
-    if (!recognitionAvailable || routing) return;
+    if (!voiceReady || routing) return;
     if (listening) {
       stopListening();
       return;
@@ -245,7 +246,7 @@ export default function JarvisConsole() {
               placeholder={
                 listening
                   ? 'Listening… speak now'
-                  : recognitionAvailable
+                  : voiceReady
                     ? "Type — or tap the mic to speak: 'show his projects'"
                     : "Type a command: 'show his projects' or 'how can I reach him'"
               }
@@ -256,7 +257,7 @@ export default function JarvisConsole() {
               autoFocus
               aria-label="Issue command to JARVIS"
             />
-            {recognitionAvailable && (
+            {voiceReady && (
               <button
                 type="button"
                 onClick={handleMic}

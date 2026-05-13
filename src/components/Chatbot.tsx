@@ -37,6 +37,8 @@ export default function Chatbot({ onClose }: { onClose: () => void }) {
     startListening,
     stopListening,
   } = useJarvisVoice();
+  // Mic is part of the unified voice mode — only show when voice is ON.
+  const voiceReady = recognitionAvailable && voiceEnabled;
 
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -93,7 +95,7 @@ export default function Chatbot({ onClose }: { onClose: () => void }) {
   }, [input, isLoading, messages, speak]);
 
   const onMic = () => {
-    if (!recognitionAvailable) return;
+    if (!voiceReady) return;
     if (listening) {
       stopListening();
       return;
@@ -228,7 +230,7 @@ export default function Chatbot({ onClose }: { onClose: () => void }) {
               placeholder={
                 listening
                   ? 'Listening… speak your query'
-                  : recognitionAvailable
+                  : voiceReady
                     ? 'Type your query, or tap mic to speak…'
                     : 'Type your query for JARVIS…'
               }
@@ -237,7 +239,7 @@ export default function Chatbot({ onClose }: { onClose: () => void }) {
               }`}
               aria-label="Ask JARVIS"
             />
-            {recognitionAvailable && (
+            {voiceReady && (
               <button
                 type="button"
                 onClick={onMic}

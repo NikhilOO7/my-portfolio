@@ -59,13 +59,25 @@ const STORAGE_KEY = 'jarvis.voice.enabled';
 
 function pickVoice(voices: SpeechSynthesisVoice[]): SpeechSynthesisVoice | null {
   if (!voices.length) return null;
+  // Preference order — calm, lower-register, British-male voices closest to
+  // the JARVIS / FRIDAY film delivery. "Enhanced" / "Premium" / "Natural"
+  // variants are higher quality and preferred first.
   const tests: ((v: SpeechSynthesisVoice) => boolean)[] = [
-    v => /daniel/i.test(v.name) && v.lang.startsWith('en'),
-    v => /oliver|arthur|george/i.test(v.name) && v.lang.startsWith('en'),
+    // Microsoft Natural (Edge) — highest quality if available
+    v => /\(natural\)/i.test(v.name) && /ryan|guy|tony|brian|adam/i.test(v.name) && v.lang.startsWith('en'),
+    v => /\(natural\)/i.test(v.name) && v.lang === 'en-GB',
+    // macOS enhanced/premium variants of British male voices
+    v => /daniel.*\((enhanced|premium)\)/i.test(v.name),
+    v => /oliver.*\((enhanced|premium)\)/i.test(v.name),
+    v => /arthur.*\((enhanced|premium)\)/i.test(v.name),
+    // Standard British male voices (macOS / Chrome)
+    v => /^daniel$/i.test(v.name) && v.lang.startsWith('en'),
+    v => /\b(oliver|arthur|george|jamie)\b/i.test(v.name) && v.lang.startsWith('en'),
     v => v.name.toLowerCase().includes('google uk english male'),
     v => v.lang === 'en-GB' && /male/i.test(v.name),
     v => v.lang === 'en-GB',
-    v => v.lang.startsWith('en') && /male/i.test(v.name),
+    // Any English male as last resort
+    v => v.lang.startsWith('en') && /male|ryan|guy|brian|adam/i.test(v.name),
     v => v.lang.startsWith('en'),
   ];
   for (const t of tests) {
@@ -135,9 +147,10 @@ export function JarvisVoiceProvider({ children }: ProviderProps) {
     if (opts?.interrupt !== false) synth.cancel();
     const utt = new SpeechSynthesisUtterance(text);
     if (voiceRef.current) utt.voice = voiceRef.current;
-    utt.rate = 1.02;
-    utt.pitch = 0.92;
-    utt.volume = 0.85;
+    // JARVIS-style delivery: measured, lower register, modest volume.
+    utt.rate = 0.98;
+    utt.pitch = 0.85;
+    utt.volume = 0.55;
     utt.onstart = () => setSpeaking(true);
     utt.onend = () => setSpeaking(false);
     utt.onerror = () => setSpeaking(false);

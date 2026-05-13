@@ -120,7 +120,7 @@ export default function HUDTopBar() {
                         color: 'rgba(125, 211, 252, 0.7)',
                       }
                 }
-                title={voiceEnabled ? 'JARVIS voice on — click to mute' : 'JARVIS voice off — click to activate'}
+                title={voiceEnabled ? 'Voice on (speech + mic active) — click to mute' : 'Voice off — click to enable speech & mic'}
                 aria-pressed={voiceEnabled}
                 aria-label="Toggle JARVIS voice"
               >

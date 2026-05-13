@@ -9,6 +9,7 @@ import ReticleCursor from '@/components/ReticleCursor';
 import LeftRail from '@/components/LeftRail';
 import AmbientDiagnostics from '@/components/AmbientDiagnostics';
 import JarvisQuickMic from '@/components/JarvisQuickMic';
+import JarvisQuickActions from '@/components/JarvisQuickActions';
 import JarvisCommandPalette from '@/components/JarvisCommandPalette';
 import JarvisSubsystems from '@/components/JarvisSubsystems';
 import IronManHologram from '@/components/IronManHologram';
@@ -49,6 +50,7 @@ export default function RootLayout({
           </main>
           <JarvisSubsystems />
           <JarvisQuickMic />
+          <JarvisQuickActions />
           <JarvisCommandPalette />
         </JarvisVoiceProvider>
         </JarvisSystemProvider>
