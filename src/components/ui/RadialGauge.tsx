@@ -80,10 +80,10 @@ export default function RadialGauge({
               const angle = (i * 30 * Math.PI) / 180;
               const inner = radius + 6;
               const outer = radius + 10;
-              const x1 = center + Math.cos(angle) * inner;
-              const y1 = center + Math.sin(angle) * inner;
-              const x2 = center + Math.cos(angle) * outer;
-              const y2 = center + Math.sin(angle) * outer;
+              const x1 = +(center + Math.cos(angle) * inner).toFixed(2);
+              const y1 = +(center + Math.sin(angle) * inner).toFixed(2);
+              const x2 = +(center + Math.cos(angle) * outer).toFixed(2);
+              const y2 = +(center + Math.sin(angle) * outer).toFixed(2);
               return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} />;
             })}
           </g>

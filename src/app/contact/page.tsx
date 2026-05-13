@@ -11,6 +11,7 @@ import Button from '@/components/Button';
 import MapComponent from '@/components/MapComponent';
 import BuyMeCoffeeButton from '@/components/BuyMeCoffeeButton';
 import SectionHeader from '@/components/ui/SectionHeader';
+import PanelHeader from '@/components/ui/PanelHeader';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -90,16 +91,28 @@ export default function Contact() {
       transition={{ duration: 0.5 }}
       className="min-h-screen bg-jarvis-dark-500 text-white relative font-display overflow-x-hidden z-10 pt-16"
     >
-      <section className="py-20 sm:py-24 relative z-10">
+      <section className="py-10 sm:py-12 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeader
-            eyebrow="Let's talk"
-            title="Contact Me"
-            subtitle="Interested in working together? Have a project in mind or just want to connect? Drop me a message and I'll get back to you as soon as possible."
-            gradient="blue-cyan"
-            size="xl"
+          <PanelHeader
+            module="Open Channel"
+            query="open a channel to him"
+            response={[
+              'Channel ready, sir or madam.',
+              'Inbound messages routed directly to subject; expected response window is 24–48 hours.',
+              'Outbound social uplinks and live location coordinates available below.',
+            ]}
+            accent="#fbbf24"
           />
-          <div className="mb-12" />
+
+          <div className="mt-14 mb-12">
+            <SectionHeader
+              eyebrow="Let's talk"
+              title="Contact Me"
+              subtitle="Interested in working together? Have a project in mind or just want to connect? Drop me a message and I'll get back to you as soon as possible."
+              gradient="blue-cyan"
+              size="xl"
+            />
+          </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Left Column - Form and Contact Information */}

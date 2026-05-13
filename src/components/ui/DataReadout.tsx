@@ -27,7 +27,8 @@ export default function DataReadout({
   scrambleOnMount = true,
   scrambleDuration = 900,
 }: DataReadoutProps) {
-  const [display, setDisplay] = useState(scrambleOnMount ? scrambleValue(value) : value);
+  // Start with the real value so SSR and first client render match.
+  const [display, setDisplay] = useState(value);
 
   useEffect(() => {
     if (!scrambleOnMount) {
@@ -35,6 +36,8 @@ export default function DataReadout({
       return;
     }
 
+    // Begin scramble *after* hydration, so the random text never appears in SSR.
+    setDisplay(scrambleValue(value));
     const start = performance.now();
     let raf: number;
     const step = (now: number) => {

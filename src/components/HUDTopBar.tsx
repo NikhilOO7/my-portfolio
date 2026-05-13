@@ -1,10 +1,25 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { Volume2, VolumeX, Command } from 'lucide-react';
+import { useJarvisVoice } from '@/components/JarvisVoiceContext';
+import { useJarvisSystem } from '@/components/JarvisSystemContext';
 
 export default function HUDTopBar() {
   const [time, setTime] = useState('--:--:--');
   const [scanLevel, setScanLevel] = useState(96);
+  const { enabled: voiceEnabled, speaking, available: voiceAvailable, toggleEnabled, speak } = useJarvisVoice();
+  const { togglePalette, paletteOpen } = useJarvisSystem();
+
+  const onToggleVoice = () => {
+    if (!voiceAvailable) return;
+    const next = !voiceEnabled;
+    toggleEnabled();
+    if (next) {
+      // Defer slightly so state flip lands before speak triggers
+      setTimeout(() => speak('Voice systems online. At your service.'), 60);
+    }
+  };
 
   useEffect(() => {
     const tick = () => {
@@ -63,8 +78,58 @@ export default function HUDTopBar() {
             <span className="text-jarvis-blue-300/60">37.7749°N · 122.4194°W</span>
           </div>
 
-          {/* Right cluster — scan + clock */}
-          <div className="flex items-center gap-3 sm:gap-4">
+          {/* Right cluster — palette + voice toggle + scan + clock */}
+          <div className="flex items-center gap-3 sm:gap-4 pointer-events-auto">
+            <button
+              onClick={togglePalette}
+              className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-sm border transition-all"
+              style={
+                paletteOpen
+                  ? {
+                      borderColor: '#00d4ff',
+                      color: '#00d4ff',
+                      backgroundColor: 'rgba(0, 212, 255, 0.1)',
+                      boxShadow: '0 0 8px rgba(0, 212, 255, 0.35)',
+                    }
+                  : {
+                      borderColor: 'rgba(0, 212, 255, 0.3)',
+                      color: 'rgba(125, 211, 252, 0.7)',
+                    }
+              }
+              title="JARVIS command registry — ⌘P / Ctrl+P"
+              aria-pressed={paletteOpen}
+              aria-label="Toggle JARVIS command registry"
+            >
+              <Command className="w-3 h-3" />
+              <span className="hidden sm:inline">CMD · ⌘P</span>
+            </button>
+            {voiceAvailable && (
+              <button
+                onClick={onToggleVoice}
+                className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-sm border transition-all"
+                style={
+                  voiceEnabled
+                    ? {
+                        borderColor: '#fbbf24',
+                        color: '#fbbf24',
+                        backgroundColor: 'rgba(251, 191, 36, 0.08)',
+                        boxShadow: '0 0 8px rgba(251, 191, 36, 0.35)',
+                      }
+                    : {
+                        borderColor: 'rgba(0, 212, 255, 0.3)',
+                        color: 'rgba(125, 211, 252, 0.7)',
+                      }
+                }
+                title={voiceEnabled ? 'JARVIS voice on — click to mute' : 'JARVIS voice off — click to activate'}
+                aria-pressed={voiceEnabled}
+                aria-label="Toggle JARVIS voice"
+              >
+                {voiceEnabled ? <Volume2 className="w-3 h-3" /> : <VolumeX className="w-3 h-3" />}
+                <span className="hidden sm:inline">
+                  VOICE {voiceEnabled ? (speaking ? '· SPK' : '· ON') : '· OFF'}
+                </span>
+              </button>
+            )}
             <span className="hidden md:inline text-jarvis-blue-300/70">SCAN {scanLevel.toFixed(1)}%</span>
             <span className="text-jarvis-cyan font-medium">{time} PST</span>
           </div>

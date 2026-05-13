@@ -74,10 +74,10 @@ export default function ArcReactor({
                 const rad = ((deg - 90) * Math.PI) / 180;
                 const inner = half - 18;
                 const outer = half - 8;
-                const x1 = half + Math.cos(rad) * inner;
-                const y1 = half + Math.sin(rad) * inner;
-                const x2 = half + Math.cos(rad) * outer;
-                const y2 = half + Math.sin(rad) * outer;
+                const x1 = +(half + Math.cos(rad) * inner).toFixed(2);
+                const y1 = +(half + Math.sin(rad) * inner).toFixed(2);
+                const x2 = +(half + Math.cos(rad) * outer).toFixed(2);
+                const y2 = +(half + Math.sin(rad) * outer).toFixed(2);
                 return <line key={deg} x1={x1} y1={y1} x2={x2} y2={y2} />;
               })}
             </g>
@@ -107,10 +107,10 @@ export default function ArcReactor({
               const isMajor = i % 6 === 0;
               const inner = half - (isMajor ? 36 : 32);
               const outer = half - 26;
-              const x1 = half + Math.cos(angle) * inner;
-              const y1 = half + Math.sin(angle) * inner;
-              const x2 = half + Math.cos(angle) * outer;
-              const y2 = half + Math.sin(angle) * outer;
+              const x1 = +(half + Math.cos(angle) * inner).toFixed(2);
+              const y1 = +(half + Math.sin(angle) * inner).toFixed(2);
+              const x2 = +(half + Math.cos(angle) * outer).toFixed(2);
+              const y2 = +(half + Math.sin(angle) * outer).toFixed(2);
               return (
                 <line
                   key={i}
@@ -175,8 +175,8 @@ export default function ArcReactor({
             {[0, 120, 240].map(deg => {
               const rad = ((deg - 90) * Math.PI) / 180;
               const r = half - 4;
-              const cx = half + Math.cos(rad) * r;
-              const cy = half + Math.sin(rad) * r;
+              const cx = +(half + Math.cos(rad) * r).toFixed(2);
+              const cy = +(half + Math.sin(rad) * r).toFixed(2);
               return (
                 <circle
                   key={deg}

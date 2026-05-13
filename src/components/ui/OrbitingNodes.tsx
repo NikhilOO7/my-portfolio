@@ -29,8 +29,8 @@ export default function OrbitingNodes({ radius, nodes, className = '' }: Orbitin
       <div className="relative" style={{ width: radius * 2, height: radius * 2 }}>
         {nodes.map((node, i) => {
           const rad = ((node.angle - 90) * Math.PI) / 180;
-          const x = radius + Math.cos(rad) * radius;
-          const y = radius + Math.sin(rad) * radius;
+          const x = +(radius + Math.cos(rad) * radius).toFixed(2);
+          const y = +(radius + Math.sin(rad) * radius).toFixed(2);
           const accent = node.accent || '#00d4ff';
           const showValue = node.value === '*' ? VALUES_CYCLE[(tick + i) % VALUES_CYCLE.length] : node.value;
 

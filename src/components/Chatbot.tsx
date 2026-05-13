@@ -1,23 +1,55 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Send, X } from 'lucide-react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { motion } from 'framer-motion';
+import { Send, X, Mic, Volume2, VolumeX, Loader2 } from 'lucide-react';
 import axios from 'axios';
+import { useJarvisVoice } from '@/components/JarvisVoiceContext';
+import HUDFrame from '@/components/ui/HUDFrame';
 
 interface Message {
   text: string;
   isUser: boolean;
+  timestamp: number;
 }
 
+const formatTime = (ts: number) => {
+  try {
+    return new Intl.DateTimeFormat('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+    }).format(new Date(ts));
+  } catch {
+    return '--:--:--';
+  }
+};
+
 export default function Chatbot({ onClose }: { onClose: () => void }) {
+  const {
+    speak,
+    enabled: voiceEnabled,
+    toggleEnabled,
+    available: voiceAvailable,
+    listening,
+    recognitionAvailable,
+    startListening,
+    stopListening,
+  } = useJarvisVoice();
+
   const [messages, setMessages] = useState<Message[]>([
-    { text: "Hello! I'm your JARVIS assistant. Ask me anything about Nikhil\'s skills, projects, or experience.", isUser: false },
+    {
+      text: "Good day. I am J.A.R.V.I.S — Nikhil's archival assistant. Ask me anything about his projects, skills, experience, or how to reach him.",
+      isUser: false,
+      timestamp: Date.now(),
+    },
   ]);
   const [input, setInput] = useState('');
+  const [interim, setInterim] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const [isInit, setIsInit] = useState(true);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -25,198 +57,222 @@ export default function Chatbot({ onClose }: { onClose: () => void }) {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
-  
-  // Add initial message suggesting topics
+  }, [messages, isLoading]);
+
   useEffect(() => {
-    if (isInit) {
-      setIsInit(false);
-      setTimeout(() => {
-        setMessages(prev => [
-          ...prev,
-          { 
-            text: 'Try asking about my skills, projects, education, or how to get in touch with me!', 
-            isUser: false 
-          }
-        ]);
-      }, 1000);
-    }
-  }, [isInit]);
+    inputRef.current?.focus();
+  }, []);
 
-  const handleSend = async () => {
-    if (!input.trim()) return;
+  const send = useCallback(async (raw?: string) => {
+    const text = (raw ?? input).trim();
+    if (!text || isLoading) return;
 
-    // Add user message
-    setMessages((prev) => [...prev, { text: input, isUser: true }]);
-    
-    // Show loading state
+    setMessages(prev => [...prev, { text, isUser: true, timestamp: Date.now() }]);
+    setInput('');
     setIsLoading(true);
 
     try {
-      // Connect to the chatbot API
-      const { data } = await axios.post('/api/chatbot', { message: input });
-      
-      setMessages((prev) => [...prev, { text: data.response, isUser: false }]);
-    } catch (error) {
-      console.error('Error sending message:', error);
-      
-      // If API fails, use a simplified fallback
-      const fallbackResponse = getFallbackResponse(input);
-      setMessages((prev) => [...prev, { text: fallbackResponse, isUser: false }]);
+      // Send last 6 turns as history so the model has context.
+      const history = messages.slice(-6).map(m => ({
+        role: (m.isUser ? 'user' : 'assistant') as 'user' | 'assistant',
+        content: m.text,
+      }));
+
+      const { data } = await axios.post('/api/chatbot', { message: text, history });
+      const reply = (data.response as string) ?? 'No response.';
+      setMessages(prev => [...prev, { text: reply, isUser: false, timestamp: Date.now() }]);
+      speak(reply);
+    } catch (err) {
+      console.error('chat error', err);
+      const errReply = 'Apologies — I lost contact with the knowledge base. Please try again.';
+      setMessages(prev => [...prev, { text: errReply, isUser: false, timestamp: Date.now() }]);
+      speak(errReply);
     } finally {
       setIsLoading(false);
     }
+  }, [input, isLoading, messages, speak]);
 
-    setInput('');
-  };
-
-  // Enhanced fallback with comprehensive information
-  const getFallbackResponse = (input: string): string => {
-    const lowercaseInput = input.toLowerCase();
-
-    // Skills queries
-    if (lowercaseInput.includes('skill') || lowercaseInput.includes('technologies') || lowercaseInput.includes('tech stack')) {
-      if (lowercaseInput.includes('ai') || lowercaseInput.includes('ml') || lowercaseInput.includes('machine learning')) {
-        return 'Nikhil has extensive AI/ML expertise including PyTorch, TensorFlow, Scikit-learn, XGBoost, LangChain, LlamaIndex, CrewAI, GPT-4o, Google Gemini, and RAG systems. He has built multi-agent AI systems and voice AI platforms.';
-      } else if (lowercaseInput.includes('backend') || lowercaseInput.includes('api')) {
-        return 'Nikhil is highly skilled in backend development with Python (FastAPI, Django), Node.js, Java (Spring Boot), and TypeScript. He works with PostgreSQL, MongoDB, Redis, and Qdrant, and has built systems handling 8.4M daily requests.';
-      } else if (lowercaseInput.includes('cloud') || lowercaseInput.includes('devops')) {
-        return 'Nikhil has strong cloud and DevOps skills including AWS (EKS, Batch, Lambda), GCP, Docker, Kubernetes, Jenkins, Prometheus, and Grafana. He has reduced infrastructure costs by 35% through optimization.';
-      } else {
-        return 'Nikhil has 6+ years of experience with Backend (Python, Node.js, Java), AI/ML (PyTorch, LangChain, RAG systems), Cloud (AWS, GCP, Kubernetes), and Frontend (React, Next.js). He specializes in distributed systems and AI infrastructure.';
-      }
+  const onMic = () => {
+    if (!recognitionAvailable) return;
+    if (listening) {
+      stopListening();
+      return;
     }
-
-    // Project queries
-    else if (lowercaseInput.includes('project')) {
-      if (lowercaseInput.includes('voice') || lowercaseInput.includes('document intelligence')) {
-        return 'Voice Document Intelligence Platform is Nikhil\'s most advanced project - a real-time voice-based platform with multi-agent RAG pipeline supporting 1,000+ concurrent sessions with sub-50ms latency and 95%+ transcription accuracy. Built with Python, FastAPI, WebRTC, LiveKit, and CrewAI.';
-      } else if (lowercaseInput.includes('knowledge graph') || lowercaseInput.includes('gaussian')) {
-        return 'Gaussian Splatting Knowledge Graph uses a 3-agent pipeline (Extractor → Resolver → Validator) with GPT-4o to ingest academic papers and construct queryable knowledge graphs. Built with PostgreSQL, Hono, and React Flow.';
-      } else if (lowercaseInput.includes('fraud') || lowercaseInput.includes('anomaly') || lowercaseInput.includes('financial')) {
-        return 'Anomaly Detection in Financial Data achieves 95%+ accuracy in fraud detection using Isolation Forest and One-Class SVM, processing 10K+ transactions per minute with interactive Plotly dashboards.';
-      } else {
-        return 'Nikhil has built 11 impressive projects including Voice Document Intelligence (1,000+ concurrent sessions), Gaussian Splatting Knowledge Graph (multi-agent LLM), Anomaly Detection (95%+ accuracy), Trading Platform (MERN stack), CollabHub, and more. Check the Projects page for details!';
-      }
-    }
-
-    // Experience queries
-    else if (lowercaseInput.includes('experience') || lowercaseInput.includes('work') || lowercaseInput.includes('job')) {
-      if (lowercaseInput.includes('times') || lowercaseInput.includes('internet')) {
-        return 'At Times Internet, Nikhil scaled backend services to handle 8.4M daily requests supporting 120K+ subscribers ($150M+ revenue). He built a Kafka-based personalization pipeline achieving 9.7% CTR increase and reduced infrastructure costs by 35%.';
-      } else if (lowercaseInput.includes('northeastern') || lowercaseInput.includes('university')) {
-        return 'At Northeastern University, Nikhil designed a FastAPI + PostgreSQL pipeline for semantic search across 10K+ biomedical articles, built AWS Batch pipeline reducing compute costs by 40%, and created React + D3.js visualization tools.';
-      } else if (lowercaseInput.includes('progcap') || lowercaseInput.includes('loan')) {
-        return 'At ProgCap, Nikhil built a Loan Originating System from scratch, cutting operational errors by 90% and engineering APIs with sub-100ms latency using Java Spring Boot and React.';
-      } else {
-        return 'Nikhil has 6+ years of experience as AI Solutions Consultant (current), Full-Stack + AI Developer at Northeastern, Software Engineer at Times Internet (8.4M requests/day), and ProgCap (90% error reduction). He has expertise across fintech, media, research, and health tech.';
-      }
-    }
-
-    // Education queries
-    else if (lowercaseInput.includes('education') || lowercaseInput.includes('study') || lowercaseInput.includes('degree') || lowercaseInput.includes('university')) {
-      return 'Nikhil holds a Master of Science in Information Systems from Northeastern University (2022-2023, GPA: 3.9/4.0) and a Bachelor of Technology in Computer Science from SRM Institute (2015-2019, GPA: 9.0/10.0). He studied courses in AI, cloud computing, web design, and data science.';
-    }
-
-    // Contact queries
-    else if (lowercaseInput.includes('contact') || lowercaseInput.includes('hire') || lowercaseInput.includes('email') || lowercaseInput.includes('reach')) {
-      return 'Nikhil is based in San Francisco, CA. You can reach him through the Contact form on this website, connect on LinkedIn (linkedin.com/in/nikhil-bindal), GitHub (github.com/NikhilOO7), or X (@NikhilBindal2). He offers consulting services in Backend, AI Solutions, and Technical Strategy.';
-    }
-
-    // Services queries
-    else if (lowercaseInput.includes('service') || lowercaseInput.includes('consulting') || lowercaseInput.includes('offer')) {
-      return 'Nikhil offers 3 main services: 1) Full-Stack Development (React, Next.js, Node.js, APIs), 2) AI Solutions (RAG systems, Multi-agent AI, Chatbots, ML models), and 3) Consulting & Strategy (Architecture design, AI/ML integration, System scalability). Visit the Services section for more details!';
-    }
-
-    // Achievement queries
-    else if (lowercaseInput.includes('achievement') || lowercaseInput.includes('metric') || lowercaseInput.includes('result')) {
-      return 'Key achievements: 1,000+ concurrent sessions with sub-50ms latency, 95%+ accuracy in fraud detection, 8.4M daily requests handled, $150M+ revenue contribution, 40% search improvement, 90% error reduction, 60% API call reduction, and 35% infrastructure cost savings.';
-    }
-
-    // Greeting
-    else if (lowercaseInput.includes('hi') || lowercaseInput.includes('hello') || lowercaseInput.includes('hey')) {
-      return 'Hello! I\'m JARVIS, Nikhil\'s AI assistant. I can tell you about his 6+ years of experience in Backend & AI engineering, 11 impressive projects, technical skills, work history, or how to get in touch. What would you like to know?';
-    }
-
-    // Default
-    else {
-      return 'I\'m here to help you learn about Nikhil Bindal! I can share details about his skills (Backend, AI/ML, Cloud), projects (Voice AI, Knowledge Graphs, Trading Platform), 6+ years of work experience (Times Internet, Northeastern, ProgCap), education (MS from Northeastern), or how to contact him. What interests you?';
-    }
+    setInterim('');
+    startListening({
+      onInterim: t => setInterim(t),
+      onFinal: t => {
+        setInterim('');
+        // Auto-send the captured query
+        send(t);
+      },
+      onError: () => setInterim(''),
+      onEnd: () => setInterim(''),
+    });
   };
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 20 }}
-      transition={{ duration: 0.3 }}
-      className="fixed bottom-24 right-8 z-50 w-80 enhanced-ui-panel rounded-lg shadow-jarvis-glow"
+      initial={{ opacity: 0, y: 24, scale: 0.96 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: 12, scale: 0.97 }}
+      transition={{ duration: 0.28, ease: 'easeOut' }}
+      className="fixed bottom-6 right-6 z-50 w-[calc(100vw-3rem)] sm:w-[420px] max-h-[78vh] flex flex-col"
     >
-      <div className="flex items-center justify-between p-4 enhanced-ui-header rounded-t-lg">
-        <h3 className="text-lg font-display text-jarvis-blue-500">JARVIS Assistant</h3>
-        <button onClick={onClose} className="text-gray-300 hover:text-jarvis-blue-500 transition-colors">
-          <X className="w-5 h-5" />
-        </button>
-      </div>
-      <div className="h-64 overflow-y-auto p-4 scrollbar-thin scrollbar-thumb-jarvis-blue-500 scrollbar-track-jarvis-dark-700">
-        <AnimatePresence>
-          {messages.map((message, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
-              className={`mb-4 ${message.isUser ? 'text-right' : 'text-left'}`}
-            >
+      <HUDFrame accent="#00d4ff" cornerSize={14} showScan className="bg-jarvis-dark-700/95 backdrop-blur-md flex flex-col overflow-hidden">
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: 'linear-gradient(135deg, rgba(0, 212, 255, 0.06) 0%, rgba(0, 8, 20, 0.55) 100%)' }}
+        />
+
+        {/* Header */}
+        <div className="relative px-4 py-3 border-b border-jarvis-cyan/15 flex items-center justify-between font-mono">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <span className="relative w-7 h-7 flex items-center justify-center flex-shrink-0">
               <span
-                className={`inline-block p-2 rounded-lg ${
-                  message.isUser
-                    ? 'user-message'
-                    : 'bot-message'
-                }`}
+                className="absolute inset-0 rounded-full animate-rotate-slow"
+                style={{ animationDuration: '12s', border: '1px dashed rgba(0, 212, 255, 0.5)' }}
+              />
+              <span
+                className="absolute inset-1 rounded-full"
+                style={{
+                  border: '1px solid rgba(0, 212, 255, 0.6)',
+                  boxShadow: '0 0 8px rgba(0, 212, 255, 0.4), inset 0 0 6px rgba(0, 212, 255, 0.4)',
+                }}
+              />
+              <span
+                className="absolute w-1.5 h-1.5 rounded-full"
+                style={{ background: 'radial-gradient(circle, #ffffff 0%, #00d4ff 60%, transparent 100%)' }}
+              />
+            </span>
+            <div className="min-w-0">
+              <div className="text-[10px] tracking-[0.35em] uppercase text-jarvis-cyan">
+                Conversation Channel
+              </div>
+              <div className="text-[9px] tracking-widest uppercase text-jarvis-blue-300/50">
+                J.A.R.V.I.S · interactive query
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            {voiceAvailable && (
+              <button
+                onClick={() => toggleEnabled()}
+                className="text-jarvis-blue-300/60 hover:text-jarvis-cyan transition-colors"
+                title={voiceEnabled ? 'Mute JARVIS voice' : 'Enable JARVIS voice'}
+                aria-label="Toggle JARVIS voice"
               >
-                {message.text}
-              </span>
-            </motion.div>
-          ))}
-          {isLoading && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-left mb-4"
+                {voiceEnabled ? <Volume2 className="w-4 h-4 text-jarvis-gold-400" /> : <VolumeX className="w-4 h-4" />}
+              </button>
+            )}
+            <button
+              onClick={onClose}
+              className="text-jarvis-blue-300/60 hover:text-jarvis-cyan transition-colors"
+              aria-label="Close conversation"
             >
-              <span className="inline-block p-2 rounded-lg bot-message">
-                <span className="flex space-x-1">
-                  <span className="animate-bounce">.</span>
-                  <span className="animate-bounce delay-100">.</span>
-                  <span className="animate-bounce delay-200">.</span>
-                </span>
-              </span>
-            </motion.div>
-          )}
-        </AnimatePresence>
-        <div ref={messagesEndRef} />
-      </div>
-      <div className="p-4 border-t border-jarvis-blue-500/30">
-        <div className="flex items-center">
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-            placeholder="Ask about Nikhil's skills, projects..."
-            className="flex-1 bg-jarvis-dark-500 text-gray-200 rounded-l-md p-2 focus:outline-none focus:ring-2 focus:ring-jarvis-blue-500"
-          />
-          <button
-            onClick={handleSend}
-            disabled={isLoading}
-            className="bg-jarvis-blue-500 text-white p-2 rounded-r-md hover:bg-jarvis-blue-600 transition-colors disabled:opacity-50"
-          >
-            <Send className="w-5 h-5" />
-          </button>
+              <X className="w-4 h-4" />
+            </button>
+          </div>
         </div>
-      </div>
+
+        {/* Transcript */}
+        <div className="relative flex-1 overflow-y-auto px-4 py-3 space-y-3 min-h-[260px]">
+          {messages.map((m, i) => (
+            <div key={i} className="font-mono leading-relaxed">
+              <div className="flex items-start gap-2 text-[10px] tracking-widest uppercase mb-0.5">
+                <span className={m.isUser ? 'text-jarvis-gold-400' : 'text-jarvis-cyan/70'}>
+                  [{m.isUser ? 'YOU' : 'J.A.R.V.I.S'}]
+                </span>
+                <span className="text-jarvis-blue-300/40 tabular-nums">{formatTime(m.timestamp)}</span>
+              </div>
+              <div className={`text-sm ${m.isUser ? 'text-gray-100' : 'text-gray-200'} whitespace-pre-wrap`}>
+                {m.text}
+              </div>
+            </div>
+          ))}
+
+          {isLoading && (
+            <div className="font-mono leading-relaxed">
+              <div className="flex items-center gap-2 text-[10px] tracking-widest uppercase mb-0.5">
+                <span className="text-jarvis-cyan/70">[J.A.R.V.I.S]</span>
+                <span className="text-jarvis-blue-300/40">querying…</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-gray-300">
+                <Loader2 className="w-3.5 h-3.5 animate-spin text-jarvis-cyan" />
+                <span>Compiling response…</span>
+              </div>
+            </div>
+          )}
+
+          <div ref={messagesEndRef} />
+        </div>
+
+        {/* Input row */}
+        <div className="relative border-t border-jarvis-cyan/15 px-3 py-2.5">
+          <div className="flex items-center gap-2 font-mono">
+            <span className={`text-sm select-none ${listening ? 'text-red-400' : 'text-jarvis-gold-400'}`}>
+              {listening ? '◉' : '›_'}
+            </span>
+            <input
+              ref={inputRef}
+              type="text"
+              value={listening && interim ? interim : input}
+              onChange={e => setInput(e.target.value)}
+              onKeyDown={e => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  send();
+                }
+              }}
+              disabled={isLoading || listening}
+              placeholder={
+                listening
+                  ? 'Listening… speak your query'
+                  : recognitionAvailable
+                    ? 'Type your query, or tap mic to speak…'
+                    : 'Type your query for JARVIS…'
+              }
+              className={`flex-1 bg-transparent outline-none text-sm placeholder:text-gray-500 placeholder:text-xs tracking-wide ${
+                listening && interim ? 'text-jarvis-cyan/80 italic' : 'text-gray-100'
+              }`}
+              aria-label="Ask JARVIS"
+            />
+            {recognitionAvailable && (
+              <button
+                type="button"
+                onClick={onMic}
+                disabled={isLoading}
+                className="relative transition-colors disabled:opacity-40"
+                style={{ color: listening ? '#ef4444' : 'rgba(0, 212, 255, 0.7)' }}
+                aria-label={listening ? 'Stop listening' : 'Speak your query'}
+                title={listening ? 'Stop listening' : 'Speak'}
+              >
+                {listening && (
+                  <span className="absolute inset-0 -m-1.5 rounded-full animate-ping" style={{ background: 'rgba(239, 68, 68, 0.4)' }} />
+                )}
+                <Mic className="relative w-4 h-4" />
+              </button>
+            )}
+            <button
+              onClick={() => send()}
+              disabled={!input.trim() || isLoading || listening}
+              className="font-mono text-[10px] tracking-[0.3em] uppercase px-2.5 py-1 rounded-sm border transition-all disabled:opacity-40 inline-flex items-center gap-1.5"
+              style={{
+                color: '#fbbf24',
+                borderColor: 'rgba(251, 191, 36, 0.5)',
+                backgroundColor: 'rgba(251, 191, 36, 0.08)',
+              }}
+              aria-label="Send query"
+            >
+              <Send className="w-3 h-3" />
+              Send
+            </button>
+          </div>
+          <div className="mt-1.5 text-[9px] tracking-widest uppercase text-jarvis-blue-300/40">
+            Try: "what are his recent projects" · "tell me about voice ai work" · "how to reach him"
+          </div>
+        </div>
+      </HUDFrame>
     </motion.div>
   );
 }

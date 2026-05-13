@@ -6,6 +6,7 @@ import SectionHeader from '@/components/ui/SectionHeader';
 import HUDFrame from '@/components/ui/HUDFrame';
 import ArcReactor from '@/components/ui/ArcReactor';
 import DataReadout from '@/components/ui/DataReadout';
+import PanelHeader from '@/components/ui/PanelHeader';
 import { FaLinkedin, FaGithub } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
 import { Code2, Sparkles, Rocket, MapPin, Mail } from 'lucide-react';
@@ -55,14 +56,27 @@ export default function About() {
       transition={{ duration: 0.5 }}
       className="min-h-screen bg-jarvis-dark-500 text-white relative font-display overflow-x-hidden z-10 pt-16"
     >
-      <section className="py-20 sm:py-24 relative z-10">
+      <section className="py-10 sm:py-12 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeader
-            eyebrow="Who I am"
-            title="About Me"
-            gradient="blue-cyan"
-            size="xl"
+          <PanelHeader
+            module="Subject Dossier"
+            query="show me his dossier"
+            response={[
+              'Right away. Pulling up the full record on Nikhil Bindal.',
+              'Cross-referencing biographical, professional, and academic data. Six years of production experience verified across fintech, media, research, and AI startups.',
+              'Dossier rendered below.',
+            ]}
+            accent="#00d4ff"
           />
+
+          <div className="mt-14">
+            <SectionHeader
+              eyebrow="Who I am"
+              title="About Me"
+              gradient="blue-cyan"
+              size="xl"
+            />
+          </div>
 
           <div className="flex flex-col lg:flex-row items-start gap-10 mt-14">
             <motion.div

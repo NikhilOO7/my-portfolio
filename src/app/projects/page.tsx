@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import EnhancedProjectCard from '@/components/EnhancedProjectCard';
 import Button from '@/components/Button';
 import SectionHeader from '@/components/ui/SectionHeader';
+import PanelHeader from '@/components/ui/PanelHeader';
 import { projects } from '@/data/projects';
 
 export default function Projects() {
@@ -33,15 +34,28 @@ export default function Projects() {
       transition={{ duration: 0.5 }}
       className="min-h-screen bg-jarvis-dark-500 text-white relative font-display overflow-x-hidden z-10 pt-16"
     >
-      <section className="py-20 sm:py-24 relative z-10">
+      <section className="py-10 sm:py-12 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeader
-            eyebrow="What I've shipped"
-            title="Projects"
-            subtitle="Production systems and explorations across AI infrastructure, voice, fintech, and developer tooling."
-            gradient="cyan-violet"
-            size="xl"
+          <PanelHeader
+            module="Project Archive"
+            query="show me his project archive"
+            response={[
+              'Accessing operational history.',
+              `${projects.length} entries available, ${projects.filter(p => p.featured).length} marked featured. Filtering controls online.`,
+              'Records sorted by recency. Most recent work involves multi-agent AI infrastructure and real-time voice pipelines.',
+            ]}
+            accent="#06b6d4"
           />
+
+          <div className="mt-14">
+            <SectionHeader
+              eyebrow="What I've shipped"
+              title="Projects"
+              subtitle="Production systems and explorations across AI infrastructure, voice, fintech, and developer tooling."
+              gradient="cyan-violet"
+              size="xl"
+            />
+          </div>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}

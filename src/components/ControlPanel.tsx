@@ -1,15 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { Mic, MessageSquare, Music } from 'lucide-react';
+import { MessageSquare, Music } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Chatbot from './Chatbot';
-import VoiceControl from './VoiceControl';
 import MusicPlayer from './MusicPlayer';
 
 export default function ControlPanel() {
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const [isVoiceOpen, setIsVoiceOpen] = useState(false);
   const [isMusicOpen, setIsMusicOpen] = useState(false);
 
   return (
@@ -19,15 +17,6 @@ export default function ControlPanel() {
       transition={{ duration: 0.5 }}
       className="fixed bottom-24 right-8 z-40 flex flex-col space-y-4"
     >
-      <motion.button
-        whileHover={{ scale: 1.1, boxShadow: '0 0 10px rgba(25, 118, 255, 0.5)' }}
-        transition={{ duration: 0.3 }}
-        className="text-gray-300 hover:text-jarvis-blue-500 transition-colors duration-200 bg-jarvis-dark-600 rounded-full w-12 h-12 flex items-center justify-center"
-        title="Voice Control"
-        onClick={() => setIsVoiceOpen(!isVoiceOpen)}
-      >
-        <Mic className="w-6 h-6" />
-      </motion.button>
       <motion.button
         whileHover={{ scale: 1.1, boxShadow: '0 0 10px rgba(25, 118, 255, 0.5)' }}
         transition={{ duration: 0.3 }}
@@ -48,7 +37,6 @@ export default function ControlPanel() {
         <Music className="w-6 h-6" />
       </motion.button>
       {isChatOpen && <Chatbot onClose={() => setIsChatOpen(false)} />}
-      {isVoiceOpen && <VoiceControl onClose={() => setIsVoiceOpen(false)} />}
       {isMusicOpen && <MusicPlayer onClose={() => setIsMusicOpen(false)} />}
     </motion.div>
   );

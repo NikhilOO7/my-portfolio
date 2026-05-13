@@ -2,14 +2,19 @@ import type { Metadata } from 'next';
 import './globals.css';
 import ParallaxLayer from '@/components/ParallaxLayer';
 import Header from '@/components/Header';
-import ControlPanel from '@/components/ControlPanel';
 import ThreeCanvasWrapper from '@/components/ThreeCanvasWrapper';
 import ScrollProgressBar from '@/components/ScrollProgressBar';
 import HUDTopBar from '@/components/HUDTopBar';
 import ReticleCursor from '@/components/ReticleCursor';
 import LeftRail from '@/components/LeftRail';
 import AmbientDiagnostics from '@/components/AmbientDiagnostics';
+import JarvisQuickMic from '@/components/JarvisQuickMic';
+import JarvisCommandPalette from '@/components/JarvisCommandPalette';
+import JarvisSubsystems from '@/components/JarvisSubsystems';
+import IronManHologram from '@/components/IronManHologram';
 import { ChatbotProvider } from '@/components/ChatbotContext';
+import { JarvisVoiceProvider } from '@/components/JarvisVoiceContext';
+import { JarvisSystemProvider } from '@/components/JarvisSystemContext';
 
 export const metadata: Metadata = {
   title: 'Nikhil Bindal | Portfolio',
@@ -25,11 +30,14 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <ChatbotProvider>
+        <JarvisSystemProvider>
+        <JarvisVoiceProvider>
           <HUDTopBar />
           <ScrollProgressBar />
           <ReticleCursor />
           <LeftRail />
           <AmbientDiagnostics />
+          <IronManHologram intensity={0.18} />
           <ThreeCanvasWrapper />
           <ParallaxLayer depth={0.1}>
             <div className="absolute inset-0 bg-jarvis-grid opacity-10" />
@@ -41,7 +49,11 @@ export default function RootLayout({
               {children}
             </div>
           </main>
-          <ControlPanel />
+          <JarvisSubsystems />
+          <JarvisQuickMic />
+          <JarvisCommandPalette />
+        </JarvisVoiceProvider>
+        </JarvisSystemProvider>
         </ChatbotProvider>
       </body>
     </html>

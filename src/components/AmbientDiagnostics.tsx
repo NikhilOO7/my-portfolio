@@ -1,7 +1,9 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Minus, Plus } from 'lucide-react';
 import HUDFrame from '@/components/ui/HUDFrame';
+import { useJarvisSystem } from '@/components/JarvisSystemContext';
 
 interface Metrics {
   cpu: number;
@@ -18,6 +20,7 @@ function formatUptime(seconds: number) {
 }
 
 export default function AmbientDiagnostics() {
+  const { diagnosticsOpen, toggleDiagnostics } = useJarvisSystem();
   const [metrics, setMetrics] = useState<Metrics>({
     cpu: 18,
     mem: 42,
@@ -72,8 +75,29 @@ export default function AmbientDiagnostics() {
               <span className="w-1.5 h-1.5 rounded-full bg-jarvis-cyan animate-corner-pulse" />
               SYS·DIAG
             </span>
-            <span className="text-jarvis-gold-400/80">LIVE</span>
+            <div className="flex items-center gap-2">
+              <span className="text-jarvis-gold-400/80">LIVE</span>
+              <button
+                onClick={toggleDiagnostics}
+                className="text-jarvis-blue-300/60 hover:text-jarvis-cyan transition-colors"
+                aria-label={diagnosticsOpen ? 'Collapse diagnostics' : 'Expand diagnostics'}
+                title={diagnosticsOpen ? 'Collapse' : 'Expand'}
+              >
+                {diagnosticsOpen ? <Minus className="w-3 h-3" /> : <Plus className="w-3 h-3" />}
+              </button>
+            </div>
           </div>
+
+          <AnimatePresence initial={false}>
+            {diagnosticsOpen && (
+              <motion.div
+                key="body"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.25 }}
+                className="overflow-hidden"
+              >
 
           {/* CPU row */}
           <Row label="CPU" value={`${metrics.cpu.toFixed(1)}%`} pct={metrics.cpu} accent="#00d4ff" />
@@ -109,6 +133,9 @@ export default function AmbientDiagnostics() {
             <span className="text-jarvis-blue-300/70">UPTIME</span>
             <span className="text-jarvis-cyan tabular-nums">{uptime}</span>
           </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </HUDFrame>
     </motion.div>
