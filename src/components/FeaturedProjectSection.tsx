@@ -6,6 +6,8 @@ import { BsArrowRight } from 'react-icons/bs';
 import Link from 'next/link';
 import Image from 'next/image';
 import { featuredProjects } from '@/data/projects';
+import SectionHeader from '@/components/ui/SectionHeader';
+import HUDFrame from '@/components/ui/HUDFrame';
 import {
   SiReact, SiNextdotjs, SiPython, SiNodedotjs, SiMongodb, SiAmazonwebservices,
   SiGooglecloud, SiTensorflow, SiFastapi, SiPostgresql, SiRedis, SiTypescript,
@@ -69,21 +71,19 @@ export default function EnhancedFeaturedProjectsSection() {
       className="py-20 bg-jarvis-dark-600/30"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-end mb-12">
-          <motion.h2
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.8, delay: 0.4, ease: 'easeOut' }}
-            className="text-4xl sm:text-5xl font-bold text-jarvis-blue-500 leading-tight"
-          >
-            Featured Projects
-          </motion.h2>
-
-          <Link href="/projects" className="hidden md:flex items-center text-jarvis-blue-500 hover:text-jarvis-blue-400 transition-colors">
-            <span className="mr-2">View all projects</span>
-            <BsArrowRight />
-          </Link>
+        <div className="mb-12">
+          <SectionHeader
+            eyebrow="Selected work"
+            title="Featured Projects"
+            subtitle="A curated selection of recent production AI systems and full-stack work."
+            gradient="cyan-violet"
+          />
+          <div className="hidden md:flex justify-end mt-6">
+            <Link href="/projects" className="inline-flex items-center text-jarvis-blue-300 hover:text-jarvis-accent-500 transition-colors group">
+              <span className="mr-2">View all projects</span>
+              <BsArrowRight className="transition-transform group-hover:translate-x-1" />
+            </Link>
+          </div>
         </div>
 
         <div className="grid gap-10 grid-cols-1 lg:grid-cols-3">
@@ -94,38 +94,43 @@ export default function EnhancedFeaturedProjectsSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
-                whileHover={{
-                  scale: 1.03,
-                  boxShadow: '0 0 30px rgba(25, 118, 255, 0.2)'
-                }}
-                className="bg-jarvis-dark-600 rounded-xl overflow-hidden shadow-jarvis-glow border border-jarvis-blue-500/20 h-full flex flex-col"
+                whileHover={{ y: -6 }}
+                className="h-full"
               >
-                <div className="relative h-48 w-full">
-                  <Image
-                    src={project.imageUrl}
-                    alt={project.title}
-                    fill
-                    style={{ objectFit: 'cover' }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-jarvis-dark-900 via-transparent to-transparent"></div>
-                </div>
-
-                <div className="p-6 flex flex-col flex-grow">
-                  <h3 className="text-2xl font-display text-jarvis-blue-500 mb-2">{project.title}</h3>
-                  <p className="text-gray-300 mb-4 flex-grow">{project.description}</p>
-
-                  <div className="flex flex-wrap gap-3 mt-auto">
-                    {project.techStack.slice(0, 6).map(tech => (
-                      <div key={tech} title={tech}>
-                        {techIcons[tech] || (
-                          <span className="text-xs font-display text-gray-200 bg-jarvis-dark-700/70 px-3 py-1 rounded-full">
-                            {tech}
-                          </span>
-                        )}
-                      </div>
-                    ))}
+                <HUDFrame accent="#00d4ff" cornerSize={16} showScan className="bg-jarvis-dark-600/60 overflow-hidden h-full flex flex-col">
+                  <div className="absolute inset-0 border border-jarvis-blue-500/20 pointer-events-none" />
+                  <div className="relative h-48 w-full">
+                    <Image
+                      src={project.imageUrl}
+                      alt={project.title}
+                      fill
+                      style={{ objectFit: 'cover' }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-jarvis-dark-900 via-transparent to-transparent" />
+                    {/* HUD scan bar across top of image */}
+                    <div className="absolute top-2 left-3 right-3 flex items-center justify-between font-mono text-[9px] tracking-[0.3em] uppercase text-jarvis-cyan/80">
+                      <span>› Project {String(index + 1).padStart(2, '0')}</span>
+                      <span className="text-jarvis-gold-400/90">ACTIVE</span>
+                    </div>
                   </div>
-                </div>
+
+                  <div className="p-6 flex flex-col flex-grow relative">
+                    <h3 className="text-xl sm:text-2xl font-display text-white mb-2 leading-tight">{project.title}</h3>
+                    <p className="text-gray-300 text-sm mb-4 flex-grow">{project.description}</p>
+
+                    <div className="flex flex-wrap gap-3 mt-auto">
+                      {project.techStack.slice(0, 6).map(tech => (
+                        <div key={tech} title={tech}>
+                          {techIcons[tech] || (
+                            <span className="text-xs font-mono text-gray-200 bg-jarvis-dark-700/70 px-2.5 py-0.5 rounded-sm border border-jarvis-blue-500/30">
+                              {tech}
+                            </span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </HUDFrame>
               </motion.div>
             </Link>
           ))}

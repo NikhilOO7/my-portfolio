@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import EnhancedProjectCard from '@/components/EnhancedProjectCard';
 import Button from '@/components/Button';
+import SectionHeader from '@/components/ui/SectionHeader';
 import { projects } from '@/data/projects';
 
 export default function Projects() {
@@ -34,20 +35,19 @@ export default function Projects() {
     >
       <section className="py-20 sm:py-24 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4, ease: 'easeOut' }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-jarvis-blue-500 leading-tight text-center"
-          >
-            Projects
-          </motion.h1>
-          
+          <SectionHeader
+            eyebrow="What I've shipped"
+            title="Projects"
+            subtitle="Production systems and explorations across AI infrastructure, voice, fintech, and developer tooling."
+            gradient="cyan-violet"
+            size="xl"
+          />
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="flex justify-center mt-8 mb-12 space-x-4 overflow-x-auto py-2"
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="flex justify-center mt-10 mb-12 space-x-4 overflow-x-auto py-2"
           >
             {categories.map((category) => (
               <Button
@@ -112,7 +112,7 @@ export default function Projects() {
                 whileTap={{ scale: 0.95 }}
                 onClick={() => window.location.href = '/contact'}
               >
-                Hire Me
+                Have a project in mind?
               </Button>
             </motion.div>
           </motion.div>

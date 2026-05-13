@@ -8,6 +8,11 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 
+interface SubRole {
+  company: string;
+  description: string[];
+}
+
 interface Experience {
   id: string;
   title: string;
@@ -16,6 +21,7 @@ interface Experience {
   startDate: string;
   endDate: string;
   description: string[];
+  subRoles?: SubRole[];
   skills: string[];
   category: string;
 }
@@ -50,32 +56,53 @@ export default function InteractiveResume() {
   const experiences: Experience[] = [
     {
       id: 'ai-consultant',
-      title: 'AI Solutions Consultant — Backend & AI Infrastructure',
-      company: 'Independent',
+      title: 'AI Consultant / AI Infrastructure Engineer',
+      company: 'Neurologica · Stealth AI Startup',
       location: 'San Francisco, CA',
       startDate: 'Sep 2024',
       endDate: 'Present',
-      description: [
-        'Architected a voice-based document intelligence platform using WebRTC, LiveKit, FastAPI and PostgreSQL; implemented a multi-agent RAG pipeline with CrewAI and LlamaIndex that improved search relevance by 40%, supported 1,000+ concurrent sessions with sub-50 ms latency and 95%+ transcription accuracy.',
-        'Designed multi-agent LLM reasoning pipelines (CrewAI + LlamaIndex) with a three-tier RAG approach (local/document/global embeddings) powering semantic question generation and context-aware inference.',
-        'Built continuous streaming infrastructure for STT/TTS (Deepgram Nova-3, Cartesia Sonic) and model inference in production with real-time WebRTC voice UI.',
-        'Led end-to-end solution from prototyping to production on GCP, leveraging Docker, Kubernetes, Qdrant vector database, and introduced comprehensive monitoring (Prometheus/Grafana) and CI/CD pipelines; collaborated with clients to prioritize features and mentored junior engineers in both front- and back-end best practices.'
+      description: [],
+      subRoles: [
+        {
+          company: 'Neurologica — Engineering Contractor',
+          description: [
+            'Architected and built a production-grade AI coaching platform combining biometric signal analysis with a multi-agent orchestration pipeline and persistent personal memory systems.',
+            'Designed and implemented a 6-agent orchestration pipeline reducing end-to-end AI latency from 36s to 9.5s (73% reduction) through prompt consolidation, model tiering, and async execution optimization.',
+            'Built Mnemosyne memory architecture with semantic retrieval, temporal decay lifecycle, and context-scoped memory bucketing across multiple user domains.',
+            'Engineered Redis-backed concurrency controls and session orchestration preventing state corruption under concurrent real-time voice sessions.',
+            'Built parallel voice sidecar architecture using Gemini Live enabling low-latency audio conversations while asynchronously running sentiment, query, and analytics pipelines.',
+            'Integrated real-time HCI signal processing workflows using multimodal emotion/context signals to adapt conversational reasoning dynamically.',
+            'Developed Python and JavaScript SDKs supporting 32 operations across orchestration, memory, analytics, sessions, and BYOD infrastructure.',
+            'Established CI/CD pipelines, audit logging infrastructure, webhook delivery systems, and production deployment workflows on GCP Cloud Run.'
+          ]
+        },
+        {
+          company: 'Stealth AI Startup — AI Solutions Consultant',
+          description: [
+            'Architected an AI-powered meeting intelligence platform automating pre-meeting research, live meeting assistance, and post-meeting synthesis workflows.',
+            'Designed a 3-phase agentic architecture orchestrating 15 specialized AI agents across research, meeting intelligence, and decision-tracking pipelines.',
+            'Built contextual retrieval workflows using multi-level semantic search across Qdrant vector collections improving retrieval relevance by ~40% over traditional RAG pipelines.',
+            'Implemented a real-time voice pipeline using LiveKit WebRTC, Deepgram STT, and Cartesia TTS targeting sub-200ms perceived latency.',
+            'Designed PostgreSQL schemas and knowledge graph workflows modeling meeting entities, action items, decisions, transcripts, and research relationships.',
+            'Implemented Redis-backed rate limiting, Prometheus metrics, structured logging, and async background workers for scalable production monitoring.'
+          ]
+        }
       ],
-      skills: ['Python', 'FastAPI', 'Django', 'PostgreSQL', 'Redis', 'WebRTC', 'LiveKit', 'CrewAI', 'LlamaIndex', 'Qdrant', 'Kubernetes', 'GCP', 'Deepgram'],
+      skills: ['Python', 'FastAPI', 'Node.js', 'PostgreSQL', 'Redis', 'Qdrant', 'WebRTC', 'LiveKit', 'Gemini Live', 'CrewAI', 'LangGraph', 'LlamaIndex', 'GPT-4o', 'Deepgram', 'Cartesia', 'Kubernetes', 'GCP Cloud Run', 'Prometheus'],
       category: 'ai'
     },
     {
       id: 'northeastern',
-      title: 'Full-Stack + AI Developer',
+      title: 'Full-Stack Developer / Research Assistant',
       company: 'Northeastern University',
       location: 'Boston, MA',
       startDate: 'Feb 2023',
       endDate: 'Dec 2023',
       description: [
-        'Designed a FastAPI + PostgreSQL pipeline enabling semantic search across 10K+ biomedical articles; integrated vector embeddings and search scoring to surface relevant literature for biomedical research.',
-        'Built AWS Batch cloud pipeline to execute large-scale simulations; automated job orchestration and resource provisioning, reducing compute costs by 40%.',
-        'Created React + D3.js visualization tools and TensorFlow CNN classifiers for glycan research analysis.',
-        'Developed a tactile graphics generator and screen-reader plugins to improve STEM accessibility, leveraging React and OpenCV.'
+        'Developed a semantic search and data-visualization platform for biomedical research using FastAPI, PostgreSQL, React, and D3.js, enabling researchers to search and analyze 10K+ scientific papers and molecular datasets.',
+        'Built AWS Batch-based distributed simulation pipelines orchestrating large-scale molecular computations and reducing compute costs by 40%.',
+        'Led backend development for scientific data ingestion pipelines, metadata APIs, and ML inference workflows (TensorFlow CNN classifiers for glycan research) supporting computational biology research.',
+        'Designed accessibility-focused tooling including tactile graphics generation and screen-reader integrations to improve STEM accessibility for visually impaired students and researchers.'
       ],
       skills: ['React', 'FastAPI', 'Python', 'PostgreSQL', 'AWS Batch', 'D3.js', 'TensorFlow', 'OpenCV', 'TypeScript', 'Docker'],
       category: 'fullstack'
@@ -88,9 +115,9 @@ export default function InteractiveResume() {
       startDate: 'Apr 2021',
       endDate: 'Jul 2022',
       description: [
-        'Scaled backend services (Spring Boot + Redis) to handle 8.4M daily requests and supported 120K+ subscribers, contributing to $150M+ annual revenue for the TOI+ subscription platform.',
-        'Designed a Kafka-based personalization and recommendations pipeline that delivered personalized news feeds; achieved 9.7% CTR increase for premium users.',
-        'Led migration of 70+ city sections into React micro-frontends, improving page load times and raising Lighthouse performance scores to 92/100.',
+        'Built and scaled backend services (Spring Boot + Redis) for the TOI+ subscription platform handling 8.4M daily requests and supporting 120K+ subscribers, contributing to $150M+ annual revenue.',
+        'Migrated 70+ city portals from legacy systems to React-based micro-frontends, raising Lighthouse performance scores to 92/100 and improving maintainability.',
+        'Designed a Kafka-based personalization and recommendations pipeline that delivered personalized news feeds; achieved 9.7% CTR increase for premium users and supported higher engagement and retention.',
         'Containerized services using Docker and deployed to AWS EKS, reducing infrastructure costs by 35% and simplifying deployments.'
       ],
       skills: ['Spring Boot', 'Java', 'Node.js', 'Redis', 'Kafka', 'React', 'Docker', 'Kubernetes', 'AWS EKS', 'Jenkins'],
@@ -104,9 +131,9 @@ export default function InteractiveResume() {
       startDate: 'Jan 2019',
       endDate: 'Mar 2021',
       description: [
-        'Designed and built Node.js/Express microservices for real-time loan underwriting; reduced latency from 8.7s to 890ms through caching and optimized database queries.',
-        'Implemented a Kafka event-driven architecture processing 22K transactions per second with exactly-once semantics to ensure financial integrity.',
-        'Developed credit scoring ML models (XGBoost) that decreased false negatives by 19%, enabling smarter lending decisions.',
+        'Built real-time lending and underwriting microservices using Node.js/Express, Kafka, MongoDB, and event-driven architecture; reduced transaction workflow latency from 8.7s to 890ms through caching and optimized queries.',
+        'Implemented Kafka event-driven workflows processing 22K transactions per second with exactly-once semantics to ensure financial integrity across high-throughput lending operations.',
+        'Integrated ML-powered credit scoring (XGBoost) into backend lending systems, decreasing false negatives by 19% and enabling smarter lending decisions for large-scale financial operations.',
         'Supported product growth to ₹9,800 Cr+ lending volume, helping secure Series B funding (US$25M).'
       ],
       skills: ['Node.js', 'Express', 'Kafka', 'MongoDB', 'Redis', 'XGBoost', 'AWS ECS', 'Python'],
@@ -115,14 +142,15 @@ export default function InteractiveResume() {
     {
       id: 'livemedia',
       title: 'Software Engineer',
-      company: 'Livemedia',
+      company: 'LiveMedia / LiveChek',
       location: 'New Delhi, India',
       startDate: 'Aug 2017',
       endDate: 'May 2018',
       description: [
+        'Worked on insurance-focused telematics and behavioral analytics systems integrating real-time driving behavior and user interaction data into backend services and APIs.',
         'Built an OCR-based document verification system using Tesseract.js and Python APIs, achieving 92%+ accuracy for identity verification.',
         'Developed a React Native offline-first inspection app used for 50K+ monthly site inspections; reduced inspection time from 45 minutes to 22 minutes through local caching and sync logic.',
-        'Created a React.js + Django claims platform that cut insurance claims processing time by 60%.'
+        'Created a React.js + Django claims platform that cut insurance claims processing time by 60% and contributed to early-stage product and architecture decisions in a startup environment.'
       ],
       skills: ['React Native', 'React', 'Django', 'Python', 'Tesseract.js', 'PostgreSQL', 'Redux', 'REST APIs'],
       category: 'fullstack'
@@ -252,15 +280,33 @@ export default function InteractiveResume() {
                       </div>
                     </div>
                     
-                    <ul className="text-gray-300 space-y-2 mb-4">
-                      {exp.description.map((item, i) => (
-                        <li key={i} className="text-sm flex">
-                          <span className="mr-2 text-jarvis-blue-400 flex-shrink-0">•</span>
-                          <span className="flex-1">{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    
+                    {exp.subRoles && exp.subRoles.length > 0 ? (
+                      <div className="space-y-5 mb-4">
+                        {exp.subRoles.map((sub, si) => (
+                          <div key={si}>
+                            <h4 className="text-base font-display text-jarvis-blue-400 mb-2">{sub.company}</h4>
+                            <ul className="text-gray-300 space-y-2">
+                              {sub.description.map((item, i) => (
+                                <li key={i} className="text-sm flex">
+                                  <span className="mr-2 text-jarvis-blue-400 flex-shrink-0">•</span>
+                                  <span className="flex-1">{item}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <ul className="text-gray-300 space-y-2 mb-4">
+                        {exp.description.map((item, i) => (
+                          <li key={i} className="text-sm flex">
+                            <span className="mr-2 text-jarvis-blue-400 flex-shrink-0">•</span>
+                            <span className="flex-1">{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+
                     <div className="flex flex-wrap gap-2">
                       {exp.skills.map((skill) => (
                         <span

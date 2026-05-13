@@ -4,6 +4,7 @@ import BlogGenImage from './../assets/images/blogGen.png';
 import FianceAnalyse from './../assets/images/financial-analyser.png';
 import VoiceDocIntelligenceImage from './../assets/images/voice-doc-intelligence.png';
 import GaussianImage from './../assets/images/Gaussian-splatting.png';
+import RecoMeImage from './../assets/images/ml-feature-selection.png';
 import GennieImage from './../assets/images/gennie.png';
 import TradingImage from './../assets/images/trading.png';
 import AnomalyImage from './../assets/images/anomaly.png';
@@ -40,6 +41,22 @@ export interface Project {
         "Supported 1,000+ concurrent sessions with sub-50ms latency and 95%+ transcription accuracy",
         "Built real-time streaming infrastructure for STT/TTS with Deepgram Nova-3 and Cartesia Sonic",
         "Deployed on GCP with Docker, Kubernetes, and comprehensive monitoring (Prometheus/Grafana)"
+      ],
+      featured: true
+    },
+    {
+      id: "recome-recommendation-engine",
+      title: "RecoMe — Personalized Recommendation Engine",
+      description: "Behavioral recommendation system modeling user preferences and cross-platform interaction patterns for personalized content discovery.",
+      longDescription: "Built a behavioral recommendation engine that models user preferences and interaction patterns across platforms to personalize content discovery workflows. Combines collaborative filtering, content-based signals, and session-level behavioral features to deliver context-aware recommendations, with feedback loops for continuous learning from implicit and explicit user signals.",
+      tags: ["Recommendation Systems", "Personalization", "ML", "Behavioral Analytics"],
+      techStack: ["Python", "FastAPI", "PostgreSQL", "Redis", "Scikit-learn", "Pandas", "Docker"],
+      imageUrl: RecoMeImage,
+      github: "https://github.com/NikhilOO7/recome",
+      achievements: [
+        "Modeled user preferences and interaction patterns across multiple platforms for unified personalization",
+        "Built hybrid recommendation pipeline combining collaborative filtering with content-based and behavioral signals",
+        "Designed feedback loops capturing implicit and explicit signals for continuous model improvement"
       ],
       featured: true
     },
@@ -121,7 +138,7 @@ export interface Project {
         "Built real-time anomaly detection pipeline processing 10K+ transactions per minute",
         "Created interactive Plotly dashboards for visualizing fraud patterns and insights"
       ],
-      featured: true
+      featured: false
     },
     {
       id: "collabhub",

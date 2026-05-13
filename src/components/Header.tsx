@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Clock, Menu, X } from 'lucide-react';
+import { useState } from 'react';
+import { Menu, X } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -16,7 +16,6 @@ const navItems = [
 ];
 
 export default function Header() {
-  const [time, setTime] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
@@ -27,59 +26,43 @@ export default function Header() {
     return pathname.startsWith(href);
   };
 
-  useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
-      try {
-        setTime(
-          now.toLocaleTimeString('en-US', {
-            timeZone: 'America/Los_Angeles',
-            hour12: false,
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-          })
-        );
-      } catch (e) {
-        console.error('Error formatting time:', e);
-        setTime(
-          now.toLocaleTimeString('en-US', {
-            hour12: false,
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-          })
-        );
-      }
-    };
-
-    updateTime();
-    const interval = setInterval(updateTime, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
   return (
     <motion.header
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, delay: 0.2 }}
-      className="fixed top-0 left-0 right-0 bg-jarvis-dark-600 bg-opacity-80 backdrop-blur-md z-50 shadow-lg"
+      className="fixed top-7 left-0 xl:left-14 right-0 bg-jarvis-dark-600/80 backdrop-blur-md z-50 border-b border-jarvis-blue-500/10"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
-        <div className="flex items-center gap-4">
-          <span
-            className="text-xs sm:text-sm text-gray-300 flex items-center flex-shrink-0"
-            style={{ whiteSpace: 'nowrap', minWidth: '160px' }}
-            title="Current Time in San Francisco, CA"
-          >
-            <Clock className="w-3 h-3 sm:w-4 sm:h-4 mr-1 text-jarvis-blue-500" />
-            San Francisco, CA | {time}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-14">
+        <Link href="/" className="flex items-center gap-2.5 group flex-shrink-0">
+          {/* Mini arc reactor logo */}
+          <span className="relative w-7 h-7 flex items-center justify-center">
+            <span
+              className="absolute inset-0 rounded-full animate-rotate-slow"
+              style={{
+                animationDuration: '12s',
+                border: '1px dashed rgba(0, 212, 255, 0.5)',
+              }}
+            />
+            <span
+              className="absolute inset-1.5 rounded-full"
+              style={{
+                border: '1px solid rgba(0, 212, 255, 0.6)',
+                boxShadow: '0 0 8px rgba(0, 212, 255, 0.45), inset 0 0 6px rgba(0, 212, 255, 0.4)',
+              }}
+            />
+            <span
+              className="absolute inset-[10px] rounded-full"
+              style={{
+                background: 'radial-gradient(circle, #ffffff 0%, #00d4ff 60%, transparent 100%)',
+                filter: 'blur(0.5px)',
+              }}
+            />
           </span>
-          <span className="hidden md:inline-flex text-xs sm:text-sm text-gray-300 items-center flex-shrink-0">
-            <span className="w-2 h-2 bg-green-500 rounded-full mr-1 animate-pulse"></span>
-            System Status: Optimal
+          <span className="font-mono text-xs sm:text-sm tracking-[0.25em] text-jarvis-blue-300 group-hover:text-jarvis-cyan transition-colors uppercase">
+            N.BINDAL
           </span>
-        </div>
+        </Link>
         <div className="hidden sm:flex sm:space-x-8">
           {navItems.map((item) => (
             <Link

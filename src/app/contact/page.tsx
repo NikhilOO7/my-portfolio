@@ -10,6 +10,7 @@ import axios from 'axios';
 import Button from '@/components/Button';
 import MapComponent from '@/components/MapComponent';
 import BuyMeCoffeeButton from '@/components/BuyMeCoffeeButton';
+import SectionHeader from '@/components/ui/SectionHeader';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -91,24 +92,14 @@ export default function Contact() {
     >
       <section className="py-20 sm:py-24 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4, ease: 'easeOut' }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-jarvis-blue-500 leading-tight text-center"
-          >
-            Contact Me
-          </motion.h1>
-          
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="mt-4 text-center text-gray-300 max-w-2xl mx-auto mb-12"
-          >
-            Interested in working together? Have a project in mind or just want to connect?
-            Drop me a message and I'll get back to you as soon as possible.
-          </motion.p>
+          <SectionHeader
+            eyebrow="Let's talk"
+            title="Contact Me"
+            subtitle="Interested in working together? Have a project in mind or just want to connect? Drop me a message and I'll get back to you as soon as possible."
+            gradient="blue-cyan"
+            size="xl"
+          />
+          <div className="mb-12" />
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Left Column - Form and Contact Information */}
@@ -286,7 +277,7 @@ export default function Contact() {
                 <div className="h-[300px] rounded-lg overflow-hidden">
                   <MapComponent />
                 </div>
-                <p className="text-sm text-gray-400 mt-2 text-center">Interactive map showing my location in Boston</p>
+                <p className="text-sm text-gray-400 mt-2 text-center">Interactive map showing my location in San Francisco</p>
               </motion.div>
               
               {/* Connect With Me - Under map */}
@@ -398,7 +389,7 @@ export default function Contact() {
               
               <div>
                 <h3 className="text-xl font-display text-white mb-2">Do you work remotely?</h3>
-                <p className="text-gray-300">Yes, I work remotely with clients globally. I'm based in Boston, MA (EST timezone) but can accommodate different time zones for meetings and collaboration.</p>
+                <p className="text-gray-300">Yes, I work remotely with clients globally. I'm based in San Francisco, CA (PST timezone) but can accommodate different time zones for meetings and collaboration.</p>
               </div>
               
               <div>
