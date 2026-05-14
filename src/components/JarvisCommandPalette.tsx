@@ -42,7 +42,7 @@ export default function JarvisCommandPalette() {
     if (paletteOpen) {
       setFilter('');
       setActiveIndex(0);
-      window.setTimeout(() => inputRef.current?.focus(), 50);
+      window.setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 50);
     }
   }, [paletteOpen]);
 

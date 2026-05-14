@@ -59,21 +59,24 @@ const STORAGE_KEY = 'jarvis.voice.enabled';
 
 function pickVoice(voices: SpeechSynthesisVoice[]): SpeechSynthesisVoice | null {
   if (!voices.length) return null;
-  // Preference order — calm, lower-register, British-male voices closest to
-  // the JARVIS / FRIDAY film delivery. "Enhanced" / "Premium" / "Natural"
-  // variants are higher quality and preferred first.
+  // Preference order — neural/natural voices first (these are *dramatically*
+  // more human-sounding than the legacy formant-synthesis ones), then
+  // enhanced/premium British males which best match the JARVIS film delivery.
   const tests: ((v: SpeechSynthesisVoice) => boolean)[] = [
-    // Microsoft Natural (Edge) — highest quality if available
-    v => /\(natural\)/i.test(v.name) && /ryan|guy|tony|brian|adam/i.test(v.name) && v.lang.startsWith('en'),
+    // Microsoft Online (Natural) — Edge's neural voices. By far the most human.
+    v => /\bonline\b.*\(natural\)/i.test(v.name) && /ryan|guy|brian|tony|adam|davis|jason/i.test(v.name) && v.lang.startsWith('en'),
     v => /\(natural\)/i.test(v.name) && v.lang === 'en-GB',
-    // macOS enhanced/premium variants of British male voices
-    v => /daniel.*\((enhanced|premium)\)/i.test(v.name),
-    v => /oliver.*\((enhanced|premium)\)/i.test(v.name),
-    v => /arthur.*\((enhanced|premium)\)/i.test(v.name),
-    // Standard British male voices (macOS / Chrome)
+    v => /\(natural\)/i.test(v.name) && v.lang.startsWith('en'),
+    // Google neural voices (Chrome desktop)
+    v => /^google.*(uk|british).*male/i.test(v.name),
+    v => /^google us english/i.test(v.name) && /male/i.test(v.name),
+    // macOS enhanced/premium variants — neural-grade on Apple silicon
+    v => /(daniel|oliver|arthur|tom).*\((enhanced|premium)\)/i.test(v.name),
+    v => /\((enhanced|premium)\)/i.test(v.name) && v.lang === 'en-GB',
+    v => /\((enhanced|premium)\)/i.test(v.name) && v.lang.startsWith('en'),
+    // Standard British male voices
     v => /^daniel$/i.test(v.name) && v.lang.startsWith('en'),
     v => /\b(oliver|arthur|george|jamie)\b/i.test(v.name) && v.lang.startsWith('en'),
-    v => v.name.toLowerCase().includes('google uk english male'),
     v => v.lang === 'en-GB' && /male/i.test(v.name),
     v => v.lang === 'en-GB',
     // Any English male as last resort
@@ -85,6 +88,18 @@ function pickVoice(voices: SpeechSynthesisVoice[]): SpeechSynthesisVoice | null 
     if (hit) return hit;
   }
   return voices[0];
+}
+
+// Pre-process text for natural pronunciation. The TTS engine spells out
+// "J.A.R.V.I.S" letter-by-letter; substituting the word makes it speak "Jarvis"
+// as a single token. Also expands a few abbreviations that read oddly.
+function humanizeForSpeech(input: string): string {
+  return input
+    .replace(/\bJ\.A\.R\.V\.I\.S\.?/g, 'Jarvis')
+    .replace(/\bF\.R\.I\.D\.A\.Y\.?/g, 'Friday')
+    .replace(/\bA\.I\.?\b/g, 'AI')
+    .replace(/\bU\.K\.?\b/g, 'UK')
+    .replace(/\bU\.S\.?\b/g, 'US');
 }
 
 interface ProviderProps {
@@ -126,14 +141,97 @@ export function JarvisVoiceProvider({ children }: ProviderProps) {
     };
   }, []);
 
+  // Cloud TTS playback state. Each queue item carries its own AbortController
+  // so interrupt() can yank in-flight fetches without affecting newer ones.
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const queueRef = useRef<{ text: string; controller: AbortController }[]>([]);
+  const processingRef = useRef(false);
+
+  const stopAll = useCallback(() => {
+    queueRef.current.forEach(item => item.controller.abort());
+    queueRef.current = [];
+    if (audioRef.current) {
+      try { audioRef.current.pause(); } catch {}
+      audioRef.current = null;
+    }
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
+    setSpeaking(false);
+  }, []);
+
+  const playWebSpeech = (text: string): Promise<void> =>
+    new Promise(resolve => {
+      if (typeof window === 'undefined' || !window.speechSynthesis) return resolve();
+      const synth = window.speechSynthesis;
+      const utt = new SpeechSynthesisUtterance(text);
+      if (voiceRef.current) utt.voice = voiceRef.current;
+      utt.rate = 0.95;
+      utt.pitch = 0.92;
+      utt.volume = 0.7;
+      utt.onstart = () => setSpeaking(true);
+      utt.onend = () => { setSpeaking(false); resolve(); };
+      utt.onerror = () => { setSpeaking(false); resolve(); };
+      synth.speak(utt);
+    });
+
+  const playOne = (text: string, controller: AbortController): Promise<void> =>
+    new Promise(async resolve => {
+      const done = () => { setSpeaking(false); resolve(); };
+      try {
+        const res = await fetch('/api/tts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text }),
+          signal: controller.signal,
+        });
+        if (controller.signal.aborted || !enabledRef.current) return done();
+        if (!res.ok) throw new Error(`tts-${res.status}`);
+        const blob = await res.blob();
+        if (controller.signal.aborted || !enabledRef.current) return done();
+
+        const url = URL.createObjectURL(blob);
+        const audio = new Audio(url);
+        audio.volume = 0.95;
+        audioRef.current = audio;
+
+        const cleanup = () => {
+          URL.revokeObjectURL(url);
+          if (audioRef.current === audio) audioRef.current = null;
+          done();
+        };
+        audio.onplay = () => setSpeaking(true);
+        audio.onended = cleanup;
+        audio.onerror = cleanup;
+        controller.signal.addEventListener('abort', () => {
+          try { audio.pause(); } catch {}
+          cleanup();
+        });
+        await audio.play();
+      } catch (err) {
+        if (controller.signal.aborted || !enabledRef.current) return done();
+        // Cloud TTS unavailable — fall back to the browser's voice.
+        await playWebSpeech(text);
+        done();
+      }
+    });
+
+  const processQueue = useCallback(async () => {
+    if (processingRef.current) return;
+    processingRef.current = true;
+    while (queueRef.current.length > 0 && enabledRef.current) {
+      const item = queueRef.current.shift()!;
+      if (item.controller.signal.aborted) continue;
+      await playOne(item.text, item.controller);
+    }
+    processingRef.current = false;
+  }, []);
+
   const setEnabled = useCallback((v: boolean) => {
     setEnabledState(v);
     try { localStorage.setItem(STORAGE_KEY, v ? '1' : '0'); } catch {}
-    if (!v && typeof window !== 'undefined' && window.speechSynthesis) {
-      window.speechSynthesis.cancel();
-      setSpeaking(false);
-    }
-  }, []);
+    if (!v) stopAll();
+  }, [stopAll]);
 
   const toggleEnabled = useCallback(() => {
     setEnabled(!enabledRef.current);
@@ -142,26 +240,17 @@ export function JarvisVoiceProvider({ children }: ProviderProps) {
   const speak = useCallback((text: string, opts?: { interrupt?: boolean }) => {
     if (!enabledRef.current) return;
     if (typeof window === 'undefined') return;
-    const synth = window.speechSynthesis;
-    if (!synth) return;
-    if (opts?.interrupt !== false) synth.cancel();
-    const utt = new SpeechSynthesisUtterance(text);
-    if (voiceRef.current) utt.voice = voiceRef.current;
-    // JARVIS-style delivery: measured, lower register, modest volume.
-    utt.rate = 0.98;
-    utt.pitch = 0.85;
-    utt.volume = 0.55;
-    utt.onstart = () => setSpeaking(true);
-    utt.onend = () => setSpeaking(false);
-    utt.onerror = () => setSpeaking(false);
-    synth.speak(utt);
-  }, []);
+    const spoken = humanizeForSpeech(text);
+    if (!spoken.trim()) return;
+
+    if (opts?.interrupt !== false) stopAll();
+    queueRef.current.push({ text: spoken, controller: new AbortController() });
+    processQueue();
+  }, [stopAll, processQueue]);
 
   const stop = useCallback(() => {
-    if (typeof window === 'undefined') return;
-    window.speechSynthesis?.cancel();
-    setSpeaking(false);
-  }, []);
+    stopAll();
+  }, [stopAll]);
 
   // ── STT ────────────────────────────────────────────────────────────
   const [listening, setListening] = useState(false);
@@ -188,11 +277,8 @@ export function JarvisVoiceProvider({ children }: ProviderProps) {
       (window as any).webkitSpeechRecognition;
     if (!SR) return;
 
-    // Halt any in-flight TTS so the mic doesn't hear JARVIS.
-    if (window.speechSynthesis) {
-      window.speechSynthesis.cancel();
-      setSpeaking(false);
-    }
+    // Halt any in-flight TTS (cloud audio or Web Speech) so the mic doesn't hear JARVIS.
+    stopAll();
 
     // Tear down any existing instance first.
     try { recognitionRef.current?.abort?.(); } catch {}
@@ -237,7 +323,7 @@ export function JarvisVoiceProvider({ children }: ProviderProps) {
       // start() throws if already running — ignore
       setListening(false);
     }
-  }, []);
+  }, [stopAll]);
 
   const stopListening = useCallback(() => {
     try { recognitionRef.current?.stop?.(); } catch {}

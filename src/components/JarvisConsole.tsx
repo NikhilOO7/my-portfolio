@@ -29,6 +29,12 @@ export default function JarvisConsole() {
     setGreeting(hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening');
   }, []);
 
+  // Focus the command input without scrolling — `autoFocus` would otherwise
+  // pull the page past the JARVIS greeting on first load.
+  useEffect(() => {
+    inputRef.current?.focus({ preventScroll: true });
+  }, []);
+
   const handleMic = () => {
     if (!voiceReady || routing) return;
     if (listening) {
@@ -254,7 +260,6 @@ export default function JarvisConsole() {
               className={`flex-1 bg-transparent outline-none text-sm placeholder:text-gray-500 placeholder:text-xs sm:placeholder:text-sm tracking-wide ${
                 listening && interim ? 'text-jarvis-cyan/80 italic' : 'text-gray-100'
               }`}
-              autoFocus
               aria-label="Issue command to JARVIS"
             />
             {voiceReady && (

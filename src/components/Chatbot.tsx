@@ -62,7 +62,7 @@ export default function Chatbot({ onClose }: { onClose: () => void }) {
   }, [messages, isLoading]);
 
   useEffect(() => {
-    inputRef.current?.focus();
+    inputRef.current?.focus({ preventScroll: true });
   }, []);
 
   const send = useCallback(async (raw?: string) => {

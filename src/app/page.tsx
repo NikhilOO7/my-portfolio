@@ -23,8 +23,8 @@ export default function Home() {
       className="flex flex-col items-stretch px-4"
     >
       {/* JARVIS CONSOLE — primary interface */}
-      <div className="min-h-[calc(100vh-84px)] w-full flex flex-col items-center justify-center relative">
-        <div className="relative w-full max-w-4xl mx-auto py-12 z-10">
+      <div className="min-h-[calc(100vh-84px)] w-full flex flex-col items-center justify-start relative">
+        <div className="relative w-full max-w-4xl mx-auto pt-6 sm:pt-8 pb-6 z-10">
           <JarvisConsole />
         </div>
 

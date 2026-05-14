@@ -397,7 +397,7 @@ function CompactVoice({ accent }: { accent: string }) {
       {/* EQ bars */}
       <g transform="translate(8 78)">
         {Array.from({ length: 14 }).map((_, i) => {
-          const h = 4 + Math.abs(Math.sin(i * 0.8) * 12);
+          const h = +(4 + Math.abs(Math.sin(i * 0.8) * 12)).toFixed(2);
           return (
             <rect key={i} x={i * 6.2} y={-h} width="3.4" height={h} fill={accent} fillOpacity="0.7" stroke={accent} strokeOpacity="0.85" strokeWidth="0.3">
               <animate
