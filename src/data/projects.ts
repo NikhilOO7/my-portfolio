@@ -52,7 +52,7 @@ export interface Project {
       tags: ["Recommendation Systems", "Personalization", "ML", "Behavioral Analytics"],
       techStack: ["Python", "FastAPI", "PostgreSQL", "Redis", "Scikit-learn", "Pandas", "Docker"],
       imageUrl: RecoMeImage,
-      github: "https://github.com/NikhilOO7/recome",
+      github: "https://github.com/NikhilOO7/recome-website",
       achievements: [
         "Modeled user preferences and interaction patterns across multiple platforms for unified personalization",
         "Built hybrid recommendation pipeline combining collaborative filtering with content-based and behavioral signals",

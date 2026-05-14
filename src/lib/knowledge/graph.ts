@@ -284,7 +284,7 @@ export const PROJECTS: Project[] = [
       'Hybrid recommendation pipeline (collaborative + content + behavioral)',
       'Feedback loops for continuous model improvement',
     ],
-    github: 'https://github.com/NikhilOO7/recome',
+    github: 'https://github.com/NikhilOO7/recome-website',
     featured: true,
   },
   {
