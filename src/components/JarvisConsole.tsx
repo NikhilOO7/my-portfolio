@@ -135,13 +135,13 @@ export default function JarvisConsole() {
         <div className="relative min-h-[180px]">
           {/* Greeting narration */}
           <JarvisNarrator
-            speed={20}
-            startDelay={500}
+            speed={18}
+            startDelay={120}
             onDone={() => setNarrationDone(true)}
             lines={[
               `${greeting}. I am J.A.R.V.I.S — Nikhil's archival assistant.`,
               `Subject is Nikhil Bindal, a full-stack and AI infrastructure engineer based in San Francisco, currently available for new engagements.`,
-              `How may I assist you today, sir or madam?`,
+              `How may I assist you today?`,
             ]}
           />
 

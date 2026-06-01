@@ -175,6 +175,7 @@ export type SchematicType =
   | 'voice'
   | 'recommend'
   | 'graph'
+  | 'manifold'
   | 'multi-agent-3'
   | 'chat-sentiment'
   | 'trading'
@@ -200,6 +201,8 @@ export type SchematicType =
 const PROJECT_SCHEMATIC: Record<string, SchematicType> = {
   'voice-document-intelligence': 'voice',
   'recome-recommendation-engine': 'recommend',
+  'knowledge-graph-application': 'graph',
+  'manifold-strata': 'manifold',
   'gaussian-splatting-knowledge-graph': 'graph',
   'nexus-chatbot': 'multi-agent-3',
   'conversational-ai-chatbot': 'chat-sentiment',

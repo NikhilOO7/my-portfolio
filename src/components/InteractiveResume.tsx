@@ -75,93 +75,89 @@ export default function InteractiveResume() {
         {
           company: 'Neurologica — Engineering Contractor',
           description: [
-            'Architected and built a production-grade AI coaching platform combining biometric signal analysis with a multi-agent orchestration pipeline and persistent personal memory systems.',
-            'Designed and implemented a 6-agent orchestration pipeline reducing end-to-end AI latency from 36s to 9.5s (73% reduction) through prompt consolidation, model tiering, and async execution optimization.',
-            'Built Mnemosyne memory architecture with semantic retrieval, temporal decay lifecycle, and context-scoped memory bucketing across multiple user domains.',
-            'Engineered Redis-backed concurrency controls and session orchestration preventing state corruption under concurrent real-time voice sessions.',
-            'Built parallel voice sidecar architecture using Gemini Live enabling low-latency audio conversations while asynchronously running sentiment, query, and analytics pipelines.',
-            'Integrated real-time HCI signal processing workflows using multimodal emotion/context signals to adapt conversational reasoning dynamically.',
-            'Developed Python and JavaScript SDKs supporting 32 operations across orchestration, memory, analytics, sessions, and BYOD infrastructure.',
-            'Established CI/CD pipelines, audit logging infrastructure, webhook delivery systems, and production deployment workflows on GCP Cloud Run.'
+            'Architected a production multi-agent AI coaching platform on GCP Cloud Run combining biometric/HCI signal processing with a persistent personal-memory system, owning system design end to end.',
+            'Cut end-to-end AI latency 73% (36s → 9.5s) by re-architecting a 6-agent pipeline into a coordinator-orchestrated DAG with prompt consolidation, model tiering, and async parallel execution.',
+            'Designed "Mnemosyne," a context-scoped memory architecture with semantic retrieval and a temporal-decay lifecycle, bucketed per user and domain so context can never cross boundaries.',
+            'Engineered Redis-backed concurrency control and session orchestration that prevented state corruption across concurrent real-time voice sessions, plus a parallel voice sidecar (Gemini Live) running sentiment/query/analytics off the hot path.',
+            'Shipped Python and JavaScript SDKs (32 operations) spanning orchestration, memory, analytics, sessions, and BYOD multi-tenant infrastructure, with CI/CD, audit logging, and webhook delivery.'
           ]
         },
         {
           company: 'Stealth AI Startup — AI Solutions Consultant',
           description: [
-            'Architected an AI-powered meeting intelligence platform automating pre-meeting research, live meeting assistance, and post-meeting synthesis workflows.',
-            'Designed a 3-phase agentic architecture orchestrating 15 specialized AI agents across research, meeting intelligence, and decision-tracking pipelines.',
-            'Built contextual retrieval workflows using multi-level semantic search across Qdrant vector collections improving retrieval relevance by ~40% over traditional RAG pipelines.',
-            'Implemented a real-time voice pipeline using LiveKit WebRTC, Deepgram STT, and Cartesia TTS targeting sub-200ms perceived latency.',
-            'Designed PostgreSQL schemas and knowledge graph workflows modeling meeting entities, action items, decisions, transcripts, and research relationships.',
-            'Implemented Redis-backed rate limiting, Prometheus metrics, structured logging, and async background workers for scalable production monitoring.'
+            'Built "Donna," an AI meeting-intelligence platform, end to end (0→1) automating pre-meeting research, live in-meeting assistance, and post-meeting synthesis, and released it for real users.',
+            'Designed a 3-phase architecture orchestrating 15 specialized agents behind a uniform agent contract that made parallel orchestration and fan-out trivial to extend.',
+            'Built hybrid contextual RAG over Qdrant combining vector and keyword retrieval with reciprocal-rank fusion, improving retrieval relevance ~40% over a naive dense baseline (measured, not estimated).',
+            'Implemented a real-time voice pipeline (LiveKit WebRTC + Deepgram STT + Cartesia TTS) targeting sub-200ms perceived latency, with a replica-independent WebSocket fan-out over Redis pub/sub.',
+            'Built "RecoMe," a personal interest-graph & agentic recommendation engine — a capture → signal → graph → agent → surface pipeline turning cross-platform activity (15+ sources) into a typed Neo4j interest graph plus Qdrant per-user vectors, with recommendations streamed to the client over SSE.',
+            'Orchestrated 5 background agents behind a single Guardian gate enforcing a hard $0.10/user/day LLM cost cap, throttling, and quiet hours, with a prompt-injection-resistant scorer (the LLM writes prose only, never the verdict); ran on BullMQ workers with idempotent Stripe metering and a dual consumer + multi-tenant surface on one backend (TypeScript, Hono, Prisma).'
           ]
         }
       ],
-      skills: ['Python', 'FastAPI', 'Node.js', 'PostgreSQL', 'Redis', 'Qdrant', 'WebRTC', 'LiveKit', 'Gemini Live', 'CrewAI', 'LangGraph', 'LlamaIndex', 'GPT-4o', 'Deepgram', 'Cartesia', 'Kubernetes', 'GCP Cloud Run', 'Prometheus'],
+      skills: ['Python', 'FastAPI', 'Node.js', 'TypeScript', 'Hono', 'PostgreSQL', 'Redis', 'Qdrant', 'Neo4j', 'WebRTC', 'LiveKit', 'Gemini Live', 'CrewAI', 'LangGraph', 'GPT-4o', 'Deepgram', 'Cartesia', 'BullMQ', 'Stripe', 'Kubernetes', 'GCP Cloud Run', 'Prometheus'],
       category: 'ai'
     },
     {
       id: 'northeastern',
-      title: 'Full-Stack Developer / Research Assistant',
-      company: 'Northeastern University',
+      title: 'Full-Stack & AI Engineer',
+      company: 'Northeastern University — Minkara Computational Lab',
       location: 'Boston, MA',
       startDate: 'Feb 2023',
       endDate: 'Dec 2023',
       description: [
-        'Developed a semantic search and data-visualization platform for biomedical research using FastAPI, PostgreSQL, React, and D3.js, enabling researchers to search and analyze 10K+ scientific papers and molecular datasets.',
-        'Built AWS Batch-based distributed simulation pipelines orchestrating large-scale molecular computations and reducing compute costs by 40%.',
-        'Led backend development for scientific data ingestion pipelines, metadata APIs, and ML inference workflows (TensorFlow CNN classifiers for glycan research) supporting computational biology research.',
-        'Designed accessibility-focused tooling including tactile graphics generation and screen-reader integrations to improve STEM accessibility for visually impaired students and researchers.'
+        'Built a semantic-search & visualization platform for biomedical research (FastAPI, PostgreSQL + pgvector, React, D3.js) letting researchers search 10K+ papers and molecular datasets by meaning via embeddings and vector search.',
+        'Built AWS Batch distributed simulation pipelines orchestrating thousands of parallel molecular computations and cutting compute cost ~40% via spot instances, right-sizing, and scale-to-zero with checkpoint/restart.',
+        'Owned backend for scientific data ingestion, metadata APIs, and ML-inference workflows serving models as isolated services so heavy inference never blocked the API.',
+        'Designed accessibility tooling for visually impaired researchers — tactile-graphics generation from molecular coordinates and screen-reader/sonification integrations, validated with blind users including the lab PI.'
       ],
-      skills: ['React', 'FastAPI', 'Python', 'PostgreSQL', 'AWS Batch', 'D3.js', 'TensorFlow', 'OpenCV', 'TypeScript', 'Docker'],
+      skills: ['FastAPI', 'PostgreSQL', 'pgvector', 'React', 'D3.js', 'AWS Batch', 'Python', 'TypeScript', 'Docker'],
       category: 'fullstack'
     },
     {
       id: 'times-internet',
       title: 'Software Engineer',
-      company: 'Times Internet',
+      company: 'Times Internet — TOI+ subscription platform',
       location: 'Noida, India',
       startDate: 'Apr 2021',
       endDate: 'Jul 2022',
       description: [
-        'Built and scaled backend services (Spring Boot + Redis) for the TOI+ subscription platform handling 8.4M daily requests and supporting 120K+ subscribers, contributing to $150M+ annual revenue.',
-        'Migrated 70+ city portals from legacy systems to React-based micro-frontends, raising Lighthouse performance scores to 92/100 and improving maintainability.',
-        'Designed a Kafka-based personalization and recommendations pipeline that delivered personalized news feeds; achieved 9.7% CTR increase for premium users and supported higher engagement and retention.',
-        'Containerized services using Docker and deployed to AWS EKS, reducing infrastructure costs by 35% and simplifying deployments.'
+        'Built backend for TOI+ serving ~8.4M daily requests — Node/Express subscription & paywall services with JWT auth and Redis-cached entitlements (sub-ms checks), keeping origin load low by offloading cacheable content to the Akamai edge.',
+        'Designed a Verdaccio-based micro-frontend system packaging shared UI as versioned internal npm widgets, so 70+ city portals consumed updates by version bump instead of duplicated code — publish cadence decoupled from consume cadence.',
+        'Migrated 70+ legacy XML/XSLT portals to React micro-frontends via a strangler-fig rollout (old + new in parallel, per-portal feature flags, stable API contracts), reaching ~92/100 Lighthouse with instant rollback.',
+        'Built the real-time Kafka event pipeline feeding the Signals personalization engine (behavior events → user feature profiles, ~90s refresh), contributing to a measured ~9% CTR lift on recommendations.'
       ],
-      skills: ['Spring Boot', 'Java', 'Node.js', 'Redis', 'Kafka', 'React', 'Docker', 'Kubernetes', 'AWS EKS', 'Jenkins'],
+      skills: ['Node.js', 'Express', 'Redis', 'Kafka', 'React', 'Verdaccio', 'JWT', 'Akamai', 'Docker'],
       category: 'backend'
     },
     {
       id: 'progcap',
       title: 'Founding Software Engineer',
-      company: 'Progcap (Fintech)',
+      company: 'Progcap — collateral-free SMB lending fintech',
       location: 'New Delhi, India',
       startDate: 'Jan 2019',
       endDate: 'Mar 2021',
       description: [
-        'Built real-time lending and underwriting microservices using Node.js/Express, Kafka, MongoDB, and event-driven architecture; reduced transaction workflow latency from 8.7s to 890ms through caching and optimized queries.',
-        'Implemented Kafka event-driven workflows processing 22K transactions per second with exactly-once semantics to ensure financial integrity across high-throughput lending operations.',
-        'Integrated ML-powered credit scoring (XGBoost) into backend lending systems, decreasing false negatives by 19% and enabling smarter lending decisions for large-scale financial operations.',
-        'Supported product growth to ₹9,800 Cr+ lending volume, helping secure Series B funding (US$25M).'
+        'Owned the underwriting & transaction backbone of a collateral-free lending platform — Node/Express microservices on an event-driven Kafka backbone, with PostgreSQL as the transactional system of record (+ append-only ledger) and MongoDB for high-write capture.',
+        'Cut decision latency 90% (8.7s → 890ms) by parallelizing serial KYC/fraud/credit-score checks, trimming the hot path, and adding compound indexes plus Redis caching with connection pooling.',
+        'Integrated XGBoost credit scoring on alternative data as an isolated service with timeouts and rule-based fallback, reducing false negatives ~19% (model + rules, measured on repayment cohorts).',
+        'Engineered effectively-once disbursement via idempotency — guarded atomic state transitions, idempotency-keyed bank/NPCI calls, and partitioned Kafka consumers; load-tested to ~22K events/sec at the event tier.',
+        'Built a Python/Celery service for feature assembly, batch jobs, and reconciliation against the append-only ledger as the source of truth.'
       ],
-      skills: ['Node.js', 'Express', 'Kafka', 'MongoDB', 'Redis', 'XGBoost', 'AWS ECS', 'Python'],
+      skills: ['Node.js', 'Express', 'Kafka', 'PostgreSQL', 'MongoDB', 'Redis', 'XGBoost', 'Python', 'Celery'],
       category: 'backend'
     },
     {
       id: 'livemedia',
       title: 'Software Engineer',
-      company: 'LiveMedia / LiveChek',
+      company: 'LiveMedia / LiveChek — insurance telematics',
       location: 'New Delhi, India',
       startDate: 'Aug 2017',
       endDate: 'May 2018',
       description: [
-        'Worked on insurance-focused telematics and behavioral analytics systems integrating real-time driving behavior and user interaction data into backend services and APIs.',
-        'Built an OCR-based document verification system using Tesseract.js and Python APIs, achieving 92%+ accuracy for identity verification.',
-        'Developed a React Native offline-first inspection app used for 50K+ monthly site inspections; reduced inspection time from 45 minutes to 22 minutes through local caching and sync logic.',
-        'Created a React.js + Django claims platform that cut insurance claims processing time by 60% and contributed to early-stage product and architecture decisions in a startup environment.'
+        'Built backend services and APIs for real-time telematics and behavioral analytics processing driving-behavior and user-interaction streams for insurance workflows.',
+        'Contributed to early-stage product and architecture decisions in a fast-moving startup environment.'
       ],
-      skills: ['React Native', 'React', 'Django', 'Python', 'Tesseract.js', 'PostgreSQL', 'Redux', 'REST APIs'],
+      skills: ['Node.js', 'Python', 'PostgreSQL', 'REST APIs', 'Telematics'],
       category: 'fullstack'
     }
   ];

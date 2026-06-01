@@ -48,6 +48,7 @@ const SCHEMATIC_MAP: Record<SchematicType, React.ComponentType<SubProps>> = {
   voice: VoiceSchematic,
   recommend: RecommendSchematic,
   graph: GraphSchematic,
+  manifold: ManifoldSchematic,
   'multi-agent-3': MultiAgent3Schematic,
   'chat-sentiment': ChatSentimentSchematic,
   trading: TradingSchematic,
@@ -346,6 +347,188 @@ function GraphSchematic({ accent }: SubProps) {
       {/* Bottom-right meta */}
       <text x="285" y="155" textAnchor="end" fill={accent} fontSize="6" letterSpacing="1.5" opacity="0.65" {...MONO}>REACT-FLOW · HONO · DRIZZLE</text>
       <text x="285" y="20" textAnchor="end" fill={accent} fontSize="7" letterSpacing="2" opacity="0.85" {...MONO}>NODES · 6 · EDGES · 6</text>
+    </svg>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// 3b. Manifold Strata — Poincaré disk (hyperbolic geometry) + LLM-call savings
+// ─────────────────────────────────────────────────────────────────────────
+function ManifoldSchematic({ accent }: SubProps) {
+  // Disk center & radius for the Poincaré model in the SVG viewBox.
+  const dx = 150, dy = 92, R = 52;
+  // Hyperbolic concept nodes. Parents (low r) live near the centre; their
+  // children fan out near the boundary. Positions use (radius, angleDeg).
+  const nodes = [
+    { id: 'GS',   r: 4,  a: 0,    label: 'GS' },           // root (hyperbolic origin)
+    { id: '3DGS', r: 22, a: 35,   label: '3DGS' },
+    { id: 'NERF', r: 22, a: 130,  label: 'NERF' },
+    { id: 'RAD',  r: 22, a: 240,  label: 'RAD' },
+    { id: 'MIP',  r: 40, a: 20,   label: 'MIP' },
+    { id: 'SPLT', r: 42, a: 60,   label: 'SPLT' },
+    { id: 'PLN',  r: 41, a: 115,  label: 'PLN' },
+    { id: 'INST', r: 40, a: 155,  label: 'INST' },
+    { id: 'VOX',  r: 41, a: 225,  label: 'VOX' },
+    { id: 'OCC',  r: 42, a: 260,  label: 'OCC' },
+  ];
+  // Project polar → cartesian.
+  const cart = (rad: number, angDeg: number) => {
+    const ang = (angDeg * Math.PI) / 180;
+    return [
+      +(dx + Math.cos(ang) * rad).toFixed(2),
+      +(dy + Math.sin(ang) * rad).toFixed(2),
+    ] as const;
+  };
+  const pos: Record<string, readonly [number, number]> = {};
+  nodes.forEach(n => { pos[n.id] = cart(n.r, n.a); });
+  // Edges — parent → children (hierarchy). Drawn as hyperbolic geodesics:
+  // approximated by quadratic Béziers with a control point bent toward the
+  // disk centre, which is visually correct for a Poincaré disk.
+  const edges: [string, string][] = [
+    ['GS', '3DGS'], ['GS', 'NERF'], ['GS', 'RAD'],
+    ['3DGS', 'MIP'], ['3DGS', 'SPLT'],
+    ['NERF', 'PLN'], ['NERF', 'INST'],
+    ['RAD', 'VOX'], ['RAD', 'OCC'],
+  ];
+
+  return (
+    <svg viewBox="0 0 300 180" className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid meet">
+      {/* arXiv paper queue (left) — animated marching toward the disk */}
+      <g transform="translate(8 30)">
+        <text x="0" y="-2" fill={accent} fontSize="6" letterSpacing="1.5" opacity="0.7" {...MONO}>› ARXIV QUEUE</text>
+        {[0, 1, 2, 3].map(i => (
+          <g key={i} transform={`translate(${i * 3} ${i * 14})`}>
+            <rect width="36" height="12" fill={accent} fillOpacity={0.08 + i * 0.05} stroke={accent} strokeOpacity="0.7" strokeWidth="0.6" />
+            <text x="4" y="8.5" fill={accent} fontSize="6" letterSpacing="1" opacity="0.85" {...MONO}>2406.0{i + 1}</text>
+            {i === 0 && (
+              <rect width="36" height="12" fill="none" stroke={accent} strokeOpacity="0.95" strokeWidth="0.9">
+                <animate attributeName="stroke-opacity" values="0.95;0.3;0.95" dur="1.6s" repeatCount="indefinite" />
+              </rect>
+            )}
+          </g>
+        ))}
+        <text x="0" y="80" fill={accent} fontSize="6" letterSpacing="1.5" opacity="0.55" {...MONO}>EXTRACT · RESOLVE</text>
+      </g>
+
+      {/* Pipeline arrow into the disk */}
+      <line x1="56" y1="56" x2="92" y2="80" stroke={accent} strokeOpacity="0.65" strokeDasharray="2 3">
+        <animate attributeName="stroke-dashoffset" from="0" to="-12" dur="1.4s" repeatCount="indefinite" />
+      </line>
+      <polygon points="89,76 92,80 87,80" fill={accent} fillOpacity="0.9" />
+
+      {/* ── POINCARÉ DISK ─────────────────────────────────────────────── */}
+      {/* Outer boundary */}
+      <circle cx={dx} cy={dy} r={R} fill="none" stroke={accent} strokeOpacity="0.85" strokeWidth="1" />
+      {/* Soft inner fill */}
+      <circle cx={dx} cy={dy} r={R} fill={accent} fillOpacity="0.05" />
+      {/* Concentric hyperbolic radii (visual cue: equal hyperbolic distance) */}
+      {[14, 28, 42].map(r => (
+        <circle key={r} cx={dx} cy={dy} r={r} fill="none" stroke={accent} strokeOpacity="0.18" strokeDasharray="1 3" />
+      ))}
+      {/* Cross-hair at the disk centre */}
+      <line x1={dx - 3} y1={dy} x2={dx + 3} y2={dy} stroke={accent} strokeOpacity="0.6" strokeWidth="0.6" />
+      <line x1={dx} y1={dy - 3} x2={dx} y2={dy + 3} stroke={accent} strokeOpacity="0.6" strokeWidth="0.6" />
+
+      {/* Hyperbolic edges (quadratic curve bent toward disk centre) */}
+      {edges.map(([a, b], i) => {
+        const [x1, y1] = pos[a];
+        const [x2, y2] = pos[b];
+        // Bend the control point toward the centre — that's the curvature
+        // signature of a hyperbolic geodesic in the Poincaré disk.
+        const mx = (x1 + x2) / 2;
+        const my = (y1 + y2) / 2;
+        const tx = +(mx + (dx - mx) * 0.35).toFixed(2);
+        const ty = +(my + (dy - my) * 0.35).toFixed(2);
+        return (
+          <path
+            key={i}
+            d={`M ${x1} ${y1} Q ${tx} ${ty} ${x2} ${y2}`}
+            fill="none"
+            stroke={accent}
+            strokeOpacity="0.55"
+            strokeWidth="0.7"
+          />
+        );
+      })}
+
+      {/* PageRank pulse — a token traversing one edge */}
+      <circle r="1.6" fill={accent} style={{ filter: `drop-shadow(0 0 3px ${accent})` }}>
+        <animateMotion dur="2.6s" repeatCount="indefinite" path={`M ${pos['GS'][0]} ${pos['GS'][1]} Q ${dx + (pos['3DGS'][0] - dx) * 0.3} ${dy + (pos['3DGS'][1] - dy) * 0.3} ${pos['3DGS'][0]} ${pos['3DGS'][1]}`} />
+      </circle>
+
+      {/* Nodes — radius shrinks as r → R (the canonical Poincaré-disk
+          visual: more points crowd near the boundary at decreasing sizes). */}
+      {nodes.map(n => {
+        const [x, y] = pos[n.id];
+        const isRoot = n.id === 'GS';
+        const nodeR = isRoot ? 4.5 : 3.4 - (n.r / R) * 1.2;
+        return (
+          <g key={n.id}>
+            <circle
+              cx={x}
+              cy={y}
+              r={+nodeR.toFixed(2)}
+              fill={accent}
+              fillOpacity={isRoot ? '0.9' : '0.55'}
+              stroke={accent}
+              strokeOpacity="0.95"
+              strokeWidth="0.6"
+            />
+            <text
+              x={x}
+              y={y - nodeR - 1.5}
+              textAnchor="middle"
+              fill={accent}
+              fontSize={isRoot ? '5.5' : '4.5'}
+              letterSpacing="1"
+              opacity={isRoot ? '1' : '0.85'}
+              {...MONO}
+            >
+              {n.label}
+            </text>
+          </g>
+        );
+      })}
+
+      {/* Disk header */}
+      <text x={dx} y={dy - R - 5} textAnchor="middle" fill={accent} fontSize="6.5" letterSpacing="2" opacity="0.85" {...MONO}>POINCARÉ · HYPERBOLIC</text>
+
+      {/* Right panels — LLM savings, MCP status, pipeline mode */}
+      <g transform="translate(220 24)">
+        {/* LLM call savings (the project's hero number) */}
+        <rect width="74" height="36" fill={accent} fillOpacity="0.14" stroke={accent} strokeOpacity="0.95" strokeWidth="0.9" />
+        <text x="6" y="9" fill={accent} fontSize="6" letterSpacing="1.5" opacity="0.7" {...MONO}>› LLM CALLS</text>
+        <text x="37" y="24" textAnchor="middle" fill={accent} fontSize="14" letterSpacing="1" {...MONO} style={{ filter: `drop-shadow(0 0 4px ${accent})` }}>−68%</text>
+        <text x="37" y="32" textAnchor="middle" fill={accent} fontSize="5" letterSpacing="1.5" opacity="0.65" {...MONO}>vs LEGACY</text>
+
+        {/* Entity dedup metric (~60 → ~42) */}
+        <g transform="translate(0 44)">
+          <rect width="74" height="22" fill={accent} fillOpacity="0.08" stroke={accent} strokeOpacity="0.55" strokeWidth="0.7" />
+          <text x="6" y="9" fill={accent} fontSize="6" letterSpacing="1.5" opacity="0.7" {...MONO}>› DEDUP / PAPER</text>
+          <text x="6" y="18" fill={accent} fontSize="8" letterSpacing="1.5" opacity="0.95" {...MONO}>~60 → ~42</text>
+        </g>
+
+        {/* Pipeline mode switch */}
+        <g transform="translate(0 72)">
+          <rect width="74" height="22" fill={accent} fillOpacity="0.08" stroke={accent} strokeOpacity="0.55" strokeWidth="0.7" />
+          <text x="6" y="9" fill={accent} fontSize="6" letterSpacing="1.5" opacity="0.7" {...MONO}>› PIPELINE_MODE</text>
+          <rect x="6" y="13" width="28" height="6" fill={accent} fillOpacity="0.55" />
+          <text x="20" y="18" textAnchor="middle" fill="#000" fontSize="5" letterSpacing="1.5" {...MONO}>FIELD</text>
+          <rect x="36" y="13" width="32" height="6" fill="none" stroke={accent} strokeOpacity="0.45" />
+          <text x="52" y="18" textAnchor="middle" fill={accent} fontSize="5" letterSpacing="1.5" opacity="0.55" {...MONO}>LEGACY</text>
+        </g>
+
+        {/* MCP status */}
+        <g transform="translate(0 100)">
+          <circle cx="5" cy="5" r="2" fill={accent}>
+            <animate attributeName="opacity" values="1;0.3;1" dur="1.4s" repeatCount="indefinite" />
+          </circle>
+          <text x="12" y="7.5" fill={accent} fontSize="6" letterSpacing="1.5" opacity="0.85" {...MONO}>MCP · READY</text>
+        </g>
+      </g>
+
+      {/* Bottom-left: PageRank micro caption */}
+      <text x="14" y="170" fill={accent} fontSize="6" letterSpacing="1.5" opacity="0.6" {...MONO}>HIPPO-RAG · PERSONALIZED PAGERANK</text>
     </svg>
   );
 }

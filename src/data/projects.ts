@@ -28,43 +28,76 @@ export interface Project {
   
   export const projects: Project[] = [
     {
-      id: "voice-document-intelligence",
-      title: "Voice Document Intelligence Platform",
-      description: "Real-time voice-based document intelligence platform with multi-agent RAG pipeline for semantic search and Q&A.",
-      longDescription: "Architected a voice-based document intelligence platform using WebRTC, LiveKit, FastAPI and PostgreSQL; implemented a multi-agent RAG pipeline with CrewAI and LlamaIndex that improved search relevance by 40%, supported 1,000+ concurrent sessions with sub-50 ms latency and 95%+ transcription accuracy. Built continuous streaming infrastructure for STT/TTS (Deepgram Nova-3, Cartesia Sonic) and model inference with real-time WebRTC voice UI.",
-      tags: ["AI", "Voice AI", "RAG", "Multi-Agent", "Real-time"],
-      techStack: ["Python", "FastAPI", "PostgreSQL", "WebRTC", "LiveKit", "CrewAI", "LlamaIndex", "Qdrant", "Deepgram", "Kubernetes", "GCP"],
-      imageUrl: VoiceDocIntelligenceImage,
-      github: "https://github.com/NikhilOO7/voice-doc-intelligence",
+      id: "recome-recommendation-engine",
+      title: "RecoMe — Personalized Recommendation Engine",
+      description: "Personal interest-graph and agentic recommendation engine turning cross-platform activity into a typed Neo4j interest graph with SSE-streamed recommendations.",
+      longDescription: "Built RecoMe — a capture → signal → graph → agent → surface pipeline that ingests 15+ cross-platform activity sources into a typed Neo4j interest graph plus Qdrant per-user vectors, with recommendations streamed to the client over SSE. Orchestrated 5 background agents behind a single Guardian gate enforcing a hard $0.10/user/day LLM cost cap, throttling, and quiet hours, plus a prompt-injection-resistant scorer (the LLM writes prose only, never the verdict). Runs on BullMQ workers with idempotent Stripe metering and a dual consumer + multi-tenant surface on one backend.",
+      tags: ["AI", "Agentic", "Recommendation Systems", "Personalization", "Knowledge Graph", "Real-time"],
+      techStack: ["TypeScript", "Hono", "Prisma", "Neo4j", "Qdrant", "Redis", "BullMQ", "Stripe", "SSE", "PostgreSQL"],
+      imageUrl: RecoMeImage,
+      github: "https://github.com/NikhilOO7/recome-website",
       achievements: [
-        "Implemented multi-agent RAG pipeline with 40% improvement in search relevance",
-        "Supported 1,000+ concurrent sessions with sub-50ms latency and 95%+ transcription accuracy",
-        "Built real-time streaming infrastructure for STT/TTS with Deepgram Nova-3 and Cartesia Sonic",
-        "Deployed on GCP with Docker, Kubernetes, and comprehensive monitoring (Prometheus/Grafana)"
+        "Pipeline ingests 15+ cross-platform sources into a typed Neo4j interest graph + Qdrant per-user vectors",
+        "Guardian gate enforces a hard $0.10/user/day LLM cost cap with prompt-injection-resistant scoring",
+        "Recommendations streamed over SSE; runs on BullMQ workers with idempotent Stripe metering"
       ],
       featured: true
     },
     {
-      id: "recome-recommendation-engine",
-      title: "RecoMe — Personalized Recommendation Engine",
-      description: "Behavioral recommendation system modeling user preferences and cross-platform interaction patterns for personalized content discovery.",
-      longDescription: "Built a behavioral recommendation engine that models user preferences and interaction patterns across platforms to personalize content discovery workflows. Combines collaborative filtering, content-based signals, and session-level behavioral features to deliver context-aware recommendations, with feedback loops for continuous learning from implicit and explicit user signals.",
-      tags: ["Recommendation Systems", "Personalization", "ML", "Behavioral Analytics"],
-      techStack: ["Python", "FastAPI", "PostgreSQL", "Redis", "Scikit-learn", "Pandas", "Docker"],
-      imageUrl: RecoMeImage,
-      github: "https://github.com/NikhilOO7/recome-website",
+      id: "voice-document-intelligence",
+      title: "Donna — Voice Document Intelligence Platform",
+      description: "AI meeting-intelligence platform automating pre-meeting research, live in-meeting assistance, and post-meeting synthesis with real-time voice and hybrid RAG.",
+      longDescription: "Built Donna — an AI meeting-intelligence platform shipped end to end (0→1) that automates pre-meeting research, live in-meeting assistance, and post-meeting synthesis for real users. A 3-phase agentic architecture orchestrates 15 specialized agents behind a uniform contract, with hybrid contextual RAG over Qdrant combining vector and keyword retrieval via reciprocal-rank fusion (~40% relevance lift over a naive dense baseline, measured). The real-time voice pipeline (LiveKit WebRTC + Deepgram STT + Cartesia TTS) targets sub-200ms perceived latency with a replica-independent WebSocket fan-out over Redis pub/sub.",
+      tags: ["AI", "Voice AI", "RAG", "Multi-Agent", "Real-time", "Agentic"],
+      techStack: ["Python", "FastAPI", "PostgreSQL", "Qdrant", "Redis", "LiveKit", "WebRTC", "Deepgram", "Cartesia", "CrewAI"],
+      imageUrl: VoiceDocIntelligenceImage,
+      github: "https://github.com/NikhilOO7/voice-doc-intelligence",
       achievements: [
-        "Modeled user preferences and interaction patterns across multiple platforms for unified personalization",
-        "Built hybrid recommendation pipeline combining collaborative filtering with content-based and behavioral signals",
-        "Designed feedback loops capturing implicit and explicit signals for continuous model improvement"
+        "15-agent 3-phase orchestration behind a uniform agent contract — parallel fan-out trivial to extend",
+        "Hybrid contextual RAG (vector + keyword + reciprocal-rank fusion) lifted retrieval relevance ~40% over a naive dense baseline",
+        "Real-time voice pipeline (LiveKit WebRTC + Deepgram + Cartesia) targeting sub-200ms perceived latency",
+        "Replica-independent WebSocket fan-out over Redis pub/sub for horizontal scaling"
+      ],
+      featured: true
+    },
+    {
+      id: "knowledge-graph-application",
+      title: "Knowledge Graph Application",
+      description: "Document-ingestion system whose centerpiece is automatic context routing — embedding-similarity decides whether to extend an existing knowledge bucket or create a new one.",
+      longDescription: "A document-ingestion system whose centerpiece is automatic context routing — on upload it decides append-to-existing vs. create-new \"bucket\" via embedding similarity with an LLM tie-breaker, so related documents enrich one graph and unrelated ones stay isolated. A LangGraph state machine (prepare → route → ontology → extract → finalize) drives a CrewAI crew and a per-bucket inferred ontology (no hardcoded types), with graceful degradation when no LLM key is present.",
+      tags: ["AI", "Knowledge Graph", "Multi-Agent", "RAG", "LLM", "Agentic"],
+      techStack: ["Python", "FastAPI", "LangGraph", "CrewAI", "Neo4j", "PostgreSQL", "React"],
+      imageUrl: GaussianImage,
+      github: "https://github.com/NikhilOO7/knowledge-graph-application",
+      achievements: [
+        "Automatic context routing — embedding similarity + LLM tie-breaker decides append-vs-new-bucket per upload",
+        "LangGraph state machine (prepare → route → ontology → extract → finalize) drives a CrewAI crew",
+        "Per-bucket inferred ontology (no hardcoded types) with graceful degradation when no LLM key is present"
+      ],
+      featured: false
+    },
+    {
+      id: "manifold-strata",
+      title: "Manifold Strata — Geometric Low-LLM Retrieval Engine",
+      description: "Knowledge-graph retrieval engine that minimises LLM calls by doing entity resolution and validation in embedding and rule space; concepts live in hyperbolic (Poincaré) geometry.",
+      longDescription: "Manifold Strata ingests arXiv papers (auto-fetch → PDF extraction → agentic extract/resolve/validate with edge-level provenance) into a knowledge graph, then minimises LLM calls by doing entity resolution and relationship validation in embedding/rule space rather than per-step prompts — canonicalising variants like \"3DGS\" → \"3D Gaussian Splatting\" and cutting ~60 raw mentions to ~42 deduped entities per paper. Retrieval uses HippoRAG-style Personalized PageRank; concepts live in hyperbolic (Poincaré) space for hierarchy-aware similarity; context is compressed via propositions + MMR before a single answer call. Exposes the graph to AI clients (e.g. Claude) as an MCP server for tool-based search/retrieval, with a PIPELINE_MODE=field|legacy switch that A/B-benchmarks the LLM-call savings.",
+      tags: ["AI", "Knowledge Graph", "RAG", "Agentic", "Geometric ML", "MCP"],
+      techStack: ["TypeScript", "Hono", "Drizzle", "PostgreSQL", "React", "MCP Server"],
+      imageUrl: GaussianImage,
+      github: "https://github.com/NikhilOO7/manifold-strata",
+      achievements: [
+        "Entity resolution & relationship validation in embedding/rule space — cuts LLM call volume vs. per-step prompts",
+        "Canonicalises variants (e.g. \"3DGS\" → \"3D Gaussian Splatting\"): ~60 raw mentions collapse to ~42 deduped entities per paper",
+        "Retrieval via HippoRAG-style Personalized PageRank; concepts in hyperbolic (Poincaré) space for hierarchy-aware similarity",
+        "Exposes the graph to AI clients as an MCP server; PIPELINE_MODE switch A/B-benchmarks the LLM-call savings"
       ],
       featured: true
     },
     {
       id: "gaussian-splatting-knowledge-graph",
-      title: "Gaussian Splatting Knowledge Graph",
-      description: "AI Research Infrastructure with multi-agent LLM system for academic paper ingestion and knowledge graph construction.",
-      longDescription: "Designed a full-stack multi-agent LLM system that ingests academic papers, extracts structured entities/relationships, and constructs a queryable knowledge graph using PostgreSQL, Hono, Drizzle ORM, and React Flow. Implemented a 3-agent pipeline (Extractor → Resolver → Validator) using GPT-4o with strict JSON schema outputs and provenance tracking across 40+ document chunks.",
+      title: "Gaussian Splatting Knowledge Graph (archived)",
+      description: "Earlier 3-agent multi-agent LLM system that ingested academic papers and constructed a queryable knowledge graph with provenance tracking.",
+      longDescription: "Full-stack multi-agent LLM system that ingested academic papers and constructed a queryable knowledge graph using a 3-agent pipeline (Extractor → Resolver → Validator) with GPT-4o under strict JSON schema and provenance tracking across 40+ document chunks. Superseded by the Manifold Strata engine, which moved the same problem into embedding/rule space and added a Poincaré-disk geometry for hierarchy-aware retrieval.",
       tags: ["AI Research", "Knowledge Graph", "Multi-Agent", "LLM"],
       techStack: ["PostgreSQL", "Hono", "Drizzle ORM", "React", "GPT-4o", "TypeScript"],
       imageUrl: GaussianImage,
@@ -74,7 +107,7 @@ export interface Project {
         "Built queryable knowledge graph with provenance tracking across 40+ document chunks",
         "Designed structured entity/relationship extraction with strict JSON schema outputs"
       ],
-      featured: true
+      featured: false
     },
     {
       id: "nexus-chatbot",

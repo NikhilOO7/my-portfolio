@@ -144,7 +144,7 @@ export default function Contact() {
             module="Open Channel"
             query="open a channel to him"
             response={[
-              'Channel ready, sir or madam.',
+              'Channel is ready.',
               'Inbound messages routed directly to subject; expected response window is 24–48 hours.',
               'Compose your transmission below — or use a social uplink.',
             ]}

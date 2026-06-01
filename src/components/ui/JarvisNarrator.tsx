@@ -18,8 +18,8 @@ interface JarvisNarratorProps {
  */
 export default function JarvisNarrator({
   lines,
-  speed = 22,
-  startDelay = 200,
+  speed = 18,
+  startDelay = 80,
   prompt = 'J.A.R.V.I.S',
   className = '',
   cursor = true,
@@ -65,12 +65,14 @@ export default function JarvisNarrator({
       const t = setTimeout(() => setCharIndex(charIndex + 1), speed);
       return () => clearTimeout(t);
     }
-    // Line finished; if more lines, advance after pause
+    // Line finished; if more lines, advance after a short pause.
+    // Kept short — the voice queue handles its own inter-line spacing, and
+    // long typewriter gaps make JARVIS feel sluggish.
     if (lineIndex < currentLines.length - 1) {
       const t = setTimeout(() => {
         setLineIndex(lineIndex + 1);
         setCharIndex(0);
-      }, 450);
+      }, 180);
       return () => clearTimeout(t);
     }
     onDone?.();

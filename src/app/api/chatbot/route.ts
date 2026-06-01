@@ -79,7 +79,7 @@ function fallbackResponse(input: string): string {
     return "I am J.A.R.V.I.S — Just A Rather Very Intelligent System — Nikhil's archival assistant for this portfolio. Ask me about his projects, experience, or skills, or say 'what can you do' for the full capability list.";
   }
   if (q.includes('can you') || q.includes('capabilit') || (q.includes('what') && q.includes('do'))) {
-    return "I archive Nikhil's full record — projects, experience, skills, education, doctrine, contact channels — and answer freely. Voice mode in the HUD bar lets me speak and listen; ⌘P opens the Command Registry for quick navigation. What would you like to explore, sir or madam?";
+    return "I archive Nikhil's full record — projects, experience, skills, education, doctrine, contact channels — and answer freely. Voice mode in the HUD bar lets me speak and listen; ⌘P opens the Command Registry for quick navigation. What would you like to explore?";
   }
   if (q.includes('contact') || q.includes('reach') || q.includes('email') || q.includes('hire')) {
     return `${p.shortName} is based in ${p.location}. Email: ${p.email}. LinkedIn: ${p.links.linkedin}.`;

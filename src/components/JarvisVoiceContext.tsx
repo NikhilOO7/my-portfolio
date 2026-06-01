@@ -142,10 +142,28 @@ export function JarvisVoiceProvider({ children }: ProviderProps) {
   }, []);
 
   // Cloud TTS playback state. Each queue item carries its own AbortController
-  // so interrupt() can yank in-flight fetches without affecting newer ones.
+  // so interrupt() can yank in-flight fetches without affecting newer ones,
+  // PLUS a blobPromise that starts as soon as the item is queued — this is
+  // the key to eliminating gaps between sequential lines: by the time the
+  // current line finishes playing, the next line's audio is already in hand.
+  type QueueItem = {
+    text: string;
+    controller: AbortController;
+    blobPromise: Promise<Blob | null>;
+  };
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const queueRef = useRef<{ text: string; controller: AbortController }[]>([]);
+  const queueRef = useRef<QueueItem[]>([]);
   const processingRef = useRef(false);
+
+  const fetchTtsBlob = (text: string, controller: AbortController): Promise<Blob | null> =>
+    fetch('/api/tts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text }),
+      signal: controller.signal,
+    })
+      .then(res => (res.ok ? res.blob() : null))
+      .catch(() => null);
 
   const stopAll = useCallback(() => {
     queueRef.current.forEach(item => item.controller.abort());
@@ -166,53 +184,50 @@ export function JarvisVoiceProvider({ children }: ProviderProps) {
       const synth = window.speechSynthesis;
       const utt = new SpeechSynthesisUtterance(text);
       if (voiceRef.current) utt.voice = voiceRef.current;
-      utt.rate = 0.95;
-      utt.pitch = 0.92;
-      utt.volume = 0.7;
+      // Match cloud TTS pacing — modern-assistant speed, not formant-drag.
+      utt.rate = 1.08;
+      utt.pitch = 0.95;
+      utt.volume = 0.75;
       utt.onstart = () => setSpeaking(true);
       utt.onend = () => { setSpeaking(false); resolve(); };
       utt.onerror = () => { setSpeaking(false); resolve(); };
       synth.speak(utt);
     });
 
-  const playOne = (text: string, controller: AbortController): Promise<void> =>
+  const playOne = (item: QueueItem): Promise<void> =>
     new Promise(async resolve => {
       const done = () => { setSpeaking(false); resolve(); };
-      try {
-        const res = await fetch('/api/tts', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text }),
-          signal: controller.signal,
-        });
-        if (controller.signal.aborted || !enabledRef.current) return done();
-        if (!res.ok) throw new Error(`tts-${res.status}`);
-        const blob = await res.blob();
-        if (controller.signal.aborted || !enabledRef.current) return done();
-
-        const url = URL.createObjectURL(blob);
-        const audio = new Audio(url);
-        audio.volume = 0.95;
-        audioRef.current = audio;
-
-        const cleanup = () => {
-          URL.revokeObjectURL(url);
-          if (audioRef.current === audio) audioRef.current = null;
-          done();
-        };
-        audio.onplay = () => setSpeaking(true);
-        audio.onended = cleanup;
-        audio.onerror = cleanup;
-        controller.signal.addEventListener('abort', () => {
-          try { audio.pause(); } catch {}
-          cleanup();
-        });
-        await audio.play();
-      } catch (err) {
-        if (controller.signal.aborted || !enabledRef.current) return done();
+      // Await the pre-fetched blob — this resolves instantly if the fetch
+      // finished while a previous line was still playing (the common case).
+      const blob = await item.blobPromise;
+      if (item.controller.signal.aborted || !enabledRef.current) return done();
+      if (!blob) {
         // Cloud TTS unavailable — fall back to the browser's voice.
-        await playWebSpeech(text);
+        await playWebSpeech(item.text);
+        return done();
+      }
+
+      const url = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      audio.volume = 0.95;
+      audioRef.current = audio;
+
+      const cleanup = () => {
+        URL.revokeObjectURL(url);
+        if (audioRef.current === audio) audioRef.current = null;
         done();
+      };
+      audio.onplay = () => setSpeaking(true);
+      audio.onended = cleanup;
+      audio.onerror = cleanup;
+      item.controller.signal.addEventListener('abort', () => {
+        try { audio.pause(); } catch {}
+        cleanup();
+      });
+      try {
+        await audio.play();
+      } catch {
+        cleanup();
       }
     });
 
@@ -222,15 +237,26 @@ export function JarvisVoiceProvider({ children }: ProviderProps) {
     while (queueRef.current.length > 0 && enabledRef.current) {
       const item = queueRef.current.shift()!;
       if (item.controller.signal.aborted) continue;
-      await playOne(item.text, item.controller);
+      await playOne(item);
     }
     processingRef.current = false;
   }, []);
+
+  // Pre-warm the TTS route on enable so the *first* speak() doesn't pay the
+  // cold-start tax (Open AI route handler init + connection setup).
+  const prewarmTts = () => {
+    fetch('/api/tts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: '.' }),
+    }).catch(() => {});
+  };
 
   const setEnabled = useCallback((v: boolean) => {
     setEnabledState(v);
     try { localStorage.setItem(STORAGE_KEY, v ? '1' : '0'); } catch {}
     if (!v) stopAll();
+    else prewarmTts();
   }, [stopAll]);
 
   const toggleEnabled = useCallback(() => {
@@ -244,7 +270,11 @@ export function JarvisVoiceProvider({ children }: ProviderProps) {
     if (!spoken.trim()) return;
 
     if (opts?.interrupt !== false) stopAll();
-    queueRef.current.push({ text: spoken, controller: new AbortController() });
+    const controller = new AbortController();
+    // Kick off the fetch RIGHT NOW — even if other items are still playing.
+    // This is the trick that collapses the gap between narrator lines.
+    const blobPromise = fetchTtsBlob(spoken, controller);
+    queueRef.current.push({ text: spoken, controller, blobPromise });
     processQueue();
   }, [stopAll, processQueue]);
 

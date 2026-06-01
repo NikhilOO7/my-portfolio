@@ -26,8 +26,9 @@ export async function POST(req: NextRequest) {
       // "fable" is the British-male voice — the closest match to film J.A.R.V.I.S.
       voice: 'fable',
       input: text,
-      // Slightly under 1.0 reads more measured and on-character.
-      speed: 0.97,
+      // Slightly above 1.0 reads like a modern assistant — measured but
+      // not lethargic. Anything ≤1.0 sounds slow next to live chat bots.
+      speed: 1.1,
       response_format: 'mp3',
     });
 
