@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "backend": "tsx src/backend/server.ts"
+    "backend": "tsx src/backend/server.ts",
+    "build-rag": "tsx scripts/build-rag-index.ts"
   },
   "dependencies": {
     "@react-three/drei": "^10.0.6",

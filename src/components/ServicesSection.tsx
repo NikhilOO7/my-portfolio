@@ -42,7 +42,7 @@ interface Service {
   icon: React.ComponentType<{ className?: string }>;
 }
 
-const SERVICES: Service[] = [
+export const SERVICES: Service[] = [
   {
     id: 'ai-infra',
     module: 'MODULE-01',

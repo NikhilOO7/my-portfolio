@@ -13,7 +13,7 @@ interface Stat {
   accent: string;
 }
 
-const STATS: Stat[] = [
+export const STATS: Stat[] = [
   { value: '9.5s', unit: 'e2e', label: 'AI Latency', sub: '↓ 73% from 36s', accent: '#00d4ff' },
   { value: '6', unit: 'agents', label: 'Pipeline DAG', sub: 'Coordinator-orchestrated', accent: '#a855f7' },
   { value: '5', unit: 'lanes', label: 'Mnemosyne Memory', sub: 'Context-scoped, per-user', accent: '#22c55e' },
@@ -28,7 +28,7 @@ interface Subsystem {
   accent: string;
 }
 
-const SUBSYSTEMS: Subsystem[] = [
+export const SUBSYSTEMS: Subsystem[] = [
   {
     id: 'pipeline',
     label: '6-Agent Orchestration',
@@ -73,7 +73,7 @@ const SUBSYSTEMS: Subsystem[] = [
   },
 ];
 
-const STACK = [
+export const STACK = [
   'Python', 'FastAPI', 'Node.js', 'GCP Cloud Run', 'Cloud SQL (Postgres)',
   'Memorystore (Redis)', 'Vertex AI · Gemini', 'Gemini Live', 'CrewAI',
   'LangGraph', 'Kubernetes', 'Prometheus', 'Terraform',

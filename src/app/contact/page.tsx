@@ -19,7 +19,7 @@ import { PERSON } from '@/lib/knowledge/graph';
 
 const MONO = 'font-mono uppercase tracking-[0.25em]';
 
-const INQUIRY_TYPES = [
+export const INQUIRY_TYPES = [
   { value: '', label: '— SELECT CHANNEL TYPE —' },
   { value: 'job', label: 'JOB OPPORTUNITY' },
   { value: 'project', label: 'PROJECT INQUIRY' },
@@ -28,7 +28,7 @@ const INQUIRY_TYPES = [
   { value: 'other', label: 'OTHER' },
 ];
 
-const CHANNELS = [
+export const CHANNELS = [
   { href: PERSON.links.linkedin, icon: FaLinkedin, label: 'LinkedIn', uplink: 'CH·001', status: 'PRIMARY', accent: '#0077b5' },
   { href: PERSON.links.github, icon: FaGithub, label: 'GitHub', uplink: 'CH·002', status: 'PRIMARY', accent: '#a855f7' },
   { href: PERSON.links.twitter, icon: FaXTwitter, label: 'X (Twitter)', uplink: 'CH·003', status: 'ACTIVE', accent: '#06b6d4' },
@@ -37,7 +37,7 @@ const CHANNELS = [
   { href: 'https://medium.com/@nikhilbindal2', icon: FaMedium, label: 'Medium', uplink: 'CH·006', status: 'ACTIVE', accent: '#fbbf24' },
 ];
 
-const PROTOCOLS = [
+export const PROTOCOLS = [
   {
     q: 'What types of engagements do you take on?',
     a: "Three lanes — short consulting (1–4 weeks, architecture review or hands-on technical guidance), contract builds (1–6 months, production AI systems), and select full-time roles at well-funded AI teams. Advisory slots open for early-stage AI startups where the technical bet is interesting.",

@@ -10,7 +10,7 @@ import { Code2, Sparkles, Rocket, Crosshair, Compass, Users } from 'lucide-react
 
 const MONO = 'font-mono uppercase tracking-[0.25em]';
 
-const vitalStats = [
+export const vitalStats = [
   { value: '6+', label: 'YEARS SHIPPING', accent: '#3b82f6' },
   { value: '5', label: 'COMPANIES', accent: '#06b6d4' },
   { value: '8.4M', label: 'DAILY REQUESTS', accent: '#14b8a6' },
@@ -19,7 +19,7 @@ const vitalStats = [
   { value: '73%', label: 'LATENCY CUT', accent: '#ec4899' },
 ];
 
-const philosophyCards = [
+export const philosophyCards = [
   {
     icon: Code2,
     title: 'Production-First',
@@ -64,7 +64,7 @@ const philosophyCards = [
   },
 ];
 
-const techHighlights = [
+export const techHighlights = [
   'Python', 'FastAPI', 'Node.js', 'PostgreSQL', 'Redis',
   'LangGraph', 'CrewAI', 'GPT-4o', 'WebRTC', 'LiveKit',
   'Kafka', 'Kubernetes', 'GCP', 'AWS', 'Qdrant',
