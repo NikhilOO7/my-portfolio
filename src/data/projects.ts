@@ -94,22 +94,6 @@ export interface Project {
       featured: true
     },
     {
-      id: "gaussian-splatting-knowledge-graph",
-      title: "Gaussian Splatting Knowledge Graph (archived)",
-      description: "Earlier 3-agent multi-agent LLM system that ingested academic papers and constructed a queryable knowledge graph with provenance tracking.",
-      longDescription: "Full-stack multi-agent LLM system that ingested academic papers and constructed a queryable knowledge graph using a 3-agent pipeline (Extractor → Resolver → Validator) with GPT-4o under strict JSON schema and provenance tracking across 40+ document chunks. Superseded by the Manifold Strata engine, which moved the same problem into embedding/rule space and added a Poincaré-disk geometry for hierarchy-aware retrieval.",
-      tags: ["AI Research", "Knowledge Graph", "Multi-Agent", "LLM"],
-      techStack: ["PostgreSQL", "Hono", "Drizzle ORM", "React", "GPT-4o", "TypeScript"],
-      imageUrl: GaussianImage,
-      github: "https://github.com/NikhilOO7/gaussian-splatting",
-      achievements: [
-        "Implemented 3-agent pipeline (Extractor → Resolver → Validator) using GPT-4o",
-        "Built queryable knowledge graph with provenance tracking across 40+ document chunks",
-        "Designed structured entity/relationship extraction with strict JSON schema outputs"
-      ],
-      featured: false
-    },
-    {
       id: "nexus-chatbot",
       title: "NexusChatbot - Multi-Agent AI Assistant",
       description: "Multi-agent conversational AI with specialized agents for research, coding, and task automation.",

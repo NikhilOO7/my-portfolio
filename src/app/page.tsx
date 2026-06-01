@@ -4,6 +4,7 @@
 import EnhancedServicesSection from '@/components/ServicesSection';
 import EnhancedFeaturedProjectsSection from '@/components/FeaturedProjectSection';
 import JarvisConsole from '@/components/JarvisConsole';
+import LiveMissionSection from '@/components/LiveMissionSection';
 import { motion } from 'framer-motion';
 import { useRef } from 'react';
 import { ArrowDown } from 'lucide-react';
@@ -59,6 +60,7 @@ export default function Home() {
           </div>
         </motion.div>
 
+        <LiveMissionSection />
         <EnhancedServicesSection />
         <EnhancedFeaturedProjectsSection />
       </div>
