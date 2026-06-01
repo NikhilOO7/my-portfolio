@@ -39,7 +39,7 @@ export function useJarvisSystem(): JarvisSystemContextValue {
       chatOpen: false,
       musicOpen: false,
       paletteOpen: false,
-      diagnosticsOpen: true,
+      diagnosticsOpen: false,
       suit: 'mark42',
       toggleChat: () => {},
       toggleMusic: () => {},
@@ -61,7 +61,7 @@ export function JarvisSystemProvider({ children }: { children: ReactNode }) {
   const [chatOpen, setChatOpen] = useState(false);
   const [musicOpen, setMusicOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
-  const [diagnosticsOpen, setDiagnosticsOpen] = useState(true);
+  const [diagnosticsOpen, setDiagnosticsOpen] = useState(false);
   const [suit, setSuit] = useState<SuitId>('mark42');
 
   const toggleChat = useCallback(() => setChatOpen(v => !v), []);

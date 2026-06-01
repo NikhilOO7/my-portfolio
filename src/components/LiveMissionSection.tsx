@@ -195,13 +195,23 @@ export default function LiveMissionSection() {
             </div>
           </div>
 
-          {/* MINI ARCHITECTURE SCHEMATIC */}
+          {/* Signal-flow one-liner — the diagram in 12 words */}
           <div className="relative px-5 sm:px-8 pb-5">
-            <div className={`${MONO} text-[10px] text-emerald-400/80 mb-2`}>
-              ▸ Live Architecture · Signal Flow
-            </div>
-            <div className="relative w-full overflow-hidden rounded-sm border border-emerald-400/15 bg-jarvis-dark-900/60">
-              <ArchitectureSchematic />
+            <div
+              className={`${MONO} text-[10px] sm:text-[11px] flex flex-wrap items-center gap-x-2 gap-y-1 px-3 py-2.5 rounded-sm border border-emerald-400/15`}
+              style={{ background: 'rgba(34, 197, 94, 0.04)' }}
+            >
+              <span className="text-emerald-400/85">▸ Signal Flow</span>
+              <span className="text-jarvis-blue-300/35">›</span>
+              <span className="text-emerald-400">Voice + HCI</span>
+              <span className="text-jarvis-blue-300/35">→</span>
+              <span className="text-jarvis-cyan">Coordinator · 6-agent DAG</span>
+              <span className="text-jarvis-blue-300/35">→</span>
+              <span className="text-jarvis-gold-400">Response · 9.5s</span>
+              <span className="text-jarvis-blue-300/35">·</span>
+              <span className="text-emerald-400/85">Mnemosyne · 5 lanes</span>
+              <span className="text-jarvis-blue-300/35">·</span>
+              <span className="text-jarvis-purple-300/90" style={{ color: '#c4a8f8' }}>Gemini Live async sidecar</span>
             </div>
           </div>
 
@@ -278,218 +288,5 @@ export default function LiveMissionSection() {
         </HUDFrame>
       </motion.div>
     </section>
-  );
-}
-
-// ─────────────────────────────────────────────────────────────────────────
-// Mini live-architecture schematic — voice/HCI in → 6-agent DAG →
-// Mnemosyne memory → response, with Gemini Live sidecar branched off.
-// ─────────────────────────────────────────────────────────────────────────
-function ArchitectureSchematic() {
-  // Six pipeline agents arranged in a horizontal staggered DAG
-  const agentLabels = ['INTAKE', 'PLAN', 'RETRIEVE', 'REASON', 'COMPOSE', 'EMIT'];
-  const baseX = 96;
-  const stepX = 50;
-  return (
-    <svg viewBox="0 0 720 240" className="w-full h-auto" preserveAspectRatio="xMidYMid meet">
-      <defs>
-        <linearGradient id="lm-bg" x1="0" x2="1" y1="0" y2="1">
-          <stop offset="0%" stopColor="#22c55e" stopOpacity="0.06" />
-          <stop offset="100%" stopColor="#a855f7" stopOpacity="0.04" />
-        </linearGradient>
-        <marker id="lm-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
-          <path d="M0,0 L10,5 L0,10 z" fill="#22c55e" fillOpacity="0.8" />
-        </marker>
-      </defs>
-
-      {/* Background */}
-      <rect x="0" y="0" width="720" height="240" fill="url(#lm-bg)" />
-
-      {/* Lane labels */}
-      <text x="48" y="22" fill="#22c55e" fillOpacity="0.6" fontSize="9" letterSpacing="2" fontFamily="ui-monospace, monospace">› INPUT</text>
-      <text x="360" y="22" textAnchor="middle" fill="#00d4ff" fillOpacity="0.6" fontSize="9" letterSpacing="2" fontFamily="ui-monospace, monospace">› ORCHESTRATION · 6-AGENT DAG</text>
-      <text x="640" y="22" textAnchor="end" fill="#fbbf24" fillOpacity="0.7" fontSize="9" letterSpacing="2" fontFamily="ui-monospace, monospace">› OUTPUT</text>
-
-      {/* ── INPUT cluster (voice mic + HCI bio signals) ─────────────── */}
-      <g transform="translate(20 60)">
-        {/* Voice mic */}
-        <rect width="68" height="44" rx="2" fill="#22c55e" fillOpacity="0.10" stroke="#22c55e" strokeOpacity="0.85" strokeWidth="0.9" />
-        <circle cx="14" cy="22" r="6" fill="#22c55e" fillOpacity="0.5">
-          <animate attributeName="fill-opacity" values="0.5;0.9;0.5" dur="1.4s" repeatCount="indefinite" />
-        </circle>
-        <text x="24" y="20" fill="#22c55e" fontSize="9" letterSpacing="1.4" fontFamily="ui-monospace, monospace">VOICE</text>
-        <text x="24" y="32" fill="#22c55e" fontSize="7" letterSpacing="1" opacity="0.7" fontFamily="ui-monospace, monospace">WebRTC</text>
-
-        {/* HCI biometrics */}
-        <g transform="translate(0 56)">
-          <rect width="68" height="44" rx="2" fill="#a855f7" fillOpacity="0.10" stroke="#a855f7" strokeOpacity="0.85" strokeWidth="0.9" />
-          <text x="6" y="14" fill="#a855f7" fontSize="9" letterSpacing="1.4" fontFamily="ui-monospace, monospace">HCI</text>
-          {/* Mini biometric waveforms */}
-          <polyline
-            points="6,30 12,24 18,32 24,26 30,30 36,22 42,30 48,26 54,30 60,24"
-            fill="none"
-            stroke="#a855f7"
-            strokeOpacity="0.85"
-            strokeWidth="0.9"
-          />
-          <text x="6" y="40" fill="#a855f7" fontSize="6" letterSpacing="0.8" opacity="0.7" fontFamily="ui-monospace, monospace">EMOTION · ATTN</text>
-        </g>
-      </g>
-
-      {/* Animated dashed flow from input → pipeline */}
-      <line x1="88" y1="82" x2="92" y2="100" stroke="#22c55e" strokeOpacity="0.7" strokeWidth="0.9" strokeDasharray="3 3" markerEnd="url(#lm-arrow)">
-        <animate attributeName="stroke-dashoffset" from="0" to="-12" dur="1.4s" repeatCount="indefinite" />
-      </line>
-      <line x1="88" y1="138" x2="92" y2="120" stroke="#a855f7" strokeOpacity="0.7" strokeWidth="0.9" strokeDasharray="3 3" markerEnd="url(#lm-arrow)">
-        <animate attributeName="stroke-dashoffset" from="0" to="-12" dur="1.6s" repeatCount="indefinite" />
-      </line>
-
-      {/* ── 6-AGENT DAG (horizontal, staggered) ─────────────────────── */}
-      {agentLabels.map((label, i) => {
-        const x = baseX + i * stepX;
-        const y = i % 2 === 0 ? 100 : 124;
-        return (
-          <g key={label}>
-            <rect
-              x={x}
-              y={y}
-              width="44"
-              height="22"
-              rx="2"
-              fill="#00d4ff"
-              fillOpacity="0.16"
-              stroke="#00d4ff"
-              strokeOpacity="0.85"
-              strokeWidth="0.9"
-            />
-            <text
-              x={x + 22}
-              y={y + 14}
-              textAnchor="middle"
-              fill="#00d4ff"
-              fontSize="8"
-              letterSpacing="1.4"
-              fontFamily="ui-monospace, monospace"
-            >
-              {label}
-            </text>
-            {/* Activity pulse on each agent */}
-            <rect x={x + 6} y={y + 17} width="32" height="1.5" fill="#00d4ff" fillOpacity="0.15" />
-            <rect x={x + 6} y={y + 17} width={[26, 18, 30, 12, 22, 28][i]} height="1.5" fill="#00d4ff" fillOpacity="0.85">
-              <animate attributeName="width" values={`${[26, 18, 30, 12, 22, 28][i]};${[18, 28, 14, 26, 30, 20][i]};${[26, 18, 30, 12, 22, 28][i]}`} dur={`${1.6 + i * 0.18}s`} repeatCount="indefinite" />
-            </rect>
-          </g>
-        );
-      })}
-
-      {/* DAG edges between agents */}
-      {agentLabels.slice(0, -1).map((_, i) => {
-        const fromX = baseX + i * stepX + 44;
-        const fromY = (i % 2 === 0 ? 100 : 124) + 11;
-        const toX = baseX + (i + 1) * stepX;
-        const toY = ((i + 1) % 2 === 0 ? 100 : 124) + 11;
-        return (
-          <line
-            key={i}
-            x1={fromX}
-            y1={fromY}
-            x2={toX}
-            y2={toY}
-            stroke="#00d4ff"
-            strokeOpacity="0.6"
-            strokeWidth="0.8"
-            strokeDasharray="2 3"
-            markerEnd="url(#lm-arrow)"
-          >
-            <animate attributeName="stroke-dashoffset" from="0" to="-10" dur={`${1.5 + i * 0.15}s`} repeatCount="indefinite" />
-          </line>
-        );
-      })}
-
-      {/* Coordinator pill (above the DAG) */}
-      <g transform="translate(220 60)">
-        <rect width="140" height="22" rx="11" fill="#00d4ff" fillOpacity="0.18" stroke="#00d4ff" strokeOpacity="0.9" strokeWidth="0.9" style={{ filter: 'drop-shadow(0 0 6px rgba(0, 212, 255, 0.4))' }} />
-        <text x="70" y="14" textAnchor="middle" fill="#00d4ff" fontSize="8" letterSpacing="2.5" fontFamily="ui-monospace, monospace">COORDINATOR · DAG</text>
-        {/* Connection lines down to each agent */}
-        {[0, 1, 2, 3, 4, 5].map(i => {
-          const x = baseX + i * stepX + 22;
-          return (
-            <line
-              key={i}
-              x1={70}
-              y1={22}
-              x2={x - 220}
-              y2={(i % 2 === 0 ? 100 : 124) - 60}
-              stroke="#00d4ff"
-              strokeOpacity="0.3"
-              strokeDasharray="1 3"
-            />
-          );
-        })}
-      </g>
-
-      {/* ── Gemini Live voice sidecar (top) ───────────────────────────── */}
-      <g transform="translate(420 50)">
-        <rect width="120" height="34" rx="3" fill="#a855f7" fillOpacity="0.16" stroke="#a855f7" strokeOpacity="0.9" strokeWidth="0.9" />
-        <text x="60" y="14" textAnchor="middle" fill="#a855f7" fontSize="8" letterSpacing="2" fontFamily="ui-monospace, monospace">GEMINI LIVE</text>
-        <text x="60" y="26" textAnchor="middle" fill="#a855f7" fontSize="7" letterSpacing="1.5" opacity="0.7" fontFamily="ui-monospace, monospace">VOICE SIDECAR</text>
-        {/* Animated sentiment / analytics labels */}
-        <text x="60" y="48" textAnchor="middle" fill="#a855f7" fontSize="6" letterSpacing="1.5" opacity="0.6" fontFamily="ui-monospace, monospace">ASYNC · OFF HOT PATH</text>
-      </g>
-      <line x1="420" y1="80" x2="356" y2="106" stroke="#a855f7" strokeOpacity="0.55" strokeWidth="0.7" strokeDasharray="2 3">
-        <animate attributeName="stroke-dashoffset" from="0" to="-10" dur="1.8s" repeatCount="indefinite" />
-      </line>
-
-      {/* ── MNEMOSYNE memory (bottom) — 5 lanes ──────────────────────── */}
-      <g transform="translate(140 170)">
-        <text x="0" y="-2" fill="#22c55e" fillOpacity="0.7" fontSize="8" letterSpacing="2" fontFamily="ui-monospace, monospace">› MNEMOSYNE · 5 LANES</text>
-        {['CAREER', 'NETWORK', 'JOB-SEARCH', 'LEARNING', 'PRODUCTIVITY'].map((lane, i) => (
-          <g key={lane} transform={`translate(${i * 76} 4)`}>
-            <rect width="70" height="22" rx="2" fill="#22c55e" fillOpacity={0.08 + (i % 2) * 0.05} stroke="#22c55e" strokeOpacity="0.7" strokeWidth="0.8" />
-            <text x="35" y="9" textAnchor="middle" fill="#22c55e" fontSize="6" letterSpacing="1.2" fontFamily="ui-monospace, monospace">{lane}</text>
-            <rect x="6" y="13" width="58" height="2" fill="#22c55e" fillOpacity="0.2" />
-            <rect x="6" y="13" width={[42, 30, 50, 24, 38][i]} height="2" fill="#22c55e" fillOpacity="0.85" />
-            <text x="6" y="20" fill="#22c55e" fontSize="5" letterSpacing="0.8" opacity="0.7" fontFamily="ui-monospace, monospace">CORE → DREAM</text>
-          </g>
-        ))}
-      </g>
-
-      {/* Connections from agents down to memory */}
-      {[0, 2, 4].map(i => {
-        const fromX = baseX + i * stepX + 22;
-        return (
-          <line
-            key={i}
-            x1={fromX}
-            y1={146}
-            x2={fromX}
-            y2={172}
-            stroke="#22c55e"
-            strokeOpacity="0.45"
-            strokeWidth="0.7"
-            strokeDasharray="1 3"
-          />
-        );
-      })}
-
-      {/* ── OUTPUT (right) ───────────────────────────────────────────── */}
-      <g transform="translate(620 100)">
-        <rect width="84" height="44" rx="2" fill="#fbbf24" fillOpacity="0.16" stroke="#fbbf24" strokeOpacity="0.9" strokeWidth="0.9" />
-        <text x="42" y="18" textAnchor="middle" fill="#fbbf24" fontSize="8.5" letterSpacing="2" fontFamily="ui-monospace, monospace">RESPONSE</text>
-        <text x="42" y="32" textAnchor="middle" fill="#fbbf24" fontSize="6.5" letterSpacing="1.5" opacity="0.7" fontFamily="ui-monospace, monospace">9.5s e2e</text>
-        {/* glow */}
-        <rect x="0" y="0" width="84" height="44" rx="2" fill="none" stroke="#fbbf24" strokeOpacity="0.95" strokeWidth="0.6">
-          <animate attributeName="stroke-opacity" values="0.95;0.4;0.95" dur="2.2s" repeatCount="indefinite" />
-        </rect>
-      </g>
-      <line x1={baseX + 5 * stepX + 44} y1={(5 % 2 === 0 ? 100 : 124) + 11} x2={620} y2={122} stroke="#fbbf24" strokeOpacity="0.7" strokeWidth="0.9" strokeDasharray="3 3" markerEnd="url(#lm-arrow)">
-        <animate attributeName="stroke-dashoffset" from="0" to="-12" dur="1.4s" repeatCount="indefinite" />
-      </line>
-
-      {/* Bottom caption */}
-      <text x="360" y="232" textAnchor="middle" fill="#9ca3af" fontSize="8" letterSpacing="1.5" opacity="0.7" fontFamily="ui-monospace, monospace">
-        BIOMETRICS · 6-AGENT DAG · 5 MEMORY LANES · GEMINI LIVE SIDECAR
-      </text>
-    </svg>
   );
 }
